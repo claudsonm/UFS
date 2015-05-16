@@ -1,15 +1,8 @@
-package datastructure;
-
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Scanner;
 
-/**
- *
- * @author Claudson
- */
 class Fila {
 
     private class Node {
@@ -43,48 +36,36 @@ class Fila {
     public boolean vazia() {
         return (this.frente == this.tras);
     }
-
-    public void imprime() {
-        System.out.print(" FILA -> ");
-        Node aux;
-        aux = this.frente.prox;
-        while (aux != null) {
-            System.out.print(aux.item.toString() + " -> ");
-            aux = aux.prox;
-        }
-        System.out.println("NULL");
-    }
     
-    public void economiza() {
-        Node aux = this.frente.prox;
+    public void economiza() throws Exception {
+        Object item = null;
         String[] digitosI, digitosJ;
         int numeroDigitos, economizados = 0;
         
-        digitosI = (aux.item.toString()).split("");
-        aux = aux.prox;
+        item = desenfileira();
+        digitosI = (item.toString()).split("");
+        item = desenfileira();
         
-        while( aux != null){
-            digitosJ = (aux.item.toString()).split("");
-            aux = aux.prox;
+        while( item != null){
+            digitosJ = (item.toString()).split("");
+            item = desenfileira();
             
             numeroDigitos = digitosI.length;
             for (int i = 0; i < numeroDigitos; i++) {
                 if (digitosI[i].equals(digitosJ[i])) economizados++;
                 else break;
-            }
-            
+            }   
             digitosI = digitosJ;
         }
         System.out.println(economizados);
     }
 }
 
-public class ListaTelefonica {
+public class Main {
 
     public static void main(String[] args) throws FileNotFoundException {
         try {
-            Scanner dados = new Scanner(new FileReader("lista.in"));
-            //Scanner dados = new Scanner(System.in);
+            Scanner dados = new Scanner(System.in);
             int N;
             String X;
             ArrayList<String> entrada = new ArrayList<> ();
