@@ -57,10 +57,10 @@ public class MeuLabirinto {
     public MeuLabirinto(int N) {
         this.N = N;
         this.grid = new int[N * N];
-        //StdDraw.setXscale(0, N + 2);
-        //StdDraw.setYscale(0, N + 2);
+        StdDraw.setXscale(0, N + 2);
+        StdDraw.setYscale(0, N + 2);
         inicializar();
-        //criar();
+        criar();
     }
 
     private void inicializar() {
@@ -228,7 +228,7 @@ public class MeuLabirinto {
         StdDraw.filledCircle(inicio2 + 0.5, inicio1 + 0.5, 0.375);
 
         StdDraw.setPenColor(StdDraw.BLACK);
-        for (int x = 1; x <= N; x++) {
+        /*for (int x = 1; x <= N; x++) {
             for (int y = 1; y <= N; y++) {
                 if (sul[x][y]) {
                     StdDraw.line(x, y, x + 1, y);
@@ -241,6 +241,28 @@ public class MeuLabirinto {
                 }
                 if (leste[x][y]) {
                     StdDraw.line(x + 1, y, x + 1, y + 1);
+                }
+            }
+        }*/
+        
+        for (int row = 0; row < this.N; row++) {
+            for (int col = 0; col < this.N; col++) {
+                int cell = grid[col + row * this.N];
+                if ((cell & LEFT) != 0) {
+                    //drawLeftWall(g, row, col);
+                    StdDraw.line(col, row, col, row + 1);
+                }
+                if ((cell & RIGHT) != 0) {
+                    //drawRightWall(g, row, col);
+                    StdDraw.line(col + 1, row, col + 1, row + 1);
+                }
+                if ((cell & UP) != 0) {
+                    //drawUpperWall(g, row, col);
+                    StdDraw.line(col, row, col + 1, row);
+                }
+                if ((cell & DOWN) != 0) {
+                    //drawLowerWall(g, row, col);
+                    StdDraw.line(col, row + 1, col + 1, row + 1);
                 }
             }
         }
@@ -265,8 +287,8 @@ public class MeuLabirinto {
     }
     
     // Parametros utilizados nos desenhos
-    private final int startX = 8;
-    private final int startY = 30;
+    private final int startX = 20;
+    private final int startY = 100;
     private final int size = 10;
     
     // Metodos para desenhar cada tipo de parede (cima, baixo, esq, dir)
@@ -298,23 +320,23 @@ public class MeuLabirinto {
 
         System.out.println("Digite a posicao onde sua matriz ira comecar");
         do {
-            inicio1 = sc.nextInt();
-            inicio2 = sc.nextInt();
-            if (inicio1 > N || inicio2 > N || inicio1 < 1 || inicio2 < 1) {
+            inicio1 = (sc.nextInt()) - 1;
+            inicio2 = (sc.nextInt()) - 1;
+            if (inicio1 >= N || inicio2 >= N || inicio1 < 0 || inicio2 < 0) {
                 System.out.println("Digite uma posicao contida na Matriz");
             }
 
-        } while (inicio1 > N || inicio2 > N || inicio1 < 1 || inicio2 < 1);
+        } while (inicio1 >= N || inicio2 >= N || inicio1 < 0 || inicio2 < 0);
 
         System.out.println("Digite a posicao onde sua matriz ira terminar");
         do {
-            fim1 = sc.nextInt();
-            fim2 = sc.nextInt();
-            if (fim1 > N || fim2 > N || fim1 < 1 || fim2 < 1) {
+            fim1 = (sc.nextInt()) - 1;
+            fim2 = (sc.nextInt()) - 1;
+            if (fim1 >= N || fim2 >= N || fim1 < 0 || fim2 < 0) {
                 System.out.println("Digite uma posicao contida na Matriz");
             }
 
-        } while (fim1 > N || fim2 > N || fim1 < 1 || fim2 < 1);
+        } while (fim1 >= N || fim2 >= N || fim1 < 0 || fim2 < 0);
 
         MeuLabirinto Labirinto = new MeuLabirinto(N);
         // *********************************************************************
@@ -347,9 +369,9 @@ public class MeuLabirinto {
             }
         });
         // *********************************************************************
-        /*StdDraw.show(0);
+        StdDraw.show(0);
         Labirinto.desenhe();
-        Labirinto.resolver();*/
+        //Labirinto.resolver();
     }
 
 }
