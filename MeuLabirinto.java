@@ -52,32 +52,38 @@ public class MeuLabirinto {
             this.direction = direction;
         }
     }
+    private boolean[] visit;
     // *************************************************************************
     
     public MeuLabirinto(int N) {
         this.N = N;
         this.grid = new int[N * N];
+        this.visit = new boolean[N * N];
         StdDraw.setXscale(0, N + 2);
         StdDraw.setYscale(0, N + 2);
         inicializar();
-        criar();
+        //criar();
     }
 
     private void inicializar() {
         // inicializa as celulas das bordas como ja visitadas
-        visitado = new boolean[N + 2][N + 2];
+        visitado = new boolean[N][N];
+        /*visitado = new boolean[N + 2][N + 2];
         for (int x = 0; x < N + 2; x++) {
             visitado[x][0] = visitado[x][N + 1] = true;
         }
         for (int y = 0; y < N + 2; y++) {
             visitado[0][y] = visitado[N + 1][y] = true;
-        }
+        }*/
         
         // *********************************************************************
         // Inicia com todas as paredes do labirinto
         // *********************************************************************
-        for (int i = 0; i < this.N * this.N; i++)
+        for (int i = 0; i < this.N * this.N; i++) {
             this.grid[i] = UP | RIGHT | DOWN | LEFT;
+            // define como nao visitados os pontos
+            this.visit[i] = false;
+        }
         
         // Cria todas as paredes
         List<Wall> walls = new ArrayList<>();
@@ -118,7 +124,7 @@ public class MeuLabirinto {
         // *********************************************************************
 
         // inicializa todas as paredes como true
-        norte = new boolean[N + 2][N + 2];
+        /*norte = new boolean[N + 2][N + 2];
         leste = new boolean[N + 2][N + 2];
         sul = new boolean[N + 2][N + 2];
         oeste = new boolean[N + 2][N + 2];
@@ -126,7 +132,7 @@ public class MeuLabirinto {
             for (int y = 0; y < N + 2; y++) {
                 norte[x][y] = leste[x][y] = sul[x][y] = oeste[x][y] = true;
             }
-        }
+        }*/
     }
 
     // gera o labirinto
@@ -168,13 +174,21 @@ public class MeuLabirinto {
 
     // resolve o labirinto utilizando-se de recursao
     private void resolver(int x, int y) {
-        if (x == 0 || y == 0 || x == N + 1 || y == N + 1) {
+        /*if (x == 0 || y == 0 || x == N + 1 || y == N + 1) {
+            return;
+        }*/
+        if (x < 0 || y < 0 || x == N || y == N) {
+            System.out.println("Primeira condicao (X = "+ x +" | y = "+ y +")");
             return;
         }
         if (completo || visitado[x][y]) {
             return;
         }
         visitado[x][y] = true;
+        /*if (completo || visit[x + y * this.N]) {
+            return;
+        }
+        visit[x + y * this.N] = true;*/
 
         StdDraw.setPenColor(StdDraw.BLUE);
         StdDraw.filledCircle(x + 0.5, y + 0.5, 0.25);
@@ -186,7 +200,37 @@ public class MeuLabirinto {
         }
         // se aproveita da pilha de execucao do sistema, para realizar busca em
         // profundidade.
-        if (!norte[x][y]) {
+        int cell = grid[x + y * this.N];
+        System.out.println("Valor da CELL: " + cell);
+        
+        System.out.println("& RIGHT: " + ((cell) & RIGHT));
+        System.out.println("& LEFT: " + ((cell) & LEFT));
+        System.out.println("& UP: " + ((cell) & UP));
+        System.out.println("& DOWN: " + ((cell) & DOWN));
+        
+        
+        if ((cell & RIGHT) == 0) {
+            System.out.println("DIREITA");
+            resolver(x + 1, y);
+        }
+        if ((cell & DOWN) == 0) {
+            System.out.println("BAIXO");
+            resolver(x, y + 1);
+        }
+        if ((cell & LEFT) == 0) {
+            System.out.println("ESQ");
+            resolver(x - 1, y);
+        }
+        if ((cell & UP) == 0) {
+            System.out.println("CIMA");
+            resolver(x, y - 1);
+        }
+        System.out.println("------------------------");
+        if (completo) {
+            return;
+        }
+        
+        /*if (!norte[x][y]) {
             resolver(x, y + 1);
         }
         if (!leste[x][y]) {
@@ -200,7 +244,7 @@ public class MeuLabirinto {
         }
         if (completo) {
             return;
-        }
+        }*/
 
         StdDraw.setPenColor(StdDraw.YELLOW);
         StdDraw.filledCircle(x + 0.5, y + 0.5, 0.25);
@@ -212,8 +256,8 @@ public class MeuLabirinto {
      * no main
      */
     public void resolver() {
-        for (int x = 1; x <= N; x++) {
-            for (int y = 1; y <= N; y++) {
+        for (int x = 0; x < N; x++) {
+            for (int y = 0; y < N; y++) {
                 visitado[x][y] = false;
             }
         }
@@ -371,7 +415,7 @@ public class MeuLabirinto {
         // *********************************************************************
         StdDraw.show(0);
         Labirinto.desenhe();
-        //Labirinto.resolver();
+        Labirinto.resolver();
     }
 
 }
