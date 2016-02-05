@@ -17,28 +17,37 @@ public class Ed2 {
         long startTime = System.currentTimeMillis();
         // ------------------------------------
         
-        Aluno first = new Aluno(120, "Jorge", "Rua KK, 667", (short) 22, "M", "jorge@capadocia.com");
-        ByteBuffer buf = first.getByteBuffer();
+//        Aluno first = new Aluno(669, "Arara", "Rua 2, 667", (short) 550, "M", "jasdorge@capadocia.com");
+//        ByteBuffer buf = first.getByteBuffer();
         
-        Aluno second = new Aluno(buf);
-        System.out.println(second.getMatricula());
-        System.out.println(second.getNome());
-        System.out.println(second.getIdade());
-        System.out.println(second.getSexo());
-        System.out.println(second.getEmail());
-        System.out.println(second.getEndereco());
+//        Aluno second = new Aluno(666, "Beija-flor", "Rua XYZ, 21", (short) 14, "F", "asduhausid@dragao.com");
+//        System.out.println(second.getMatricula());
+//        System.out.println(second.getNome());
+//        System.out.println(second.getIdade());
+//        System.out.println(second.getSexo());
+//        System.out.println(second.getEmail());
+//        System.out.println(second.getEndereco());
+        
+        // AULA 2 -----------------------
+        ManipuladorSimples teste = new ManipuladorSimples("/home/aluno/NetBeansProjects/ed2/files/alunos.db");
+//        teste.addReg(first);
+//        teste.addReg(second);
+        
+        Aluno b = teste.getReg(666);
+        System.out.println(b.getMatricula() + " | " + b.getNome());
+        
         
         // ------------------------------------
         long endTime   = System.currentTimeMillis();
         long totalTime = endTime - startTime;
-        System.out.println(totalTime);
+        System.out.println(totalTime + " ms");
         
         
 //        int     x = 5; // 4 bytes
 //        short   y = 12; // 2 bytes
 //        String  z = "D\n"; // OQQ (5 bytes)
 //        
-//        File file = new File("/home/aluno/NetBeansProjects/ed2/files/teste.db");
+//        File file = new File("/home/aluno/NetBeansProjects/ed2/files/teste.db");;;
 //        RandomAccessFile rf = new RandomAccessFile(file, "rw");
 //        FileChannel canal = rf.getChannel();
 //        //FileChannel canal = new RandomAccessFile(file, "rw").getChannel();
