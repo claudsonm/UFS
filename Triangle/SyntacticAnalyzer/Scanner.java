@@ -115,10 +115,16 @@ public final class Scanner {
     case '<':  case '>':  case '\\':  case '&':  case '@':
     case '%':  case '^':  case '?':
       takeIt();
-      while (isOperator(currentChar))
-        takeIt();
-      return Token.OPERATOR;
-
+      if (currentChar == '-') {
+          takeIt();
+          return Token.BECOMES;
+      }
+      else {
+    	  while (isOperator(currentChar))
+    		  takeIt();
+    	  return Token.OPERATOR;
+      }
+      
     case '\'':
       takeIt();
       takeIt(); // the quoted character
@@ -134,11 +140,7 @@ public final class Scanner {
 
     case ':':
       takeIt();
-      if (currentChar == '=') {
-        takeIt();
-        return Token.BECOMES;
-      } else
-        return Token.COLON;
+      return Token.COLON;
 
     case ';':
       takeIt();
