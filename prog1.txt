@@ -1,0 +1,8 @@
+! Isso e um comentario
+let
+	var n: Integer
+in
+	begin
+	n <- 2 * 10;
+	putint(n)
+	end
