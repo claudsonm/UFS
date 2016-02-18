@@ -31,14 +31,57 @@ public class ManipuladorSimples implements FileOrganizer{
             canal.position(canal.size());
             canal.write(a.getByteBuffer());
         } catch (IOException ex) {
-            Logger.getLogger(ManipuladorSimples.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ManipuladorSimples.class.getName())
+                    .log(Level.SEVERE, null, ex);
         }
-        System.out.println("IRRA");
+        System.out.println("Aluno adicionado!");
     }
 
     @Override
     public Aluno delReg(int matric) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        ByteBuffer buf = ByteBuffer.allocate(157);
+        Aluno removido = null;
+        
+        try {
+            long posicaoRegistro = -1000;
+            long posicaoUltimo = canal.size() - 157;
+            
+            for (int i = 0; i < canal.size()/157; i++) {
+                canal.read(buf);
+                buf.flip();
+                int x = buf.getInt();
+                if (x == matric) {
+                    posicaoRegistro = canal.position() - 157;
+                    buf.clear();
+                    removido = new Aluno(buf);
+                    break;
+                }
+                buf.clear();
+            }
+            
+            if (posicaoRegistro != -1000) {
+                if(posicaoRegistro == posicaoUltimo){
+                    // diminua o tamanho do arquivo
+                    canal.truncate(canal.size() - 157);
+                }
+                else {
+                    // pega o último, copia e exclue.
+                    buf.clear(); // !!!! LIMPA BUF PRA REUTILIZAR
+                    canal.position(posicaoUltimo);
+                    canal.read(buf);
+                    buf.flip();
+                    canal.position(posicaoRegistro);
+                    canal.write(buf);
+                    canal.truncate(canal.size() - 157);
+                }
+            }
+            else System.out.println("Aluno inexistente!");
+            
+        } catch (IOException ex) {
+            Logger.getLogger(ManipuladorSimples.class.getName())
+                    .log(Level.SEVERE, null, ex);
+        }
+        return removido;
     }
 
     @Override
@@ -52,21 +95,15 @@ public class ManipuladorSimples implements FileOrganizer{
                 int x = buf.getInt();
                 if (x == matric) {
                     buf.clear();
-                    System.out.println("POSITION: " + buf.position());
                     Aluno a = new Aluno(buf);
-                    System.out.println(i + " | " + x + " [C]: " + canal.position() + " | " + canal.size());
                     return a;
                 }
-                //short y = buf.getShort();
-                //byte[] stringSize = new byte[2];
-                //buf.get(stringSize);
-                //String z = new String(stringSize);
-                //System.out.println(x + " | " + y + " | " + z + " | [C]: " + canal.position());
                 buf.clear();
             }
             
         } catch (IOException ex) {
-            Logger.getLogger(ManipuladorSimples.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ManipuladorSimples.class.getName())
+                    .log(Level.SEVERE, null, ex);
         }
         return null;
     }
