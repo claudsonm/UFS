@@ -1,8 +1,2 @@
-! Isso e um comentario
-let
-	var n: Integer
-in
-	begin
-	n <- 2 * 15;
-	putint(n)
-	end
+let var n: Integer in begin n <- 2 * 15
+putint(n) end

@@ -77,7 +77,7 @@ public final class Scanner {
       }
       break;
 
-    case ' ': case '\n': case '\r': case '\t':
+    case ' ': /*case '\n':*/ case '\r': case '\t':
       takeIt();
       break;
     }
@@ -142,7 +142,7 @@ public final class Scanner {
       takeIt();
       return Token.COLON;
 
-    case ';':
+    case '\n':
       takeIt();
       return Token.SEMICOLON;
 
@@ -195,7 +195,7 @@ public final class Scanner {
     currentlyScanningToken = false;
     while (currentChar == '!'
            || currentChar == ' '
-           || currentChar == '\n'
+           //|| currentChar == '\n'
            || currentChar == '\r'
            || currentChar == '\t')
       scanSeparator();
