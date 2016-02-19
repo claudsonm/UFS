@@ -38,8 +38,10 @@ public final class Scanner {
     return (c == '+' || c == '-' || c == '*' || c == '/' ||
 	    c == '=' || c == '<' || c == '>' || c == '\\' ||
 	    c == '&' || c == '@' || c == '%' || c == '^' ||
-	    c == '?');
-  }
+	    c == '?' ||
+	    c == 'n' || c == 'o' || c == 't' || c == 'a' ||
+	    c == 'd' || c == 'r');
+  } 
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -87,9 +89,9 @@ public final class Scanner {
 
     switch (currentChar) {
 
-    case 'a':  case 'b':  case 'c':  case 'd':  case 'e':
+    /*case 'a':  case 'b':  case 'c':  case 'd':  case 'e':
     case 'f':  case 'g':  case 'h':  case 'i':  case 'j':
-    case 'k':  case 'l':  case 'm':  case 'n':  case 'o':
+    case 'k':  case 'l':  case 'm':  /*case 'n':  case 'o':
     case 'p':  case 'q':  case 'r':  case 's':  case 't':
     case 'u':  case 'v':  case 'w':  case 'x':  case 'y':
     case 'z':
@@ -98,9 +100,10 @@ public final class Scanner {
     case 'K':  case 'L':  case 'M':  case 'N':  case 'O':
     case 'P':  case 'Q':  case 'R':  case 'S':  case 'T':
     case 'U':  case 'V':  case 'W':  case 'X':  case 'Y':
-    case 'Z':
+    case 'Z':*/
+    case 'P': case 'Q': case 'R': case 'S':
       takeIt();
-      while (isLetter(currentChar) || isDigit(currentChar))
+      while (/*isLetter(currentChar) ||*/ isDigit(currentChar))
         takeIt();
       return Token.IDENTIFIER;
 
@@ -111,20 +114,14 @@ public final class Scanner {
         takeIt();
       return Token.INTLITERAL;
 
-    case '+':  case '-':  case '*': case '/':  case '=':
-    case '<':  case '>':  case '\\':  case '&':  case '@':
+    case '+':  /*case '-':*/  case '*': case '/':  case '=':
+    /*case '<':*/  case '>':  case '\\':  case '&':  case '@':
     case '%':  case '^':  case '?':
       takeIt();
-      if (currentChar == '-') {
-          takeIt();
-          return Token.BECOMES;
-      }
-      else {
-    	  while (isOperator(currentChar))
-    		  takeIt();
-    	  return Token.OPERATOR;
-      }
-      
+      while (isOperator(currentChar))
+        takeIt();
+      return Token.OPERATOR;
+
     case '\'':
       takeIt();
       takeIt(); // the quoted character
@@ -140,9 +137,100 @@ public final class Scanner {
 
     case ':':
       takeIt();
-      return Token.COLON;
+      if (currentChar == '=') {
+        takeIt();
+        return Token.BECOMES;
+      } else
+        return Token.COLON;
 
-    case '\n':
+    // NOT
+    case 'n':
+    	takeIt();
+    	if (currentChar == 'o') {
+    		takeIt();
+    		if (currentChar == 't') {
+				takeIt();
+				return Token.OPERATOR;
+			}
+    	}
+    	return Token.ERROR;
+    
+    // AND
+    case 'a':
+    	takeIt();
+    	if (currentChar == 'n') {
+    		takeIt();
+    		if (currentChar == 'd') {
+    			takeIt();
+    			return Token.OPERATOR;
+    		}
+    	}
+    	return Token.ERROR;
+    
+    // OR
+    case 'o':
+    	takeIt();
+    	if (currentChar == 'r') {
+    		takeIt();
+    		return Token.OPERATOR;
+    	}
+    	return Token.ERROR;
+    
+    // true
+    case 't':
+    	takeIt();
+    	if (currentChar == 'r') {
+    		takeIt();
+    		if (currentChar == 'u') {
+    			takeIt();
+    			if (currentChar == 'e') {
+					takeIt();
+					return Token.BOOLEAN;
+				}
+			}
+    	}
+    	return Token.ERROR;
+    	
+    // false
+    case 'f':
+    	takeIt();
+    	if (currentChar == 'a') {
+    		takeIt();
+			if (currentChar == 'l'){
+				takeIt();
+				if (currentChar == 's') {
+					takeIt();
+					if (currentChar == 'e') {
+						takeIt();
+						return Token.BOOLEAN;
+					}
+				}
+			}
+		}
+    	return Token.ERROR;
+    	
+    // -> (IMPLICA)
+    case '-':
+    	takeIt();
+    	if (currentChar == '>') {
+    		takeIt();
+    		return Token.OPERATOR;
+    	}
+    	return Token.ERROR;
+    	
+    // <-> (SE, SOMENTE SE)
+    case '<':
+    	takeIt();
+    	if (currentChar == '-') {
+    		takeIt();
+    		if(currentChar == '>') {
+    			takeIt();
+    			return Token.OPERATOR;
+    		}
+    	}
+    	return Token.ERROR;
+    	
+    case ';':
       takeIt();
       return Token.SEMICOLON;
 
