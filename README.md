@@ -16,3 +16,25 @@
 * Se ``H`` e ``G`` são fórmulas, então, `(H or G)` é uma fórmula;
 * Se ``H`` e ``G`` são fórmulas, então, `(H -> G)` é uma fórmula;
 * Se ``H`` e ``G`` são fórmulas, então, `(H <-> G)` é uma fórmula;
+
+## BNF (Backus-Naur Form)
+
+```
+Program		::=		Expression
+
+Expression	::=		primary-Expression
+					| Expression Operator primary-Expression
+
+primary-Expression	::=		V-name
+							| TF-symbol
+							| (Expression)
+							| not (Expression)
+
+V-name		::=		Identifier
+
+TF-symbol	::=		true | false
+
+Identifier	::=		[PQRS][[:digit:]]*
+
+Operator	::=		and | or | -> | <->
+```
