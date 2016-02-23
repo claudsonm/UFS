@@ -1,40 +1,61 @@
-# Sintaxe da l√≥gica setenecial (CP)
+# Sintaxe da lÛgica sentencial (CP)
 
 ## Alfabeto
 
-* S√≠mbolo de Pontua√ß√£o: `(`,`)`
-* S√≠mbolo de verdade: `true` , `false`
-* S√≠mbolo proposicionais: `P`, `Q`, `R`, `S`, `P1`, `Q1`, `R1`, `S1`, `P2`, ...
+* SÌmbolo de PontuaÁ„o: `(`,`)`
+* SÌmbolo de verdade: `true` , `false`
+* SÌmbolo proposicionais: `P`, `Q`, `R`, `S`, `P1`, `Q1`, `R1`, `S1`, `P2`, ...
 * Conectivos proposicionais: `not`, `and`, `or`, `->`, `<->`
 
-## F√≥rmulas
+## FÛrmulas
 
-* Todo s√≠mbolo de verdade √© uma f√≥rmula;
-* Todo s√≠mbolo proposicional √© uma f√≥rmula;
-* Se ``H`` √© uma f√≥rmula, ent√£o, `(not H)` √© uma f√≥rmula;
-* Se ``H`` e ``G`` s√£o f√≥rmulas, ent√£o, `(H and G)` √© uma f√≥rmula;
-* Se ``H`` e ``G`` s√£o f√≥rmulas, ent√£o, `(H or G)` √© uma f√≥rmula;
-* Se ``H`` e ``G`` s√£o f√≥rmulas, ent√£o, `(H -> G)` √© uma f√≥rmula;
-* Se ``H`` e ``G`` s√£o f√≥rmulas, ent√£o, `(H <-> G)` √© uma f√≥rmula;
+* Todo sÌmbolo de verdade È uma fÛrmula;
+* Todo sÌmbolo proposicional È uma fÛrmula;
+* Se ``H`` È uma fÛrmula, ent„o, `(not H)` È uma fÛrmula;
+* Se ``H`` e ``G`` s„o fÛrmulas, ent„o, `(H and G)` È uma fÛrmula;
+* Se ``H`` e ``G`` s„o fÛrmulas, ent„o, `(H or G)` È uma fÛrmula;
+* Se ``H`` e ``G`` s„o fÛrmulas, ent„o, `(H -> G)` È uma fÛrmula;
+* Se ``H`` e ``G`` s„o fÛrmulas, ent„o, `(H <-> G)` È uma fÛrmula;
 
 ## BNF (Backus-Naur Form)
 
 ```
-Program		::=		Expression
+Program     ::=     Expression
 
-Expression	::=		primary-Expression
-					| Expression Operator primary-Expression
+Expression  ::=     primary-Expression
+                    | Expression Operator primary-Expression
 
-primary-Expression	::=		V-name
-							| TF-symbol
-							| (Expression)
-							| not (Expression)
+primary-Expression  ::=     V-name
+                            | TF-symbol
+                            | (Expression)
+                            | not (Expression)
 
-V-name		::=		Identifier
+V-name      ::=     Identifier
 
-TF-symbol	::=		true | false
+TF-symbol   ::=     true | false
 
-Identifier	::=		[PQRS][[:digit:]]*
+Identifier  ::=     [PQRS][[:digit:]]*
 
-Operator	::=		and | or | -> | <->
+Operator    ::=     and | or | -> | <->
+```
+
+## ConvenÁıes
+
+### Token.String
+
+```
+and     ---->   *
+not     ---->   (+1) % 2
+true    ---->   1
+false   ---->   0
+or
+```
+
+### ConjunÁ„o (AND)
+
+```
+1 x 1   = 1
+1 x 0   = 0
+0 x 1   = 0
+0 x 0   = 0
 ```

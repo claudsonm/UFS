@@ -1,2 +1,5 @@
-let var n: Integer in begin n <- 2 * 15
-putint(n) end
+(
+	(
+	not (P44 -> true)
+	)
+)

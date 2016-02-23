@@ -79,7 +79,7 @@ public final class Scanner {
       }
       break;
 
-    case ' ': /*case '\n':*/ case '\r': case '\t':
+    case ' ': case '\n': case '\r': case '\t':
       takeIt();
       break;
     }
@@ -150,7 +150,7 @@ public final class Scanner {
     		takeIt();
     		if (currentChar == 't') {
 				takeIt();
-				return Token.OPERATOR;
+				return Token.NOT;
 			}
     	}
     	return Token.ERROR;
@@ -283,7 +283,7 @@ public final class Scanner {
     currentlyScanningToken = false;
     while (currentChar == '!'
            || currentChar == ' '
-           //|| currentChar == '\n'
+           || currentChar == '\n'
            || currentChar == '\r'
            || currentChar == '\t')
       scanSeparator();

@@ -150,8 +150,9 @@ public class Parser {
     currentToken = lexicalAnalyser.scan();
 
     try {
-      Command cAST = parseCommand();
-      programAST = new Program(cAST, previousTokenPosition);
+      //Command cAST = parseCommand();
+      Expression expAST = parseSecondaryExpression();
+      programAST = new Program(expAST, previousTokenPosition);
       if (currentToken.kind != Token.EOT) {
         syntacticError("\"%\" not expected after end of program",
           currentToken.spelling);
@@ -183,6 +184,21 @@ public class Parser {
       syntacticError("integer literal expected here", "");
     }
     return IL;
+  }
+  
+  IntegerLiteral parseBoolean() throws SyntaxError {
+      IntegerLiteral IL = null;
+    
+      if (currentToken.kind == Token.BOOLEAN) {
+        previousTokenPosition = currentToken.position;
+        String spelling = currentToken.spelling;
+        IL = new IntegerLiteral(spelling, previousTokenPosition);
+        currentToken = lexicalAnalyser.scan();
+      } else {
+        IL = null;
+        syntacticError("booleano esperado aqui", "");
+      }
+      return IL;
   }
 
 // parseCharacterLiteral parses a character-literal, and constructs a leaf
@@ -227,7 +243,7 @@ public class Parser {
   Operator parseOperator() throws SyntaxError {
     Operator O = null;
 
-    if (currentToken.kind == Token.OPERATOR) {
+    if (currentToken.kind == Token.OPERATOR || currentToken.kind == Token.NOT) {
       previousTokenPosition = currentToken.position;
       String spelling = currentToken.spelling;
       O = new Operator(spelling, previousTokenPosition);
@@ -478,6 +494,7 @@ public class Parser {
       }
       break;
 
+    case Token.NOT:
     case Token.OPERATOR:
       {
         Operator opAST = parseOperator();
@@ -486,6 +503,12 @@ public class Parser {
         expressionAST = new UnaryExpression(opAST, eAST, expressionPos);
       }
       break;
+      
+    case Token.BOOLEAN:
+        IntegerLiteral ilAST = parseBoolean();
+        finish(expressionPos);
+        expressionAST = new IntegerExpression(ilAST, expressionPos);
+        break;
 
     case Token.LPAREN:
       acceptIt();
