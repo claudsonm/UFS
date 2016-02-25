@@ -30,6 +30,7 @@ public class ManipuladorSequencial implements FileOrganizer{
     public void addReg(Aluno a) {
         int matric = a.getMatricula();
         try {
+            canal.position(0);
             ByteBuffer buf = ByteBuffer.allocate(157);
             if(canal.size() == 0)
                 canal.write(a.getByteBuffer());
@@ -46,7 +47,7 @@ public class ManipuladorSequencial implements FileOrganizer{
                     buf.clear();
                     if (x < matric) {
                         canal.write(a.getByteBuffer());
-                        buf.clear();
+                        buf.clear();                        
                         break;
                     }
                     else {
@@ -68,6 +69,7 @@ public class ManipuladorSequencial implements FileOrganizer{
         Aluno removido = null;
         
         try {
+            canal.position(0);
             long posicaoRegistro = -1000;
             long posicaoUltimo = canal.size() - 157;
             int aux = 0;
@@ -118,8 +120,9 @@ public class ManipuladorSequencial implements FileOrganizer{
     @Override
     public Aluno getReg(int matric) {
         ByteBuffer buf = ByteBuffer.allocate(157);
-        
+
         try {
+            canal.position(0);
             for (int i = 0; i < canal.size()/157; i++) {
                 canal.read(buf);
                 buf.flip();
@@ -138,5 +141,36 @@ public class ManipuladorSequencial implements FileOrganizer{
         }
         return null;
     }
+    
+//    @Override
+//    public Aluno getReg(int matric) {
+//        ByteBuffer buf = ByteBuffer.allocate(157);
+//        
+//        try {
+//            int inicio = 0;
+//            int fim = ((int) canal.size() / 157) - 1;
+//
+//            while (inicio <= fim) {
+//                int meio = (inicio + fim) / 2;
+//                canal.position(meio * 157);
+//                canal.read(buf);
+//                buf.flip();
+//                int x = buf.getInt();
+//                if (x == matric) {
+//                    buf.clear();
+//                    Aluno a = new Aluno(buf);
+//                    return a;
+//                }
+//                buf.clear();
+//
+//                if (matric > x) inicio = meio + 1;
+//                else fim = meio - 1;
+//            }
+//        } catch (IOException ex) {
+//            Logger.getLogger(ManipuladorSequencial.class.getName())
+//                    .log(Level.SEVERE, null, ex);
+//        }
+//        return null;
+//    }
     
 }

@@ -1,8 +1,11 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+/**
+ * Os códigos foram desenvolvidos durante as aulas pelos seguintes
+ * 
+ * @author Claudson Bispo Martins Santos    201410042132
+ * @author Edgar Vieira Lima Neto           201410042150
+ * @author Guilherme Boroni Pereira         201410042197
  */
+
 package ed2;
 
 import java.io.*;
@@ -11,10 +14,6 @@ import java.nio.channels.FileChannel;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
- *
- * @author aluno
- */
 public class ManipuladorSimples implements FileOrganizer{
     
     private FileChannel canal;
