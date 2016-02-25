@@ -1,5 +1,5 @@
 /* *****************************************************************************
- * CÃ³digos desenvolvidos pelos seguintes alunos
+ * Códigos desenvolvidos pelos seguintes alunos
  *
  * @author Claudson Bispo Martins Santos    201410042132
  * @author Edgar Vieira Lima Neto           201410042150
@@ -44,16 +44,17 @@ public class ManipuladorSimples implements FileOrganizer{
         Aluno removido = null;
         
         try {
-            // PosiÃ§Ã£o do registro a ser removido (-1000 Ã© nÃ£o encontrado)
+            canal.position(0);
+            // Posição do registro a ser removido (-1000 é não encontrado)
             long posicaoRegistro = -1000;
-            // PosiÃ§Ã£o do Ãºltimo registro do arquivo
+            // Posição do último registro do arquivo
             long posicaoUltimo = canal.size() - 157;
             
             for (int i = 0; i < canal.size()/157; i++) {
                 canal.read(buf);
                 buf.flip();
                 int x = buf.getInt();
-                // Encontrada a matrÃ­cula referente ao registro a ser removido
+                // Encontrada a matrícula referente ao registro a ser removido
                 if (x == matric) {
                     posicaoRegistro = canal.position() - 157;
                     buf.clear();
@@ -66,13 +67,13 @@ public class ManipuladorSimples implements FileOrganizer{
             // Se o registro foi encontrado
             if (posicaoRegistro != -1000) {
                 if(posicaoRegistro == posicaoUltimo){
-                    // Ã‰ o Ãºltimo registro, apenas diminua o tamanho do arquivo
+                    // É o último registro, apenas diminua o tamanho do arquivo
                     canal.truncate(canal.size() - 157);
                 }
                 else {
                     // Limpa o buffer pra reutilizar
                     buf.clear();
-                    // ObtÃ©m o Ãºltimo registro, copia e exclue
+                    // Obtém o último registro, copia e exclue
                     canal.position(posicaoUltimo);
                     canal.read(buf);
                     buf.flip();
@@ -95,6 +96,7 @@ public class ManipuladorSimples implements FileOrganizer{
         ByteBuffer buf = ByteBuffer.allocate(157);
         
         try {
+            canal.position(0);
             for (int i = 0; i < canal.size()/157; i++) {
                 canal.read(buf);
                 buf.flip();

@@ -1,5 +1,5 @@
 /* *****************************************************************************
- * CÃ³digos desenvolvidos pelos seguintes alunos
+ * Códigos desenvolvidos pelos seguintes alunos
  *
  * @author Claudson Bispo Martins Santos    201410042132
  * @author Edgar Vieira Lima Neto           201410042150

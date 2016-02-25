@@ -1,5 +1,5 @@
 /* *****************************************************************************
- * CÃ³digos desenvolvidos pelos seguintes alunos
+ * Códigos desenvolvidos pelos seguintes alunos
  *
  * @author Claudson Bispo Martins Santos    201410042132
  * @author Edgar Vieira Lima Neto           201410042150
@@ -38,7 +38,7 @@ public class Aluno {
     private String nome;
     
     /**
-     * O endereÃ§o do aluno
+     * O endereço do aluno
      * 60 bytes
      */
     private String endereco;
@@ -62,7 +62,7 @@ public class Aluno {
     private String email;
     
     /**
-     * Cria uma instÃ¢ncia de Aluno a partir dos atributos fornecidos
+     * Cria uma instância de Aluno a partir dos atributos fornecidos
      * 
      * @param matricula
      * @param nome
@@ -82,7 +82,7 @@ public class Aluno {
     }
     
     /**
-     * Cria uma instÃ¢ncia de Aluno a partir da leitura de um buffer
+     * Cria uma instância de Aluno a partir da leitura de um buffer
      * 
      * @param buf
      * @throws IOException 
@@ -110,15 +110,15 @@ public class Aluno {
     }
     
     /**
-     * Formata a palavra para uma nova dimensÃ£o
+     * Formata a palavra para uma nova dimensão
      * 
      * @param palavra
      * @param dimensao
      * 
-     * @return Palavra formatada na dimensÃ£o desejada
+     * @return Palavra formatada na dimensão desejada
      */
     public String corrigir(String palavra, int dimensao) {
-        // VersÃ£o recursiva [estoura a pilha ao lidar com tamanhos grandes]
+        // Versão recursiva [estoura a pilha ao lidar com tamanhos grandes]
         /*
         int tam = palavra.length();
         if (tam > dimensao)
@@ -136,7 +136,7 @@ public class Aluno {
     }
     
     /**
-     * ObtÃ©m um ByteBuffer com as informaÃ§Ãµes do aluno
+     * Obtém um ByteBuffer com as informações do aluno
      * 
      * @return o buffer
      */
@@ -153,7 +153,7 @@ public class Aluno {
     }
 
     /**
-     * ObtÃ©m a matrÃ­cula do aluno
+     * Obtém a matrícula do aluno
      * 
      * @return a matricula
      */
@@ -162,7 +162,7 @@ public class Aluno {
     }
 
     /**
-     * Define a matrÃ­cula do aluno
+     * Define a matrícula do aluno
      * 
      * @param matricula a matricula a ser definida
      */
@@ -171,7 +171,7 @@ public class Aluno {
     }
 
     /**
-     * ObtÃ©m o nome do aluno
+     * Obtém o nome do aluno
      * 
      * @return o nome
      */
@@ -189,7 +189,7 @@ public class Aluno {
     }
 
     /**
-     * ObtÃ©m o endereÃ§o do aluno
+     * Obtém o endereço do aluno
      * 
      * @return o endereco
      */
@@ -198,7 +198,7 @@ public class Aluno {
     }
 
     /**
-     * Define o endereÃ§o do aluno
+     * Define o endereço do aluno
      * 
      * @param endereco o endereco a ser definido
      */
@@ -207,7 +207,7 @@ public class Aluno {
     }
 
     /**
-     * ObtÃ©m a idade do aluno
+     * Obtém a idade do aluno
      * 
      * @return a idade
      */
@@ -225,7 +225,7 @@ public class Aluno {
     }
 
     /**
-     * ObtÃ©m o sexo do aluno
+     * Obtém o sexo do aluno
      * 
      * @return o sexo
      */
@@ -243,7 +243,7 @@ public class Aluno {
     }
 
     /**
-     * ObtÃ©m o email do aluno
+     * Obtém o email do aluno
      * 
      * @return o email
      */

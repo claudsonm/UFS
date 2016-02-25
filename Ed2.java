@@ -9,8 +9,6 @@
 package ed2;
 
 import java.io.*;
-import java.nio.*;
-import java.nio.channels.FileChannel;
 
 public class Ed2 {
 
@@ -28,9 +26,9 @@ public class Ed2 {
         Aluno third = new Aluno(7, "Levy Vianna", "Rua 6, 45", (short) 14, "M", "levyvianna@volume5.com");
 
         // Instancia o manipulador de arquivos
-        String arquivo = "C:\\Users\\claud\\Documents\\ED2\\alunos.db";
-        // ManipuladorSimples teste = new ManipuladorSimples(arquivo);
-        ManipuladorSequencial teste = new ManipuladorSequencial(arquivo);
+        String arquivo = "alunos.db";
+        ManipuladorSimples teste = new ManipuladorSimples(arquivo);
+        //ManipuladorSequencial teste = new ManipuladorSequencial(arquivo);
 
         // Persiste os alunos instanciados manualmente no arquivo
         teste.addReg(first);
