@@ -53,6 +53,11 @@ public class ManipuladorSequencial implements FileOrganizer{
                     else {
                         canal.write(buf);
                         buf.clear();
+                        if(i==total){
+                            canal.position(0);
+                            canal.write(a.getByteBuffer());
+                            break;
+                        }
                     }
                 }
             }
