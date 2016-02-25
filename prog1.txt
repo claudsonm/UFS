@@ -1,5 +1,1 @@
-(
-	(
-	not (P44 -> true)
-	)
-)
+( ( ( not (P and (Q34 or not R35 ) and (S5 -> (P9 <-> P95)) and true or not false) ) ) )

@@ -107,15 +107,15 @@ public final class Scanner {
         takeIt();
       return Token.IDENTIFIER;
 
-    case '0':  case '1':  case '2':  case '3':  case '4':
+    /*case '0':  case '1':  case '2':  case '3':  case '4':
     case '5':  case '6':  case '7':  case '8':  case '9':
       takeIt();
       while (isDigit(currentChar))
         takeIt();
       return Token.INTLITERAL;
 
-    case '+':  /*case '-':*/  case '*': case '/':  case '=':
-    /*case '<':*/  case '>':  case '\\':  case '&':  case '@':
+    case '+':  case '-':  case '*': case '/':  case '=':
+    case '<':  case '>':  case '\\':  case '&':  case '@':
     case '%':  case '^':  case '?':
       takeIt();
       while (isOperator(currentChar))
@@ -141,7 +141,7 @@ public final class Scanner {
         takeIt();
         return Token.BECOMES;
       } else
-        return Token.COLON;
+        return Token.COLON;*/
 
     // NOT
     case 'n':
@@ -230,7 +230,7 @@ public final class Scanner {
     	}
     	return Token.ERROR;
     	
-    case ';':
+    /*case ';':
       takeIt();
       return Token.SEMICOLON;
 
@@ -240,7 +240,7 @@ public final class Scanner {
 
     case '~':
       takeIt();
-      return Token.IS;
+      return Token.IS;*/
 
     case '(':
       takeIt();
@@ -250,7 +250,7 @@ public final class Scanner {
       takeIt();
       return Token.RPAREN;
 
-    case '[':
+    /*case '[':
       takeIt();
       return Token.LBRACKET;
 
@@ -264,7 +264,7 @@ public final class Scanner {
 
     case '}':
       takeIt();
-      return Token.RCURLY;
+      return Token.RCURLY;*/
 
     case SourceFile.EOT:
       return Token.EOT;
