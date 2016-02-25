@@ -1,3 +1,11 @@
+/* *****************************************************************************
+ * Códigos desenvolvidos pelos seguintes alunos
+ *
+ * @author Claudson Bispo Martins Santos    201410042132
+ * @author Edgar Vieira Lima Neto           201410042150
+ * @author Guilherme Boroni Pereira         201410042197
+ * ****************************************************************************/
+
 package ed2;
 
 import java.io.*;
@@ -5,13 +13,17 @@ import java.nio.*;
 
 public class Aluno {
     
+    // Define as contantes com o tamanho de cada campo do registro
     public static final int NOME = 50;
     public static final int ENDERECO = 60;
     public static final int IDADE = 2;
     public static final int SEXO = 1;
     public static final int EMAIL = 40;
     public static final int MATRICULA = 4;
-    public static final int TOTAL = NOME + ENDERECO + IDADE + SEXO + MATRICULA + EMAIL;
+
+    // Calcula e define o tamanho total de cada registro
+    public static final int TOTAL = NOME + ENDERECO + IDADE + SEXO +
+                                    MATRICULA + EMAIL;
 
     /**
      * A matricula do aluno
@@ -50,7 +62,7 @@ public class Aluno {
     private String email;
     
     /**
-     * Cria uma instância de Aluno a partir de valores passados
+     * Cria uma instância de Aluno a partir dos atributos fornecidos
      * 
      * @param matricula
      * @param nome
@@ -59,7 +71,8 @@ public class Aluno {
      * @param sexo
      * @param email 
      */
-    public Aluno(int matricula, String nome, String endereco, short idade, String sexo, String email) {
+    public Aluno(int matricula, String nome, String endereco, short idade,
+                 String sexo, String email) {
         setMatricula(matricula);
         setNome(nome);
         setEndereco(endereco);
@@ -105,23 +118,20 @@ public class Aluno {
      * @return Palavra formatada na dimensão desejada
      */
     public String corrigir(String palavra, int dimensao) {
-        /*int tam = palavra.length();
+        // Versão recursiva [estoura a pilha ao lidar com tamanhos grandes]
+        /*
+        int tam = palavra.length();
         if (tam > dimensao)
             return corrigir(palavra.substring(0, palavra.length()-1), dimensao);
         else if (tam < dimensao)
             return corrigir(palavra + " ", dimensao);
-        return palavra;*/
-        
-        /*
-        Versão que não estoura a pilha
-        --------------
+        return palavra;
         */
-        int c = dimensao - palavra.length();;
-        for (int i = 0; i < c; i++) {
-            palavra = palavra + " ";
-        }
-        palavra = palavra.substring(0, dimensao);
         
+        int c = dimensao - palavra.length();;
+        for (int i = 0; i < c; i++) palavra = palavra + " ";
+        palavra = palavra.substring(0, dimensao);
+    
         return palavra;
     }
     

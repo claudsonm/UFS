@@ -1,3 +1,11 @@
+/* *****************************************************************************
+ * Códigos desenvolvidos pelos seguintes alunos
+ *
+ * @author Claudson Bispo Martins Santos    201410042132
+ * @author Edgar Vieira Lima Neto           201410042150
+ * @author Guilherme Boroni Pereira         201410042197
+ * ****************************************************************************/
+
 package ed2;
 
 import java.io.*;
@@ -6,18 +14,9 @@ import java.nio.channels.FileChannel;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+public class ManipuladorSequencial implements FileOrganizer {
 
-/**
- *
- * @author PC-Ed
- */
-public class ManipuladorSequencial implements FileOrganizer{
-
+    // Canal de comunicação com o arquivo
     private FileChannel canal;
     
     public ManipuladorSequencial(String path) throws FileNotFoundException{
@@ -29,31 +28,39 @@ public class ManipuladorSequencial implements FileOrganizer{
     @Override
     public void addReg(Aluno a) {
         int matric = a.getMatricula();
+
         try {
             canal.position(0);
             ByteBuffer buf = ByteBuffer.allocate(157);
-            if(canal.size() == 0)
-                canal.write(a.getByteBuffer());
+
+            // Se o arquivo estiver vazio, apenas insira o registro
+            if(canal.size() == 0) canal.write(a.getByteBuffer());
             else {
-                int total = (int) (canal.size()/157);                
+                // Número de registros existentes no arquivo
+                int total = (int) (canal.size()/157);  
+
                 for (int i = 1; i < total + 1; i++) {
-                    if(i!=1)
-                        canal.position(canal.size() - (i+1)*157);
-                    else
-                        canal.position(canal.size() - 157);
+                    // Se for a primeira iteração, vá para o ÚLTIMO registro
+                    // Senão, vá para o ÚLTIMO - i
+                    if (i != 1) canal.position(canal.size() - (i+1)*157);
+                    else canal.position(canal.size() - 157);
+
                     canal.read(buf);
                     buf.flip();
                     int x = buf.getInt();
                     buf.clear();
+                    // Se a matricula lida for menor, insira o registro desejado
                     if (x < matric) {
                         canal.write(a.getByteBuffer());
                         buf.clear();                        
                         break;
                     }
                     else {
+                        // Empurra os registros até encontrar uma matrícula menor
                         canal.write(buf);
                         buf.clear();
-                        if(i==total){
+                        // Insere o registro quando ele for menor que o primeiro
+                        if(i == total){
                             canal.position(0);
                             canal.write(a.getByteBuffer());
                             break;
@@ -71,19 +78,26 @@ public class ManipuladorSequencial implements FileOrganizer{
     @Override
     public Aluno delReg(int matric) {
         ByteBuffer buf = ByteBuffer.allocate(157);
+        // Informações do aluno removido
         Aluno removido = null;
         
         try {
             canal.position(0);
+            
+            // Posição do registro a ser removido (-1000 é não encontrado)
             long posicaoRegistro = -1000;
+            // Posição do último registro do arquivo
             long posicaoUltimo = canal.size() - 157;
-            int aux = 0;
+            // Número total de registros existentes no arquivo
             int total = (int) (canal.size()/157); 
+            // Iteração na qual o registro a ser removido foi encontrado
+            int aux = 0;
             
             for (int i = 0; i < total; i++) {
                 canal.read(buf);
                 buf.flip();
                 int x = buf.getInt();
+                // Encontrada a matrícula referente ao registro a ser removido
                 if (x == matric) {
                     posicaoRegistro = canal.position() - 157;
                     aux = i;
@@ -94,13 +108,16 @@ public class ManipuladorSequencial implements FileOrganizer{
                 buf.clear();
             }
             
+            // Se o registro foi encontrado
             if (posicaoRegistro != -1000) {
                 if(posicaoRegistro == posicaoUltimo){
-                    // diminua o tamanho do arquivo
+                    // É o último registro, apenas diminua o tamanho do arquivo
                     canal.truncate(canal.size() - 157);
                 }
                 else { 
-                    buf.clear(); // !!!! LIMPA BUF PRA REUTILIZAR
+                    // Limpa o buffer pra reutilizar
+                    buf.clear();
+                    // Puxa os registros a partir do removido para uma posição acima
                     for(int i = aux; i <= total; i++){
                         canal.position((i+1)*157);
                         canal.read(buf);
@@ -108,11 +125,10 @@ public class ManipuladorSequencial implements FileOrganizer{
                         canal.position(i*157);
                         canal.write(buf);
                         buf.clear();
-                        
                     }
                     canal.truncate(canal.size() - 157);
                 }
-            }   
+            }
             else System.out.println("Aluno inexistente!");
             
         } catch (IOException ex) {
@@ -122,6 +138,7 @@ public class ManipuladorSequencial implements FileOrganizer{
         return removido;
     }
 
+    
     @Override
     public Aluno getReg(int matric) {
         ByteBuffer buf = ByteBuffer.allocate(157);
@@ -147,35 +164,39 @@ public class ManipuladorSequencial implements FileOrganizer{
         return null;
     }
     
-//    @Override
-//    public Aluno getReg(int matric) {
-//        ByteBuffer buf = ByteBuffer.allocate(157);
-//        
-//        try {
-//            int inicio = 0;
-//            int fim = ((int) canal.size() / 157) - 1;
-//
-//            while (inicio <= fim) {
-//                int meio = (inicio + fim) / 2;
-//                canal.position(meio * 157);
-//                canal.read(buf);
-//                buf.flip();
-//                int x = buf.getInt();
-//                if (x == matric) {
-//                    buf.clear();
-//                    Aluno a = new Aluno(buf);
-//                    return a;
-//                }
-//                buf.clear();
-//
-//                if (matric > x) inicio = meio + 1;
-//                else fim = meio - 1;
-//            }
-//        } catch (IOException ex) {
-//            Logger.getLogger(ManipuladorSequencial.class.getName())
-//                    .log(Level.SEVERE, null, ex);
-//        }
-//        return null;
-//    }
+    /* *************************************************************************
+     * Função de obtenção de registros em busca binária
+     * *************************************************************************
+    @Override
+    public Aluno getReg(int matric) {
+        ByteBuffer buf = ByteBuffer.allocate(157);
+        
+        try {
+            int inicio = 0;
+            int fim = ((int) canal.size() / 157) - 1;
+
+            while (inicio <= fim) {
+                int meio = (inicio + fim) / 2;
+                canal.position(meio * 157);
+                canal.read(buf);
+                buf.flip();
+                int x = buf.getInt();
+                if (x == matric) {
+                    buf.clear();
+                    Aluno a = new Aluno(buf);
+                    return a;
+                }
+                buf.clear();
+
+                if (matric > x) inicio = meio + 1;
+                else fim = meio - 1;
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(ManipuladorSequencial.class.getName())
+                    .log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+    */
     
 }

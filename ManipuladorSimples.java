@@ -1,10 +1,10 @@
-/**
- * Os códigos foram desenvolvidos durante as aulas pelos seguintes
- * 
+/* *****************************************************************************
+ * Códigos desenvolvidos pelos seguintes alunos
+ *
  * @author Claudson Bispo Martins Santos    201410042132
  * @author Edgar Vieira Lima Neto           201410042150
  * @author Guilherme Boroni Pereira         201410042197
- */
+ * ****************************************************************************/
 
 package ed2;
 
@@ -27,6 +27,7 @@ public class ManipuladorSimples implements FileOrganizer{
     @Override
     public void addReg(Aluno a) {
         try {
+            // Insere o registro no final do arquivo
             canal.position(canal.size());
             canal.write(a.getByteBuffer());
         } catch (IOException ex) {
@@ -39,16 +40,20 @@ public class ManipuladorSimples implements FileOrganizer{
     @Override
     public Aluno delReg(int matric) {
         ByteBuffer buf = ByteBuffer.allocate(157);
+        // Informa��es do aluno removido
         Aluno removido = null;
         
         try {
+            // Posição do registro a ser removido (-1000 é não encontrado)
             long posicaoRegistro = -1000;
+            // Posição do último registro do arquivo
             long posicaoUltimo = canal.size() - 157;
             
             for (int i = 0; i < canal.size()/157; i++) {
                 canal.read(buf);
                 buf.flip();
                 int x = buf.getInt();
+                // Encontrada a matrícula referente ao registro a ser removido
                 if (x == matric) {
                     posicaoRegistro = canal.position() - 157;
                     buf.clear();
@@ -58,14 +63,16 @@ public class ManipuladorSimples implements FileOrganizer{
                 buf.clear();
             }
             
+            // Se o registro foi encontrado
             if (posicaoRegistro != -1000) {
                 if(posicaoRegistro == posicaoUltimo){
-                    // diminua o tamanho do arquivo
+                    // É o último registro, apenas diminua o tamanho do arquivo
                     canal.truncate(canal.size() - 157);
                 }
                 else {
-                    // pega o último, copia e exclue.
-                    buf.clear(); // !!!! LIMPA BUF PRA REUTILIZAR
+                    // Limpa o buffer pra reutilizar
+                    buf.clear();
+                    // Obtém o último registro, copia e exclue
                     canal.position(posicaoUltimo);
                     canal.read(buf);
                     buf.flip();
