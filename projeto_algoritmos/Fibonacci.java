@@ -8,22 +8,18 @@
 package projeto_algoritmos;
 
 public class Fibonacci {
-    public static long fibRec(int n) {
-        long x = 0;
-        if (n>0){
-            if (n == 1 || n == 2)
-                return 1;
-            x = fibRec(n-1) + fibRec(n-2);
+    public static int fibRec(int n) {        
+        if (n < 2) return n;
+        return fibRec(n-1) + fibRec(n - 2);
+    }
+    
+    public static int fibIter(int n) {
+        int n2 = 0;
+        int n1 = 1;
+        for (int k = 0; k < n; k++) {
+            n1 = n2 + n1;
+            n2 = n1 - n2;
         }
-        return x;
-    }
-    
-    public static long fibIter(int n) {
-        // TODO
-    }
-    
-    public int teste(int n){
-        
-        return 0;
+        return n2;
     }
 }

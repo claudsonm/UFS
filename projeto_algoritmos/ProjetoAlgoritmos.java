@@ -9,30 +9,34 @@ package projeto_algoritmos;
 
 public class ProjetoAlgoritmos {
     public static void main(String[] args) {
-        Fatorial.fatIter(500);
+        long startTime, endTime, totalTime;
+        Fatorial.fatIter(3);
+        Fibonacci.fibIter(3);
+        //long x;
+        int x;
         // ------------------------------------
-        long startTime = System.nanoTime();
+        // ------------------------------------
+        startTime = System.nanoTime();
         
-        long x = Fatorial.fatIter(1000);
+        //x = Fatorial.fatIter(1000);
+        x = Fibonacci.fibIter(6);
         
-        long endTime   = System.nanoTime();
-        long totalTime = endTime - startTime;
+        endTime   = System.nanoTime();
+        totalTime = endTime - startTime;
         System.out.println("----------------------");
+        System.out.println("Valor f(n): " + x);
         System.out.println(totalTime + " ns");
         // ------------------------------------
         // ------------------------------------
         startTime = System.nanoTime();
         
-        x = Fatorial.fatRec(1000);
+        //x = Fatorial.fatRec(1000);
+        x = Fibonacci.fibRec(6);
         
         endTime   = System.nanoTime();
         totalTime = endTime - startTime;
         System.out.println("----------------------");
+        System.out.println("Valor f(n): " + x);
         System.out.println(totalTime + " ns");
-        // ------------------------------------
-        // ------------------------------------
-        
-        x = Fibonacci.fibIter(6);
-        System.out.println(x);
     }
 }
