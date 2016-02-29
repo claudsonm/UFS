@@ -27,8 +27,8 @@ public class Ed2 {
 
         // Instancia o manipulador de arquivos
         String arquivo = "alunos.db";
-        ManipuladorSimples teste = new ManipuladorSimples(arquivo);
-        //ManipuladorSequencial teste = new ManipuladorSequencial(arquivo);
+        //ManipuladorSimples teste = new ManipuladorSimples(arquivo);
+        ManipuladorSequencial teste = new ManipuladorSequencial(arquivo);
 
         // Persiste os alunos instanciados manualmente no arquivo
         teste.addReg(first);
