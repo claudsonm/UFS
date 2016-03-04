@@ -217,6 +217,8 @@ public final class Encoder implements Visitor {
   public Object visitIntegerExpression(IntegerExpression ast, Object o) {
     Frame frame = (Frame) o;
     Integer valSize = (Integer) ast.type.visit(this, null);
+    if (ast.IL.spelling.equals("true")) ast.IL.spelling = "1";
+    else if (ast.IL.spelling.equals("false")) ast.IL.spelling = "0";
     emit(Machine.LOADLop, 0, 0, Integer.parseInt(ast.IL.spelling));
     return valSize;
   }
