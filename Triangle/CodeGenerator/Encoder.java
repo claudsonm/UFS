@@ -167,7 +167,8 @@ public final class Encoder implements Visitor {
 
   public Object visitBinaryExpression(BinaryExpression ast, Object o) {
     Frame frame = (Frame) o;
-    Integer valSize = (Integer) ast.type.visit(this, null);
+    //Integer valSize = (Integer) ast.type.visit(this, null);
+    Integer valSize = 1;
     int valSize1 = ((Integer) ast.E1.visit(this, frame)).intValue();
     Frame frame1 = new Frame(frame, valSize1);
     int valSize2 = ((Integer) ast.E2.visit(this, frame1)).intValue();
@@ -647,7 +648,11 @@ public final class Encoder implements Visitor {
 
   public Object visitOperator(Operator ast, Object o) {
     Frame frame = (Frame) o;
-    if (ast.decl.entity instanceof KnownRoutine) {
+    if (ast.spelling.equals("or")) {
+    	emit(Machine.CALLop, Machine.SBr, Machine.PBr, Machine.orDisplacement);
+    } else if (ast.spelling.equals("and")) {
+    	emit(Machine.CALLop, Machine.SBr, Machine.PBr, Machine.andDisplacement);
+    } else if (ast.decl.entity instanceof KnownRoutine) {
       ObjectAddress address = ((KnownRoutine) ast.decl.entity).address;
       emit(Machine.CALLop, displayRegister (frame.level, address.level),
 	   Machine.CBr, address.displacement);
