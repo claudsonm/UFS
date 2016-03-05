@@ -62,11 +62,11 @@ or
 
 ## Exemplos de Geração de Código
 
-### Exemplo 1
+### Exemplo de Implicação
 
 ```
-true		->		false
-P -> Q		=>		~P \/ Q
+true        ->      false
+P -> Q		=>      ~P \/ Q
 
 LOADI 1
 CALLI not
@@ -74,10 +74,10 @@ LOADI 0
 CALLI or
 ```
 
-### Exemplo 2
+### Exemplo de SSE
 
 ```
-true	<->	false
+true        <->     false
 P <-> Q	<=>	(~P \/ Q) /\ (~Q \/ P)
 
 LOADI 1

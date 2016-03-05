@@ -171,9 +171,35 @@ public final class Encoder implements Visitor {
     Integer valSize = 1;
     int valSize1 = ((Integer) ast.E1.visit(this, frame)).intValue();
     Frame frame1 = new Frame(frame, valSize1);
+    
+    if (ast.O.spelling.equals("->") || ast.O.spelling.equals("<->"))
+        ast.O.visit(this, frame1);
+    
     int valSize2 = ((Integer) ast.E2.visit(this, frame1)).intValue();
     Frame frame2 = new Frame(frame.level, valSize1 + valSize2);
+    
+    String defaultOperator = ast.O.spelling;
+    if (ast.O.spelling.equals("->") || ast.O.spelling.equals("<->"))
+        ast.O.spelling = "or";
+    
     ast.O.visit(this, frame2);
+    
+    if (defaultOperator.equals("<->")) {
+        int valSize3 = ((Integer) ast.E2.visit(this, frame2)).intValue();
+        Frame frame3 = new Frame(frame.level, valSize1 + valSize2 + valSize3);
+        
+        ast.O.spelling = defaultOperator;
+        ast.O.visit(this, frame3);
+        
+        int valSize4 = ((Integer) ast.E1.visit(this, frame3)).intValue();
+        Frame frame4 = new Frame(frame.level, valSize1 + valSize2 + valSize3 + valSize4);
+        
+        ast.O.spelling = "or";
+        ast.O.visit(this, frame4);
+        ast.O.spelling = "and";
+        ast.O.visit(this, frame4);
+    }
+    
     return valSize;
   }
 
@@ -652,6 +678,8 @@ public final class Encoder implements Visitor {
     	emit(Machine.CALLop, Machine.SBr, Machine.PBr, Machine.orDisplacement);
     } else if (ast.spelling.equals("and")) {
     	emit(Machine.CALLop, Machine.SBr, Machine.PBr, Machine.andDisplacement);
+    } else if (ast.spelling.equals("->") || ast.spelling.equals("<->")) {
+        emit(Machine.CALLop, Machine.SBr, Machine.PBr, Machine.notDisplacement);
     } else if (ast.decl.entity instanceof KnownRoutine) {
       ObjectAddress address = ((KnownRoutine) ast.decl.entity).address;
       emit(Machine.CALLop, displayRegister (frame.level, address.level),
