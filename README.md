@@ -66,7 +66,7 @@ or
 
 ```
 true		->		false
-P -> Q		<=>		~P \/ Q
+P -> Q		=>		~P \/ Q
 
 LOADI 1
 CALLI not
