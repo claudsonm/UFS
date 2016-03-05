@@ -216,7 +216,8 @@ public final class Encoder implements Visitor {
 
   public Object visitIntegerExpression(IntegerExpression ast, Object o) {
     Frame frame = (Frame) o;
-    Integer valSize = (Integer) ast.type.visit(this, null);
+    //Integer valSize = (Integer) ast.type.visit(this, null);
+    Integer valSize = 1;
     if (ast.IL.spelling.equals("true")) ast.IL.spelling = "1";
     else if (ast.IL.spelling.equals("false")) ast.IL.spelling = "0";
     emit(Machine.LOADLop, 0, 0, Integer.parseInt(ast.IL.spelling));
@@ -735,6 +736,7 @@ public final class Encoder implements Visitor {
     tableDetailsReqd = showingTable;
     //startCodeGeneration();
     theAST.visit(this, new Frame (0, 0));
+    emit(Machine.CALLop, Machine.SBr, Machine.PBr, Machine.putintDisplacement);
     emit(Machine.HALTop, 0, 0, 0);
   }
 
