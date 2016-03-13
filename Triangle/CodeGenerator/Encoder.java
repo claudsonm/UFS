@@ -769,7 +769,7 @@ public final class Encoder implements Visitor {
     tableDetailsReqd = showingTable;
     //startCodeGeneration();
     theAST.visit(this, new Frame (0, 0));
-    emit(Machine.CALLop, Machine.SBr, Machine.PBr, Machine.putintDisplacement);
+    //emit(Machine.CALLop, Machine.SBr, Machine.PBr, Machine.putintDisplacement);
     emit(Machine.HALTop, 0, 0, 0);
   }
 

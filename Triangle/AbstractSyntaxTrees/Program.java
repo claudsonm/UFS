@@ -18,14 +18,14 @@ import Triangle.SyntacticAnalyzer.SourcePosition;
 
 public class Program extends AST {
 
-  public Program (Expression expAST, SourcePosition thePosition) {
+  public Program (Command cAST, SourcePosition thePosition) {
     super (thePosition);
-    C = expAST;
+    C = cAST;
   }
 
   public Object visit(Visitor v, Object o) {
     return v.visitProgram(this, o);
   }
 
-  public Expression C;
+  public Command C;
 }

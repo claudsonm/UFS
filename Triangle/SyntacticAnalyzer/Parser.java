@@ -150,9 +150,9 @@ public class Parser {
     currentToken = lexicalAnalyser.scan();
 
     try {
-      //Command cAST = parseCommand();
-      Expression expAST = parseSecondaryExpression();
-      programAST = new Program(expAST, previousTokenPosition);
+      Command cAST = parseCommand();
+      //Expression expAST = parseSecondaryExpression();
+      programAST = new Program(cAST, previousTokenPosition);
       if (currentToken.kind != Token.EOT) {
         syntacticError("\"%\" not expected after end of program",
           currentToken.spelling);

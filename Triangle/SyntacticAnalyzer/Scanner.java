@@ -89,32 +89,32 @@ public final class Scanner {
 
     switch (currentChar) {
 
-    /*case 'a':  case 'b':  case 'c':  case 'd':  case 'e':
-    case 'f':  case 'g':  case 'h':  case 'i':  case 'j':
-    case 'k':  case 'l':  case 'm':  /*case 'n':  case 'o':
-    case 'p':  case 'q':  case 'r':  case 's':  case 't':
+    /*case 'a':*/  case 'b':  case 'c':  case 'd':  case 'e':
+    /*case 'f':*/  case 'g':  case 'h':  case 'i':  case 'j':
+    case 'k':  case 'l':  case 'm':  /*case 'n':  case 'o':*/
+    case 'p':  case 'q':  case 'r':  case 's':  /*case 't':*/
     case 'u':  case 'v':  case 'w':  case 'x':  case 'y':
     case 'z':
     case 'A':  case 'B':  case 'C':  case 'D':  case 'E':
     case 'F':  case 'G':  case 'H':  case 'I':  case 'J':
     case 'K':  case 'L':  case 'M':  case 'N':  case 'O':
-    case 'P':  case 'Q':  case 'R':  case 'S':  case 'T':
+    /*case 'P':  case 'Q':  case 'R':  case 'S':*/  case 'T':
     case 'U':  case 'V':  case 'W':  case 'X':  case 'Y':
-    case 'Z':*/
+    case 'Z':
     case 'P': case 'Q': case 'R': case 'S':
       takeIt();
-      while (/*isLetter(currentChar) ||*/ isDigit(currentChar))
+      while (isLetter(currentChar) || isDigit(currentChar))
         takeIt();
       return Token.IDENTIFIER;
 
-    /*case '0':  case '1':  case '2':  case '3':  case '4':
+    case '0':  case '1':  case '2':  case '3':  case '4':
     case '5':  case '6':  case '7':  case '8':  case '9':
       takeIt();
       while (isDigit(currentChar))
         takeIt();
       return Token.INTLITERAL;
 
-    case '+':  case '-':  case '*': case '/':  case '=':
+    /*case '+':  case '-':  case '*': case '/':  case '=':
     case '<':  case '>':  case '\\':  case '&':  case '@':
     case '%':  case '^':  case '?':
       takeIt();
@@ -133,7 +133,7 @@ public final class Scanner {
 
     case '.':
       takeIt();
-      return Token.DOT;
+      return Token.DOT;*/
 
     case ':':
       takeIt();
@@ -141,7 +141,7 @@ public final class Scanner {
         takeIt();
         return Token.BECOMES;
       } else
-        return Token.COLON;*/
+        return Token.COLON;
 
     // NOT
     case 'n':
@@ -230,11 +230,11 @@ public final class Scanner {
     	}
     	return Token.ERROR;
     	
-    /*case ';':
+    case ';':
       takeIt();
       return Token.SEMICOLON;
 
-    case ',':
+    /*case ',':
       takeIt();
       return Token.COMMA;
 

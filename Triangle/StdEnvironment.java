@@ -41,7 +41,7 @@ public final class StdEnvironment {
     notDecl;
 
   public static BinaryOperatorDeclaration
-    andDecl, orDecl,
+    andDecl, orDecl, implicaDecl, sseDecl,
     addDecl, subtractDecl, multiplyDecl, divideDecl, moduloDecl,
     equalDecl, unequalDecl, lessDecl, notlessDecl, greaterDecl, notgreaterDecl;
 

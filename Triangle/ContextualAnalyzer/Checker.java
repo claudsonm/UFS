@@ -901,9 +901,14 @@ public final class Checker implements Visitor {
     StdEnvironment.booleanDecl = declareStdType("Boolean", StdEnvironment.booleanType);
     StdEnvironment.falseDecl = declareStdConst("false", StdEnvironment.booleanType);
     StdEnvironment.trueDecl = declareStdConst("true", StdEnvironment.booleanType);
-    StdEnvironment.notDecl = declareStdUnaryOp("\\", StdEnvironment.booleanType, StdEnvironment.booleanType);
-    StdEnvironment.andDecl = declareStdBinaryOp("/\\", StdEnvironment.booleanType, StdEnvironment.booleanType, StdEnvironment.booleanType);
-    StdEnvironment.orDecl = declareStdBinaryOp("\\/", StdEnvironment.booleanType, StdEnvironment.booleanType, StdEnvironment.booleanType);
+    //StdEnvironment.notDecl = declareStdUnaryOp("\\", StdEnvironment.booleanType, StdEnvironment.booleanType);
+    StdEnvironment.notDecl = declareStdUnaryOp("not", StdEnvironment.integerType, StdEnvironment.integerType);
+    //StdEnvironment.andDecl = declareStdBinaryOp("/\\", StdEnvironment.booleanType, StdEnvironment.booleanType, StdEnvironment.booleanType);
+    StdEnvironment.andDecl = declareStdBinaryOp("and", StdEnvironment.integerType, StdEnvironment.integerType, StdEnvironment.integerType);
+    //StdEnvironment.orDecl = declareStdBinaryOp("\\/", StdEnvironment.booleanType, StdEnvironment.booleanType, StdEnvironment.booleanType);
+    StdEnvironment.orDecl = declareStdBinaryOp("or", StdEnvironment.integerType, StdEnvironment.integerType, StdEnvironment.integerType);
+    StdEnvironment.implicaDecl = declareStdBinaryOp("->", StdEnvironment.integerType, StdEnvironment.integerType, StdEnvironment.integerType);
+    StdEnvironment.sseDecl = declareStdBinaryOp("<->", StdEnvironment.integerType, StdEnvironment.integerType, StdEnvironment.integerType);
 
     StdEnvironment.integerDecl = declareStdType("Integer", StdEnvironment.integerType);
     StdEnvironment.maxintDecl = declareStdConst("maxint", StdEnvironment.integerType);
