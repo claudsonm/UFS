@@ -39,6 +39,11 @@ maiorPosicao (x:xs) p | (x, p) > (maiorPosicao xs (p+1)) = (x, p)
 maiorPosicao (x:xs) p | x > (fst maiorPosicao xs (p+1)) = (x, p)
                     | otherwise = (maiorPosicao xs (p+1))
 
+removeItem :: Int -> [Int] -> [Int]
+removeItem _ []                 = []
+removeItem x (y:ys) | x == y    = removeItem x ys
+                    | otherwise = y : removeItem x ys
+
 --main = print $ zeroToN 10
 --main = print $ add1ToFst [8,5,4,9,7]
 --main = print $ len ['A','R','I','E','L', 'A']
