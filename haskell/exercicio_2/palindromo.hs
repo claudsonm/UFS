@@ -1,16 +1,4 @@
 import Data.Char (isSpace)
---main = putStrLn "hello world"
-
-{-diga_oi :: IO ()
-
-diga_oi = do
-
-  putStrLn "Qual eh o seu nomezinho?"
-  name <- getLine
-  putStrLn $ "Oi, " ++ name
-
-main = diga_oi
--}
 
 zeroToN :: Int -> [Int]
 zeroToN x = [0..x]
