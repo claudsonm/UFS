@@ -1,44 +1,45 @@
--- Retorna a quantidade de divisores entre 2 numeros
-quantidadeDivisores :: Int -> Int -> Int
-quantidadeDivisores n 1 = 1
-quantidadeDivisores n m = if  mod n m == 0
-              then 1 + quantidadeDivisores n (m-1)
-              else quantidadeDivisores n (m -1)
+{-
+    75 [3, 20] crescente        ==>     [15,3]
+    27 [5,2,1] crescente        ==>     [0,1,5]
 
-verificaPrimo ::Int -> Bool
-verificaPrimo n = (quantidadeDivisores n n) == 2
-
+    28 [5,2] crescente          ==>     [5,1,-1]
+-}
 import Data.List
-troco t l@(x:xs) = map (\xs -> length xs) . group $ ft t l
 
---[25,25,10,10,1]
-ft p [] = []
-ft p m@(x:xs) | p >= x = x:ft (p-x) m
-                          | otherwise = ft p xs
-                          
-decrescente [] = []
-decrescente (s:xs) = decrescente [x|x <- xs,x > s] ++ [s] ++ decrescente [x|x <- xs,x <= s]
-
+crescente :: Ord a => [a] -> [a]
 crescente [] = []
-crescente (s:xs) = crescente [x|x <- xs,x < s] ++ [s] ++ crescente [x|x <- xs,x >= s]
+crescente x = sort x
 
-teste a b c = a
+decrescente :: Ord a => [a] -> [a]
+decrescente [] = []
+decrescente x = reverse (sort x)
 
-main = print $ crescente (troco 27 [5,2,1])
+chamaFuncao st x list   | st == "crescente" = crescente (change x list)
+                        | otherwise = decrescente (change x list)
 
---main :: IO ()
---main = do
---        entrada <- tudo
---        print $ entrada
+change :: Int -> [Int] -> [Int]
+change n coins = reverse . snd $ foldl next (n, []) coins
+    where next (remaining, cs) coin
+            | coin <= remaining = (r', cnt:cs)
+            | otherwise         = (remaining, 0:cs)
+            where r' = remaining `mod` coin
+                  cnt = remaining `div` coin
 
-                
-tudo = do
-    lista <- fmap words getLine
-    a <- primeiroEle lista
-    b <- segundoEle lista
-    c <- terceiroEle lista
-    return (troco 5 [5,1])
+verificaDiferenca x y = sum (zipWith (*) x y)
 
-primeiroEle (x:_) = return x
-segundoEle (x:y:_) = return y
-terceiroEle (x:y:z:_) = return z
+passaTroco = do
+    x <- getLine
+    lista <- getLine
+    funcao <- getLine
+    if verificaDiferenca (change (read x :: Int) (read lista :: [Int])) (read lista :: [Int]) < (read x :: Int)
+        then return (change (read x :: Int) (read lista :: [Int]) ++ [-1])
+        else return (chamaFuncao funcao (read x :: Int) (read lista :: [Int]))
+    --return (chamaFuncao funcao (read x :: Int) (read lista :: [Int]))
+    --return (crescente (troco (read x :: Int) (map read $ words lista :: [Int])))
+
+--main = print $ sum (verificaDiferenca [5, 2] [5, 1])
+
+main :: IO ()
+main = do
+        entrada <- passaTroco
+        print $ entrada
