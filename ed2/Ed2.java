@@ -9,6 +9,9 @@
 package ed2;
 
 import java.io.*;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 public class Ed2 {
 
@@ -18,8 +21,10 @@ public class Ed2 {
     public static void main(String[] args) throws FileNotFoundException,
                                                   IOException {
         // Obtém o momento em que o algoritmo começou a ser processado
-        long startTime = System.currentTimeMillis();
-        System.out.println("Início em: " + startTime);
+        // long startTime = System.currentTimeMillis();
+        SimpleDateFormat ft = new SimpleDateFormat("HH:mm:ss");
+        Date startTime = new Date();
+        System.out.println("Início em: " + ft.format(startTime));
         
         // Instancia manualmente 3 alunos
         // Aluno first = new Aluno(15, "Adalgisa", "Rua 4, 5", (short) 15, "F", "adalgisa@semcoracao.com");
@@ -48,9 +53,10 @@ public class Ed2 {
         int[] selected = teste2.lerSelecionados();
         
         // Realiza a busca sequencial das matriculas
-        for (int i = 0; i < 1; i++) {
+        for (int i = 0; i < 10; i++) {
             Aluno a = teste.getReg(selected[i]);
-            if (a != null) System.out.println(a.getMatricula() + " | " + 
+            if (a != null) System.out.println("[ " + i + " ] " +
+                    a.getMatricula() + " | " + 
                     a.getNome().substring(0,15) + " | " +
                     a.getEmail());
         }
@@ -84,17 +90,33 @@ public class Ed2 {
                                " (" + del.getMatricula() + ") foi removido.");*/
 
         // Obtém o momento em que o algoritmo terminou de ser processado
-        long endTime   = System.currentTimeMillis();
+        // long endTime   = System.currentTimeMillis();
+        Date endTime = new Date();
         // Calcula e imprime o tempo total de execução em milisegundos
-        long totalTime = endTime - startTime;
+        long totalTime = endTime.getTime() - startTime.getTime();
         
-        long sec = totalTime / 1000;
-        long min = sec / 60;
-        long hrs = min / 60;
+        // Computa a diferença detalhadamente
+        List<TimeUnit> units = new ArrayList<TimeUnit>(EnumSet.allOf(TimeUnit.class));
+        Collections.reverse(units);
+        Map<TimeUnit,Long> result = new LinkedHashMap<TimeUnit,Long>();
+        long milliSecondsRest = totalTime;
+        for (TimeUnit unit : units) {
+            long diff = unit.convert(milliSecondsRest,TimeUnit.MILLISECONDS);
+            long diffInMilliSecondsForUnit = unit.toMillis(diff);
+            milliSecondsRest = milliSecondsRest - diffInMilliSecondsForUnit;
+            result.put(unit,diff);
+        }
         
         System.out.println("---------------------");
-        System.out.println(totalTime + " ms");
-        System.out.println(hrs + "h " + min + "min " + sec + "s");
+        System.out.println("Hora de Início:    " + ft.format(startTime));
+        System.out.println("Hora do Término:   " + ft.format(endTime));
+        System.out.println("");
+        System.out.println("Tempo de Execução: " + totalTime + " ms");
+        System.out.println("                   " + (totalTime/1000) + " s");
+        System.out.println("                   " +
+                result.get(TimeUnit.HOURS) + " h : " +
+                result.get(TimeUnit.MINUTES) + " min : " +
+                result.get(TimeUnit.SECONDS) + " s");
     }
     
 }
