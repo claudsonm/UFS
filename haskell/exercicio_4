@@ -1,0 +1,39 @@
+-- http://pastebin.com/dz4g0t0r
+
+data Tree a =   Empty
+                | Node a (Tree a) (Tree a)
+                deriving (Read,Eq,Show)
+
+find x Empty = "inexistente"
+find x (Node (r, s) left right)
+    | x == s = r
+    | x < s = find x left
+    | x > s = find x right
+
+arv :: Tree (String, Int)
+
+arv =   
+    Node ("sete", 7)
+        (Node ("quatro", 4)  
+            (Node ("dois", 2)  
+                (Node ("um", 1) Empty Empty)  
+                (Node ("tres", 3) Empty Empty)  
+            )  
+            (Node ("seis", 6)
+                (Node ("cinco", 5) Empty Empty)
+                (Empty)
+            )  
+        )  
+        (Node ("nove", 9)  
+            (Node ("oito", 8) Empty Empty)  
+            (Empty)
+        )
+        
+retornaLiteral = do
+    entrada <- getLine
+    return (find (read entrada :: Int) arv)
+
+main :: IO()
+main = do
+    valor <- retornaLiteral
+    print $ valor
