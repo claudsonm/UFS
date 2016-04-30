@@ -27,19 +27,31 @@ public class Ed2 {
         System.out.println("Início em: " + ft.format(startTime));
         
         // Instancia manualmente 3 alunos
-        // Aluno first = new Aluno(15, "Adalgisa", "Rua 4, 5", (short) 15, "F", "adalgisa@semcoracao.com");
-        // Aluno second = new Aluno(8, "Tairone", "Rua 5, 71", (short) 37, "M", "tairone@cigano.com");
-        // Aluno third = new Aluno(7, "Levy Vianna", "Rua 6, 45", (short) 14, "M", "levyvianna@volume5.com");
+        Aluno first = new Aluno(27, "Adalgisa", "Rua 4, 5", (short) 15, "F", "adalgisa@semcoracao.com");
+        Aluno second = new Aluno(18, "Tairone", "Rua 5, 71", (short) 37, "M", "tairone@cigano.com");
+        Aluno third = new Aluno(29, "Levy Vianna", "Rua 6, 45", (short) 14, "M", "levyvianna@volume5.com");
+        Aluno vazio = new Aluno(0, "", "", (short) 0, "", "");
 
         // Instancia o manipulador de arquivos
-        String arquivo = "data\\enem_seq.db";
+        //String arquivo = "data\\enem_seq.db";
+        String arquivo = "data\\testes.db";
         //ManipuladorSimples teste = new ManipuladorSimples(arquivo);
-        ManipuladorSequencial teste = new ManipuladorSequencial(arquivo);
+        //ManipuladorSequencial teste = new ManipuladorSequencial(arquivo);
+        OrganizadorBrent teste = new OrganizadorBrent(arquivo);
+        teste.inicializaArquivo(vazio);
+        
 
         // Persiste os alunos instanciados manualmente no arquivo
         // teste.addReg(first);
         // teste.addReg(second);
         // teste.addReg(third);
+        teste.addReg(first);
+        teste.listarArquivo();
+        teste.addReg(second);
+        teste.listarArquivo();
+        teste.addReg(third);
+        teste.listarArquivo();
+        
         
         // Instancia e persiste automaticamente 1 Milhão de registros no arquivo
         /*Aluno novo = null;
@@ -49,17 +61,17 @@ public class Ed2 {
         }*/
         
         // Lê as matriculas a serem buscadas
-        ManipuladorSequencial teste2 = new ManipuladorSequencial("data\\selected.db");
-        int[] selected = teste2.lerSelecionados();
+        /*ManipuladorSequencial teste2 = new ManipuladorSequencial("data\\selected.db");
+        int[] selected = teste2.lerSelecionados();*/
         
         // Realiza a busca sequencial das matriculas
-        for (int i = 0; i < 10; i++) {
+        /*for (int i = 0; i < 1000; i++) {
             Aluno a = teste.getReg(selected[i]);
             if (a != null) System.out.println("[ " + i + " ] " +
                     a.getMatricula() + " | " + 
                     a.getNome().substring(0,15) + " | " +
                     a.getEmail());
-        }
+        }*/
   
         // Obtém do arquivo os alunos que foram instanciados manualmente
         /*Aluno b = teste.getReg(8);
@@ -112,11 +124,11 @@ public class Ed2 {
         System.out.println("Hora do Término:   " + ft.format(endTime));
         System.out.println("");
         System.out.println("Tempo de Execução: " + totalTime + " ms");
-        System.out.println("                   " + (totalTime/1000) + " s");
+        /*System.out.println("                   " + (totalTime/1000) + " s");
         System.out.println("                   " +
                 result.get(TimeUnit.HOURS) + " h : " +
                 result.get(TimeUnit.MINUTES) + " min : " +
-                result.get(TimeUnit.SECONDS) + " s");
+                result.get(TimeUnit.SECONDS) + " s");*/
     }
     
 }

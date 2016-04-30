@@ -1,11 +1,3 @@
-/* *****************************************************************************
- * Códigos desenvolvidos pelos seguintes alunos
- *
- * @author Claudson Bispo Martins Santos    201410042132
- * @author Edgar Vieira Lima Neto           201410042150
- * @author Guilherme Boroni Pereira         201410042197
- * ****************************************************************************/
-
 package ed2;
 
 import java.io.*;
@@ -14,67 +6,75 @@ import java.nio.channels.FileChannel;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class ManipuladorSequencial implements FileOrganizer {
+public class OrganizadorBrent implements FileOrganizer {
 
+    // Tamanho da tabela de registros do arquivo
+    private final int P = 11; 
+    
+    // Número de bytes que um registro ocupa
+    private final int TAMANHO_REGISTRO = 157;
+    
     // Canal de comunicação com o arquivo
     private FileChannel canal;
     
-    public ManipuladorSequencial(String path) throws FileNotFoundException{
+    public OrganizadorBrent(String path) throws FileNotFoundException{
         File file = new File(path);
         RandomAccessFile rf = new RandomAccessFile(file, "rw");
         this.canal = rf.getChannel();
     }
     
+    private int calculaHash(int matricula) {
+        return (matricula % this.P);
+    }
+    
+    private int calculaIncremento(int matricula) {
+        return ((matricula / this.P) % this.P);
+        //return (matricula % (this.P - 2)) + 1;
+    }
+    
     @Override
     public void addReg(Aluno a) {
+        ByteBuffer buf = ByteBuffer.allocate(TAMANHO_REGISTRO);
+        
         int matric = a.getMatricula();
+        int hash = calculaHash(matric);
+        int posicao = (hash-1) * TAMANHO_REGISTRO;
+        int x;
 
         try {
-            canal.position(0);
-            ByteBuffer buf = ByteBuffer.allocate(157);
-
-            // Se o arquivo estiver vazio, apenas insira o registro
-            if(canal.size() == 0) canal.write(a.getByteBuffer());
+            canal.position(posicao);
+            canal.read(buf);
+            buf.flip();
+            x = buf.getInt();
+            buf.clear();
+            
+            System.out.println("{" + posicao + "}  " + x);
+            // Se a posição estiver livre
+            if (x == 0 || x == -1) {
+                canal.write(a.getByteBuffer());
+                buf.clear();
+            }
             else {
-                // Número de registros existentes no arquivo
-                int total = (int) (canal.size()/157);  
-
-                for (int i = 1; i < total + 1; i++) {
-                    // Se for a primeira iteração, vá para o ÚLTIMO registro
-                    // Senão, vá para o ÚLTIMO - i
-                    if (i != 1) canal.position(canal.size() - (i+1)*157);
-                    else canal.position(canal.size() - 157);
-
-                    canal.read(buf);
-                    buf.flip();
-                    int x = buf.getInt();
+                int incremento = calculaIncremento(matric);
+                posicao = ( ((hash + incremento) - 1) % this.P) * TAMANHO_REGISTRO;
+                canal.position(posicao);
+                canal.read(buf);
+                buf.flip();
+                x = buf.getInt();
+                buf.clear();
+                if (x == 0 || x == -1) {
+                    canal.write(a.getByteBuffer());
                     buf.clear();
-                    // Se a matricula lida for menor, insira o registro desejado
-                    if (x < matric) {
-                        canal.write(a.getByteBuffer());
-                        buf.clear();                        
-                        break;
-                    }
-                    else {
-                        // Empurra os registros até encontrar uma matrícula menor
-                        canal.write(buf);
-                        buf.clear();
-                        // Insere o registro quando ele for menor que o primeiro
-                        if(i == total){
-                            canal.position(0);
-                            canal.write(a.getByteBuffer());
-                            break;
-                        }
-                    }
                 }
             }
+
         } catch (IOException ex) {
             Logger.getLogger(ManipuladorSequencial.class.getName())
                     .log(Level.SEVERE, null, ex);
         }
         System.out.println("Aluno adicionado!");
     }
-
+    
     @Override
     public Aluno delReg(int matric) {
         ByteBuffer buf = ByteBuffer.allocate(157);
@@ -137,7 +137,6 @@ public class ManipuladorSequencial implements FileOrganizer {
         }
         return removido;
     }
-
     
     @Override
     public Aluno getReg(int matric) {
@@ -163,7 +162,7 @@ public class ManipuladorSequencial implements FileOrganizer {
         }
         return null;
     }
-
+    
     public int[] lerSelecionados() {
         ByteBuffer buf = ByteBuffer.allocate(4);
         int[] selected = new int[1000];
@@ -186,38 +185,30 @@ public class ManipuladorSequencial implements FileOrganizer {
         return null;
     }
     
-    /* *************************************************************************
-     * Função de obtenção de registros em busca binária
-     * *************************************************************************/
-    public Aluno getRegBin(int matric) {
-        ByteBuffer buf = ByteBuffer.allocate(157);
-        
+    public void inicializaArquivo(Aluno vazio) {        
         try {
-            int inicio = 0;
-            int fim = ((int) canal.size() / 157) - 1;
-
-            while (inicio <= fim) {
-                int meio = (inicio + fim) / 2;
-                canal.position(meio * 157);
+            canal.position(0);
+            for (int i = 0; i < this.P; i++)
+                canal.write(vazio.getByteBuffer());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public void listarArquivo() {
+        ByteBuffer buf = ByteBuffer.allocate(TAMANHO_REGISTRO);
+        try {
+            canal.position(0);
+            for (int i = 0; i < canal.size()/TAMANHO_REGISTRO; i++) {
                 canal.read(buf);
                 buf.flip();
                 int x = buf.getInt();
-                if (x == matric) {
-                    buf.clear();
-                    Aluno a = new Aluno(buf);
-                    return a;
-                }
+                System.out.println("[ " + i + " ] " + x);
                 buf.clear();
-
-                if (matric > x) inicio = meio + 1;
-                else fim = meio - 1;
             }
         } catch (IOException ex) {
             Logger.getLogger(ManipuladorSequencial.class.getName())
                     .log(Level.SEVERE, null, ex);
         }
-        return null;
     }
-    //*/
-    
 }
