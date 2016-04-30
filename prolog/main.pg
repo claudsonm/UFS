@@ -1,0 +1,13 @@
+gosta(george, kate).
+gosta(kate, george).
+gosta(george, vinho).
+gosta(susie, vinho).
+
+amigo(X, Y) :- gosta(X, Y), gosta(Y, X).
+
+membro(a, [a, b, c]).
+membro(b, [a, b, c]).
+membro(c, [a, b, c]).
+
+membro(X, [X|_]).
+membro(X, [_|T]). :- membro(X, T).
