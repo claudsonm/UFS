@@ -32,6 +32,8 @@ public class Ed2 {
         Aluno third = new Aluno(29, "Levy Vianna", "Rua 6, 45", (short) 14, "M", "levyvianna@volume5.com");
         Aluno fourth = new Aluno(28, "Pablo", "Rua 6, 45", (short) 14, "M", "pabo@doarrocha.com");
         Aluno fifth = new Aluno(39, "Safadao", "Rua 6, 45", (short) 14, "M", "safadao@issae.com");
+        Aluno sixth = new Aluno(13, "Adelino Nascimento", "Rua 6, 45", (short) 14, "M", "adelino@issae.com");
+        Aluno seventh = new Aluno(16, "Vando", "Rua 6, 45", (short) 14, "M", "vando@issae.com");
         Aluno vazio = new Aluno(0, "", "", (short) 0, "", "");
 
         // Instancia o manipulador de arquivos
@@ -40,20 +42,17 @@ public class Ed2 {
         //ManipuladorSimples teste = new ManipuladorSimples(arquivo);
         //ManipuladorSequencial teste = new ManipuladorSequencial(arquivo);
         OrganizadorBrent teste = new OrganizadorBrent(arquivo);
-        //teste.inicializaArquivo(vazio);
+        teste.inicializaArquivo(vazio);
         
 
         // Persiste os alunos instanciados manualmente no arquivo
-        // teste.addReg(first);
-        // teste.addReg(second);
-        // teste.addReg(third);
-        /*teste.addReg(first);
-        teste.listarArquivo();
+        teste.addReg(first);
         teste.addReg(second);
-        teste.listarArquivo();
         teste.addReg(third);
-        teste.addReg(fourth);*/
-        //teste.addReg(fifth);
+        teste.addReg(fourth);
+        teste.addReg(fifth);
+        teste.addReg(sixth);
+        teste.addReg(seventh);
         teste.listarArquivo();
         
         /*Aluno a = teste.getReg(29);
@@ -61,10 +60,12 @@ public class Ed2 {
                 a.getNome().substring(0,15) + " | " +
                 a.getEmail());*/
         
-        Aluno del = teste.delReg(29);
+        Aluno del = teste.delReg(27);
         if (del != null)
             System.out.println("O aluno " + del.getNome() +
                                " (" + del.getMatricula() + ") foi removido.");
+        
+        teste.listarArquivo();
         
         
         //System.out.println(teste.custoBusca(29));

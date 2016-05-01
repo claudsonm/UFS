@@ -11,10 +11,10 @@ public class OrganizadorBrent implements FileOrganizer {
     // Tamanho da tabela de registros do arquivo
     private final int P = 11; 
     
-    // Número de bytes que um registro ocupa
+    // Numero de bytes que um registro ocupa
     private final int TAMANHO_REGISTRO = 157;
     
-    // Canal de comunicação com o arquivo
+    // Canal de comunicacao com o arquivo
     private FileChannel canal;
     
     public OrganizadorBrent(String path) throws FileNotFoundException{
@@ -52,13 +52,13 @@ public class OrganizadorBrent implements FileOrganizer {
             buf.clear();
             
             System.out.println("{" + posicao + "}  LIDO: " + x);
-            // Se a posição estiver livre
+            // Se a posicao estiver livre
             if (x == 0 || x == -1) {
                 canal.position(posicao);
                 canal.write(a.getByteBuffer());
                 buf.clear();
             }
-            // Houve uma colisão
+            // Houve uma colisao
             else {
                 //SIMULANDO OS PASSOS PARA ADD O NOVO REGISTRO SEM MOVER O PRIMEIRO
                 int colisao = x;
@@ -89,14 +89,14 @@ public class OrganizadorBrent implements FileOrganizer {
                     buf.clear();
                 }
                 
-                // Opção I: apenas escrever na posicao encontrada
-                if ( (custoBusca(colisao)+passos) <= (custoBusca(colisao)+passos2) ) { //+1 já incluso
+                // Opcao I: apenas escrever na posicao encontrada
+                if ( (custoBusca(colisao)+passos) <= (custoBusca(colisao)+passos2) ) { //+1 ja incluso
                     canal.position(posicao);
                     System.out.println("Adiciona o novo no final");
                     canal.write(a.getByteBuffer()); //O NOVO AQUI
                     buf.clear();
                 } else {
-                    System.out.println("Coloca o que tava na proxima posição dele e o novo no começo");
+                    System.out.println("Coloca o que tava na proxima posicao dele e o novo no comeco");
                     
                     canal.position(posicao3);
                     canal.read(buf);
@@ -120,7 +120,7 @@ public class OrganizadorBrent implements FileOrganizer {
     @Override
     public Aluno delReg(int matric) {
         ByteBuffer buf = ByteBuffer.allocate(TAMANHO_REGISTRO);
-        // Informações do aluno removido
+        // Informacoes do aluno removido
         Aluno removido = null;
         int hash = calculaHash(matric);
         int posicao = hash * TAMANHO_REGISTRO;
