@@ -57,19 +57,27 @@ public class OrganizadorBrent implements FileOrganizer {
             }
             // Houve uma colisão
             else {
+                int colisao = x;
                 int incremento = calculaIncremento(matric);
-                posicao = ((hash + incremento) % this.P) * TAMANHO_REGISTRO;
-                canal.position(posicao);
-                canal.read(buf);
-                buf.flip();
-                x = buf.getInt();
-                buf.clear();
-                
-                if (x == 0 || x == -1) {
+                int passos = 1;
+                while(x != 0 && x != -1) {
+                    passos++;
+                    posicao = (((posicao/TAMANHO_REGISTRO) + incremento) % this.P) * TAMANHO_REGISTRO;
+                    System.out.println(posicao);
                     canal.position(posicao);
-                    canal.write(a.getByteBuffer());
+                    canal.read(buf);
+                    buf.flip();
+                    x = buf.getInt();
                     buf.clear();
                 }
+                
+                canal.position(posicao);
+                System.out.println("Escreve na posição: " + canal.position() + " | Passos: "+ passos + " | "+
+                        (passos + custoBusca(colisao)));
+                // Opção I: apenas escrever na posicao encontrada
+                //if ( (passos + custoBusca(colisao)) < (1 + TODO ) )
+                //canal.write(a.getByteBuffer());
+                buf.clear();
             }
 
         } catch (IOException ex) {
@@ -165,6 +173,40 @@ public class OrganizadorBrent implements FileOrganizer {
                     .log(Level.SEVERE, null, ex);
         }
         return null;
+    }
+    
+    public int custoBusca(int matricula) {
+        ByteBuffer buf = ByteBuffer.allocate(TAMANHO_REGISTRO);
+        
+        int hash = calculaHash(matricula);
+        int posicao = hash * TAMANHO_REGISTRO;
+        int passos = 1;
+        
+        try {
+            canal.position(posicao);
+            canal.read(buf);
+            buf.flip();
+            int x = buf.getInt();
+            buf.clear();
+            
+            if (x == matricula) return passos;
+            else {
+                int incremento = calculaIncremento(matricula);
+                while(x != 0) {
+                    passos++;
+                    posicao = (((posicao/TAMANHO_REGISTRO) + incremento) % this.P) * TAMANHO_REGISTRO;
+                    canal.position(posicao);
+                    canal.read(buf);
+                    buf.flip();
+                    x = buf.getInt();
+                    buf.clear();
+                    if (x == matricula) break; 
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return passos;
     }
     
     public int[] lerSelecionados() {

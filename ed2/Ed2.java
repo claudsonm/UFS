@@ -30,6 +30,8 @@ public class Ed2 {
         Aluno first = new Aluno(27, "Adalgisa", "Rua 4, 5", (short) 15, "F", "adalgisa@semcoracao.com");
         Aluno second = new Aluno(18, "Tairone", "Rua 5, 71", (short) 37, "M", "tairone@cigano.com");
         Aluno third = new Aluno(29, "Levy Vianna", "Rua 6, 45", (short) 14, "M", "levyvianna@volume5.com");
+        Aluno fourth = new Aluno(28, "Pablo", "Rua 6, 45", (short) 14, "M", "pabo@doarrocha.com");
+        Aluno fifth = new Aluno(39, "Safadao", "Rua 6, 45", (short) 14, "M", "safadao@issae.com");
         Aluno vazio = new Aluno(0, "", "", (short) 0, "", "");
 
         // Instancia o manipulador de arquivos
@@ -38,19 +40,23 @@ public class Ed2 {
         //ManipuladorSimples teste = new ManipuladorSimples(arquivo);
         //ManipuladorSequencial teste = new ManipuladorSequencial(arquivo);
         OrganizadorBrent teste = new OrganizadorBrent(arquivo);
-        teste.inicializaArquivo(vazio);
+        //teste.inicializaArquivo(vazio);
         
 
         // Persiste os alunos instanciados manualmente no arquivo
         // teste.addReg(first);
         // teste.addReg(second);
         // teste.addReg(third);
-        teste.addReg(first);
+        /*teste.addReg(first);
         teste.listarArquivo();
         teste.addReg(second);
         teste.listarArquivo();
         teste.addReg(third);
+        teste.addReg(fourth);*/
+        teste.addReg(fifth);
         teste.listarArquivo();
+        
+        //System.out.println(teste.custoBusca(29));
         
         
         // Instancia e persiste automaticamente 1 Milhão de registros no arquivo
