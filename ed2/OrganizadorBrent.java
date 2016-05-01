@@ -89,65 +89,58 @@ public class OrganizadorBrent implements FileOrganizer {
     
     @Override
     public Aluno delReg(int matric) {
-        ByteBuffer buf = ByteBuffer.allocate(157);
+        ByteBuffer buf = ByteBuffer.allocate(TAMANHO_REGISTRO);
         // Informações do aluno removido
         Aluno removido = null;
+        int hash = calculaHash(matric);
+        int posicao = hash * TAMANHO_REGISTRO;
         
         try {
-            canal.position(0);
-            
-            // Posição do registro a ser removido (-1000 é não encontrado)
-            long posicaoRegistro = -1000;
-            // Posição do último registro do arquivo
-            long posicaoUltimo = canal.size() - 157;
-            // Número total de registros existentes no arquivo
-            int total = (int) (canal.size()/157); 
-            // Iteração na qual o registro a ser removido foi encontrado
-            int aux = 0;
-            
-            for (int i = 0; i < total; i++) {
-                canal.read(buf);
-                buf.flip();
-                int x = buf.getInt();
-                // Encontrada a matrícula referente ao registro a ser removido
-                if (x == matric) {
-                    posicaoRegistro = canal.position() - 157;
-                    aux = i;
-                    buf.clear();
-                    removido = new Aluno(buf);
-                    break;
-                }
-                buf.clear();
+            canal.position(posicao);
+            canal.read(buf);
+            buf.flip();
+            int x = buf.getInt();
+            buf.clear();
+            if (x == matric) {
+                removido = new Aluno(buf);
+                canal.position(posicao);
+                canal.write(removedByteBuffer());
+                return removido;
             }
-            
-            // Se o registro foi encontrado
-            if (posicaoRegistro != -1000) {
-                if(posicaoRegistro == posicaoUltimo){
-                    // É o último registro, apenas diminua o tamanho do arquivo
-                    canal.truncate(canal.size() - 157);
-                }
-                else { 
-                    // Limpa o buffer pra reutilizar
+            else {
+                int incremento = calculaIncremento(matric);
+                while(x != 0) {
+                    posicao = (((posicao/TAMANHO_REGISTRO) + incremento) % this.P) * TAMANHO_REGISTRO;
+                    canal.position(posicao);
+                    canal.read(buf);
+                    buf.flip();
+                    x = buf.getInt();
                     buf.clear();
-                    // Puxa os registros a partir do removido para uma posição acima
-                    for(int i = aux; i <= total; i++){
-                        canal.position((i+1)*157);
-                        canal.read(buf);
-                        buf.flip();
-                        canal.position(i*157);
-                        canal.write(buf);
-                        buf.clear();
+                    if (x == matric) {
+                        removido = new Aluno(buf);
+                        canal.position(posicao);
+                        canal.write(removedByteBuffer());
+                        return removido;
                     }
-                    canal.truncate(canal.size() - 157);
                 }
             }
-            else System.out.println("Aluno inexistente!");
-            
-        } catch (IOException ex) {
-            Logger.getLogger(ManipuladorSequencial.class.getName())
-                    .log(Level.SEVERE, null, ex);
+            System.out.println("Aluno inexistente!");
+        } catch (IOException e) {
+            e.printStackTrace();
         }
         return removido;
+    }
+    
+    private ByteBuffer removedByteBuffer() {
+        ByteBuffer b = ByteBuffer.allocate(TAMANHO_REGISTRO);
+        b.putInt(-1);
+        b.put("".getBytes());
+        b.put("".getBytes());
+        b.putShort((short) 0);
+        b.put("".getBytes());
+        b.put("".getBytes());
+        b.flip();
+        return b;
     }
     
     @Override

@@ -56,10 +56,16 @@ public class Ed2 {
         //teste.addReg(fifth);
         teste.listarArquivo();
         
-        Aluno a = teste.getReg(29);
+        /*Aluno a = teste.getReg(29);
         if (a != null) System.out.println(a.getMatricula() + " | " + 
                 a.getNome().substring(0,15) + " | " +
-                a.getEmail());
+                a.getEmail());*/
+        
+        Aluno del = teste.delReg(29);
+        if (del != null)
+            System.out.println("O aluno " + del.getNome() +
+                               " (" + del.getMatricula() + ") foi removido.");
+        
         
         //System.out.println(teste.custoBusca(29));
         
