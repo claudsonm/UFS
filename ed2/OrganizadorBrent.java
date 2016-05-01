@@ -38,7 +38,7 @@ public class OrganizadorBrent implements FileOrganizer {
         
         int matric = a.getMatricula();
         int hash = calculaHash(matric);
-        int posicao = (hash-1) * TAMANHO_REGISTRO;
+        int posicao = hash * TAMANHO_REGISTRO;
         int x;
 
         try {
@@ -48,21 +48,25 @@ public class OrganizadorBrent implements FileOrganizer {
             x = buf.getInt();
             buf.clear();
             
-            System.out.println("{" + posicao + "}  " + x);
+            System.out.println("{" + posicao + "}  LIDO: " + x);
             // Se a posição estiver livre
             if (x == 0 || x == -1) {
+                canal.position(posicao);
                 canal.write(a.getByteBuffer());
                 buf.clear();
             }
+            // Houve uma colisão
             else {
                 int incremento = calculaIncremento(matric);
-                posicao = ( ((hash + incremento) - 1) % this.P) * TAMANHO_REGISTRO;
+                posicao = ((hash + incremento) % this.P) * TAMANHO_REGISTRO;
                 canal.position(posicao);
                 canal.read(buf);
                 buf.flip();
                 x = buf.getInt();
                 buf.clear();
+                
                 if (x == 0 || x == -1) {
+                    canal.position(posicao);
                     canal.write(a.getByteBuffer());
                     buf.clear();
                 }
@@ -140,11 +144,11 @@ public class OrganizadorBrent implements FileOrganizer {
     
     @Override
     public Aluno getReg(int matric) {
-        ByteBuffer buf = ByteBuffer.allocate(157);
+        ByteBuffer buf = ByteBuffer.allocate(TAMANHO_REGISTRO);
 
         try {
             canal.position(0);
-            for (int i = 0; i < canal.size()/157; i++) {
+            for (int i = 0; i < canal.size()/TAMANHO_REGISTRO; i++) {
                 canal.read(buf);
                 buf.flip();
                 int x = buf.getInt();
@@ -199,7 +203,7 @@ public class OrganizadorBrent implements FileOrganizer {
         ByteBuffer buf = ByteBuffer.allocate(TAMANHO_REGISTRO);
         try {
             canal.position(0);
-            for (int i = 0; i < canal.size()/TAMANHO_REGISTRO; i++) {
+            for (int i = 0; i < this.P; i++) {
                 canal.read(buf);
                 buf.flip();
                 int x = buf.getInt();
