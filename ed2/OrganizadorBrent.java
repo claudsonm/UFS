@@ -153,24 +153,37 @@ public class OrganizadorBrent implements FileOrganizer {
     @Override
     public Aluno getReg(int matric) {
         ByteBuffer buf = ByteBuffer.allocate(TAMANHO_REGISTRO);
+        
+        int hash = calculaHash(matric);
+        int posicao = hash * TAMANHO_REGISTRO;
 
         try {
-            canal.position(0);
-            for (int i = 0; i < canal.size()/TAMANHO_REGISTRO; i++) {
-                canal.read(buf);
-                buf.flip();
-                int x = buf.getInt();
-                if (x == matric) {
-                    buf.clear();
-                    Aluno a = new Aluno(buf);
-                    return a;
-                }
-                buf.clear();
+            canal.position(posicao);
+            canal.read(buf);
+            buf.flip();
+            int x = buf.getInt();
+            buf.clear();
+            if (x == matric) {
+                Aluno a = new Aluno(buf);
+                return a;
             }
-            
-        } catch (IOException ex) {
-            Logger.getLogger(ManipuladorSequencial.class.getName())
-                    .log(Level.SEVERE, null, ex);
+            else {
+                int incremento = calculaIncremento(matric);
+                while(x != 0) {
+                    posicao = (((posicao/TAMANHO_REGISTRO) + incremento) % this.P) * TAMANHO_REGISTRO;
+                    canal.position(posicao);
+                    canal.read(buf);
+                    buf.flip();
+                    x = buf.getInt();
+                    buf.clear();
+                    if (x == matric) {
+                        Aluno a = new Aluno(buf);
+                        return a;
+                    }
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
         return null;
     }
