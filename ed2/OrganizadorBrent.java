@@ -11,10 +11,10 @@ public class OrganizadorBrent implements FileOrganizer {
     // Tamanho da tabela de registros do arquivo
     private final int P = 11; 
     
-    // Número de bytes que um registro ocupa
+    // NÃºmero de bytes que um registro ocupa
     private final int TAMANHO_REGISTRO = 157;
     
-    // Canal de comunicação com o arquivo
+    // Canal de comunicaÃ§Ã£o com o arquivo
     private FileChannel canal;
     
     public OrganizadorBrent(String path) throws FileNotFoundException{
@@ -39,24 +39,28 @@ public class OrganizadorBrent implements FileOrganizer {
         int matric = a.getMatricula();
         int hash = calculaHash(matric);
         int posicao = hash * TAMANHO_REGISTRO;
-        int x;
+        int x,z;
+        int posicao2 = posicao;
+        int posicao3 = posicao;
 
         try {
             canal.position(posicao);
             canal.read(buf);
             buf.flip();
             x = buf.getInt();
+            z = x;
             buf.clear();
             
             System.out.println("{" + posicao + "}  LIDO: " + x);
-            // Se a posição estiver livre
+            // Se a posiÃ§Ã£o estiver livre
             if (x == 0 || x == -1) {
                 canal.position(posicao);
                 canal.write(a.getByteBuffer());
                 buf.clear();
             }
-            // Houve uma colisão
+            // Houve uma colisÃ£o
             else {
+                //SIMULANDO OS PASSOS PARA ADD O NOVO REGISTRO SEM MOVER O PRIMEIRO
                 int colisao = x;
                 int incremento = calculaIncremento(matric);
                 int passos = 1;
@@ -71,13 +75,39 @@ public class OrganizadorBrent implements FileOrganizer {
                     buf.clear();
                 }
                 
-                canal.position(posicao);
-                System.out.println("Escreve na posição: " + canal.position() + " | Passos: "+ passos + " | "+
-                        (passos + custoBusca(colisao)));
-                // Opção I: apenas escrever na posicao encontrada
-                //if ( (passos + custoBusca(colisao)) < (1 + TODO ) )
-                //canal.write(a.getByteBuffer());
-                buf.clear();
+                //SIMULANDO OS PASSOS PARA ADD O NOVO REGISTRO MOVENDO O PRIMEIRO
+                int incremento2 = calculaIncremento(colisao);
+                int passos2 = 1;
+                while(z != 0 && z != -1) {
+                    passos2++;
+                    posicao2 = (((posicao2/TAMANHO_REGISTRO) + incremento2) % this.P) * TAMANHO_REGISTRO;
+                    System.out.println(posicao2);
+                    canal.position(posicao2);
+                    canal.read(buf);
+                    buf.flip();
+                    z = buf.getInt();
+                    buf.clear();
+                }
+                
+                // OpÃ§Ã£o I: apenas escrever na posicao encontrada
+                if ( (custoBusca(colisao)+passos) <= (custoBusca(colisao)+passos2) ) { //+1 jÃ¡ incluso
+                    canal.position(posicao);
+                    System.out.println("Adiciona o novo no final");
+                    canal.write(a.getByteBuffer()); //O NOVO AQUI
+                    buf.clear();
+                } else {
+                    System.out.println("Coloca o que tava na proxima posiÃ§Ã£o dele e o novo no comeÃ§o");
+                    
+                    canal.position(posicao3);
+                    canal.read(buf);
+                    buf.clear();
+                    canal.position(posicao2);
+                    canal.write(buf); //PRECISA COLOCAR O ANTIGO AQUI
+                    buf.clear();
+                    canal.position(posicao3);
+                    canal.write(a.getByteBuffer()); //O NOVO AQUI
+                    buf.clear();
+                }
             }
 
         } catch (IOException ex) {
@@ -90,7 +120,7 @@ public class OrganizadorBrent implements FileOrganizer {
     @Override
     public Aluno delReg(int matric) {
         ByteBuffer buf = ByteBuffer.allocate(TAMANHO_REGISTRO);
-        // Informações do aluno removido
+        // InformaÃ§Ãµes do aluno removido
         Aluno removido = null;
         int hash = calculaHash(matric);
         int posicao = hash * TAMANHO_REGISTRO;
