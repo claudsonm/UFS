@@ -186,6 +186,21 @@ public class ManipuladorSequencial implements FileOrganizer {
         return null;
     }
     
+    public ByteBuffer lerAluno(int posicao) {
+        ByteBuffer buf = ByteBuffer.allocate(157);
+        
+        try {
+            canal.position(posicao);
+            canal.read(buf);
+            buf.flip();
+            return buf;
+        } catch (IOException ex) {
+            Logger.getLogger(ManipuladorSequencial.class.getName())
+                    .log(Level.SEVERE, null, ex);
+        }
+        return null; 
+    }
+    
     /* *************************************************************************
      * Função de obtenção de registros em busca binária
      * *************************************************************************/

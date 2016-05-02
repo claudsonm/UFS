@@ -27,26 +27,26 @@ public class Ed2 {
         System.out.println("Início em: " + ft.format(startTime));
         
         // Instancia manualmente 3 alunos
-        Aluno first = new Aluno(27, "Adalgisa", "Rua 4, 5", (short) 15, "F", "adalgisa@semcoracao.com");
+        /*Aluno first = new Aluno(27, "Adalgisa", "Rua 4, 5", (short) 15, "F", "adalgisa@semcoracao.com");
         Aluno second = new Aluno(18, "Tairone", "Rua 5, 71", (short) 37, "M", "tairone@cigano.com");
         Aluno third = new Aluno(29, "Levy Vianna", "Rua 6, 45", (short) 14, "M", "levyvianna@volume5.com");
         Aluno fourth = new Aluno(28, "Pablo", "Rua 6, 45", (short) 14, "M", "pabo@doarrocha.com");
         Aluno fifth = new Aluno(39, "Safadao", "Rua 6, 45", (short) 14, "M", "safadao@issae.com");
         Aluno sixth = new Aluno(13, "Adelino Nascimento", "Rua 6, 45", (short) 14, "M", "adelino@issae.com");
         Aluno seventh = new Aluno(16, "Vando", "Rua 6, 45", (short) 14, "M", "vando@issae.com");
-        Aluno vazio = new Aluno(0, "", "", (short) 0, "", "");
+        Aluno vazio = new Aluno(0, "", "", (short) 0, "", "");*/
 
         // Instancia o manipulador de arquivos
         //String arquivo = "data\\enem_seq.db";
-        String arquivo = "data\\testes.db";
+        String arquivo = "data\\enem_brent.db";
         //ManipuladorSimples teste = new ManipuladorSimples(arquivo);
         //ManipuladorSequencial teste = new ManipuladorSequencial(arquivo);
         OrganizadorBrent teste = new OrganizadorBrent(arquivo);
-        teste.inicializaArquivo(vazio);
+        //teste.inicializaArquivo(vazio);
         
 
         // Persiste os alunos instanciados manualmente no arquivo
-        teste.addReg(first);
+        /*teste.addReg(first);
         teste.addReg(second);
         teste.addReg(third);
         teste.addReg(fourth);
@@ -55,20 +55,17 @@ public class Ed2 {
         teste.addReg(seventh);
         teste.listarArquivo();
         
-        /*Aluno a = teste.getReg(29);
+        Aluno a = teste.getReg(29);
         if (a != null) System.out.println(a.getMatricula() + " | " + 
                 a.getNome().substring(0,15) + " | " +
-                a.getEmail());*/
+                a.getEmail());
         
         Aluno del = teste.delReg(27);
         if (del != null)
             System.out.println("O aluno " + del.getNome() +
                                " (" + del.getMatricula() + ") foi removido.");
         
-        teste.listarArquivo();
-        
-        
-        //System.out.println(teste.custoBusca(29));
+        teste.listarArquivo();*/
         
         
         // Instancia e persiste automaticamente 1 Milhão de registros no arquivo
@@ -90,6 +87,17 @@ public class Ed2 {
                     a.getNome().substring(0,15) + " | " +
                     a.getEmail());
         }*/
+        
+        // Migra os alunos do ENEM_ALEAT para o ENEM_BRENT
+        ManipuladorSequencial teste2 = new ManipuladorSequencial("data\\enem_aleat.db");
+        for (int i = 0; i < 8722356; i++) {
+            Aluno a = new Aluno(teste2.lerAluno(i * 157));
+            System.out.println("[ " + i + " ] " +
+                    a.getMatricula() + " | " + 
+                    a.getNome().substring(0,15) + " | " +
+                    a.getEmail());
+            teste.addReg(a);
+        }
   
         // Obtém do arquivo os alunos que foram instanciados manualmente
         /*Aluno b = teste.getReg(8);

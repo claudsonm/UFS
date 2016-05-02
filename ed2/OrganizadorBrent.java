@@ -9,7 +9,7 @@ import java.util.logging.Logger;
 public class OrganizadorBrent implements FileOrganizer {
 
     // Tamanho da tabela de registros do arquivo
-    private final int P = 11; 
+    private final int P = 12000017; 
     
     // Numero de bytes que um registro ocupa
     private final int TAMANHO_REGISTRO = 157;
@@ -28,8 +28,8 @@ public class OrganizadorBrent implements FileOrganizer {
     }
     
     private int calculaIncremento(int matricula) {
-        return ((matricula / this.P) % this.P);
-        //return (matricula % (this.P - 2)) + 1;
+        //return ((matricula / this.P) % this.P);
+        return (matricula % (this.P - 2)) + 1;
     }
     
     @Override
@@ -39,7 +39,7 @@ public class OrganizadorBrent implements FileOrganizer {
         int matric = a.getMatricula();
         int hash = calculaHash(matric);
         int posicao = hash * TAMANHO_REGISTRO;
-        int x,z;
+        int x, z;
         int posicao2 = posicao;
         int posicao3 = posicao;
 
@@ -51,7 +51,6 @@ public class OrganizadorBrent implements FileOrganizer {
             z = x;
             buf.clear();
             
-            System.out.println("{" + posicao + "}  LIDO: " + x);
             // Se a posicao estiver livre
             if (x == 0 || x == -1) {
                 canal.position(posicao);
@@ -67,7 +66,6 @@ public class OrganizadorBrent implements FileOrganizer {
                 while(x != 0 && x != -1) {
                     passos++;
                     posicao = (((posicao/TAMANHO_REGISTRO) + incremento) % this.P) * TAMANHO_REGISTRO;
-                    System.out.println(posicao);
                     canal.position(posicao);
                     canal.read(buf);
                     buf.flip();
@@ -81,7 +79,6 @@ public class OrganizadorBrent implements FileOrganizer {
                 while(z != 0 && z != -1) {
                     passos2++;
                     posicao2 = (((posicao2/TAMANHO_REGISTRO) + incremento2) % this.P) * TAMANHO_REGISTRO;
-                    System.out.println(posicao2);
                     canal.position(posicao2);
                     canal.read(buf);
                     buf.flip();
@@ -92,20 +89,19 @@ public class OrganizadorBrent implements FileOrganizer {
                 // Opcao I: apenas escrever na posicao encontrada
                 if ( (custoBusca(colisao)+passos) <= (custoBusca(colisao)+passos2) ) { //+1 ja incluso
                     canal.position(posicao);
-                    System.out.println("Adiciona o novo no final");
-                    canal.write(a.getByteBuffer()); //O NOVO AQUI
+                    canal.write(a.getByteBuffer());
                     buf.clear();
-                } else {
-                    System.out.println("Coloca o que tava na proxima posicao dele e o novo no comeco");
-                    
+                }
+                // Opcao II: por o novo no inicio e mover o original
+                else {
                     canal.position(posicao3);
                     canal.read(buf);
                     buf.clear();
                     canal.position(posicao2);
-                    canal.write(buf); //PRECISA COLOCAR O ANTIGO AQUI
+                    canal.write(buf);
                     buf.clear();
                     canal.position(posicao3);
-                    canal.write(a.getByteBuffer()); //O NOVO AQUI
+                    canal.write(a.getByteBuffer());
                     buf.clear();
                 }
             }
@@ -114,7 +110,7 @@ public class OrganizadorBrent implements FileOrganizer {
             Logger.getLogger(ManipuladorSequencial.class.getName())
                     .log(Level.SEVERE, null, ex);
         }
-        System.out.println("Aluno adicionado!");
+        //System.out.println("Aluno adicionado!");
     }
     
     @Override
@@ -211,7 +207,7 @@ public class OrganizadorBrent implements FileOrganizer {
         return null;
     }
     
-    public int custoBusca(int matricula) {
+    private int custoBusca(int matricula) {
         ByteBuffer buf = ByteBuffer.allocate(TAMANHO_REGISTRO);
         
         int hash = calculaHash(matricula);
@@ -243,28 +239,6 @@ public class OrganizadorBrent implements FileOrganizer {
             e.printStackTrace();
         }
         return passos;
-    }
-    
-    public int[] lerSelecionados() {
-        ByteBuffer buf = ByteBuffer.allocate(4);
-        int[] selected = new int[1000];
-        
-        try {
-            canal.position(0);
-            for (int i = 0; i < canal.size()/4; i++) {
-                canal.read(buf);
-                buf.flip();
-                int x = buf.getInt();
-                selected[i] = x;
-                buf.clear();
-            }
-            return selected;
-            
-        } catch (IOException ex) {
-            Logger.getLogger(ManipuladorSequencial.class.getName())
-                    .log(Level.SEVERE, null, ex);
-        }
-        return null;
     }
     
     public void inicializaArquivo(Aluno vazio) {        
