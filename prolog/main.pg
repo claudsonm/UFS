@@ -10,4 +10,20 @@ membro(b, [a, b, c]).
 membro(c, [a, b, c]).
 
 membro(X, [X|_]).
-membro(X, [_|T]). :- membro(X, T).
+membro(X, [_|T]) :- membro(X, T).
+
+adiciona(X, [], [X]).
+adiciona(X, [H|T], [H|Y]) :- adiciona(X,T,Y).
+
+esquerda(_, [], []).
+esquerda(X, [H|T], Y) :- H < X, esquerda(X, T, Y1), append([H], Y1, Y), !.
+esquerda(X, [_|T], Y) :- esquerda(X, T, Y).
+
+direita(_, [], []).
+direita(X, [H|T], Y) :- H > X, direita(X, T, Y1), append([H], Y1, Y), !.
+direita(X, [_|T], Y) :- direita(X, T, Y).
+
+quicksort([], []).
+quicksort([X], [X]).
+quicksort([H|T], Y) :-  esquerda(H, T, Y1), direita(H, T, Y2), quicksort(Y1, Z1),
+                        quicksort(Y2, Z2), append(Z1, [H], Z3), append(Z3, Z2, Y), !.
