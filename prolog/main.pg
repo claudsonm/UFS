@@ -3,6 +3,9 @@ gosta(kate, george).
 gosta(george, vinho).
 gosta(susie, vinho).
 
+come(lobo, ovelha).
+come(ovelha,alface).
+
 amigo(X, Y) :- gosta(X, Y), gosta(Y, X).
 
 membro(a, [a, b, c]).
@@ -27,3 +30,20 @@ quicksort([], []).
 quicksort([X], [X]).
 quicksort([H|T], Y) :-  esquerda(H, T, Y1), direita(H, T, Y2), quicksort(Y1, Z1),
                         quicksort(Y2, Z2), append(Z1, [H], Z3), append(Z3, Z2, Y), !.
+
+member(X, [X]).
+member(X, [_|T]) :- member(X, T).
+
+queens([]).
+queens([X/Y|T]) :-	queens(T),
+					member(Y, [1,2,3,4,5,6,7,8]),
+					noataque(X/Y, T).
+
+noataque(_, []).
+noataque(X/Y, [X1/Y1|T]) :- X =/= X1,
+                            Y =/= Y1,
+                            X-Y =/= X1-Y1,
+                            X+Y =/= X1+Y1,
+                            noataque(X/Y, T).
+
+# queens([1/Y1, 2/Y2, 3/Y3, 4/Y4, 5/Y5, 6/Y6, 7/Y7, 8/Y8]).
