@@ -1,1 +1,3 @@
 haskell/arquivos_locais/
+*.sublime-project
+*.sublime-workspace
