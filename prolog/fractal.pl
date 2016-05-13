@@ -41,3 +41,6 @@ imprimir([]).
 imprimir(H) :-
   write(H),
   imprimir(T).
+
+/* javac -cp 2p-3.0.1/bin/tuprolog.jar:. Exemplo1.java */
+/* java -cp 2p-3.0.1/bin/tuprolog.jar:. Exemplo1 */
