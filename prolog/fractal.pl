@@ -1,7 +1,7 @@
 fractal :-
-	%new(D, window('Fractal')),
+	new(D, window('Fractal')),
 	send(D, size, size(800, 600)),
-	drawTree(D, 400, 500, -90, 9),
+	drawTree(D, 400, 500, -90, 2),
 	send(D, open).
 
 drawTree(_D, _X, _Y, _Angle, 0).
@@ -16,13 +16,13 @@ drawTree(D, X1, Y1, Angle, Depth) :-
 	drawTree(D, X2, Y2, A1, De),
 	drawTree(D, X2, Y2, A2, De).
 
-meuFractal :-
-	meuDraw(400, 500, -90, 2, Sol),
-    imprimir(Sol), !.
 
 
-meuDraw(_X, _Y, _Angle, 0, []).
-	
+meuFractal(Sol) :-
+	meuDraw(400, 500, -90, 3, Sol), !.
+    % imprimir(Sol), !.
+
+meuDraw(_X, _Y, _Angle, 0, []).	
 meuDraw(X1, Y1, Angle, Depth, Sol) :-
 	X2 is X1 + cos(Angle * pi / 180.0) * Depth * 10.0,
 	Y2 is Y1 + sin(Angle * pi / 180.0) * Depth * 10.0,
@@ -37,10 +37,10 @@ meuDraw(X1, Y1, Angle, Depth, Sol) :-
     append(Sol3, Sol4, Sol5),
     append([Sol1], Sol5, Sol).
 
-imprimir([]).
+/* imprimir([]).
 imprimir(H) :-
   write(H),
-  imprimir(T).
+  imprimir(T). */
 
 /* javac -cp 2p-3.0.1/bin/tuprolog.jar:. Exemplo1.java */
 /* java -cp 2p-3.0.1/bin/tuprolog.jar:. Exemplo1 */

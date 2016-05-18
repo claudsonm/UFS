@@ -16,5 +16,5 @@ function soma()
 soma();
 echo $b;
 
-include 'arquivo.php';
+// include 'arquivo.php';
 ?>
