@@ -1,0 +1,3 @@
+# LFT
+
+Inicio do projeto
