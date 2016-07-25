@@ -10,6 +10,6 @@ public class EseqExp extends Exp{
 	
 	@Override
 	public String print() {
-		return stm.print() + " " + exp.print();
+		return "(" + stm.print() + ", " + exp.print() + ")";
 	}
 }

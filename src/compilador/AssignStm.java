@@ -8,7 +8,7 @@ public class AssignStm extends Stm {
 	
 	@Override
 	public String print() {
-		return id + " := " + exp.print();
+		return id + " := " + exp.print() + ";";
 	}
 	
 }

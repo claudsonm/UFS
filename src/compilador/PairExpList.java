@@ -8,6 +8,6 @@ public class PairExpList extends ExpList{
 	
 	@Override
 	public String print() {
-		return head.print() + " " + tail.print();
+		return head.print() + ", " + tail.print();
 	}
 }

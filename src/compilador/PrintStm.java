@@ -7,6 +7,6 @@ public class PrintStm extends Stm {
 	
 	@Override
 	public String print() {
-		return exps.print();
+		return "print(" + exps.print() + ")";
 	}
 }
