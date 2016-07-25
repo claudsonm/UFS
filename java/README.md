@@ -1,4 +1,4 @@
-# Sintaxe da lógica sentencial (CP)
+﻿# Sintaxe da lógica sentencial (CP)
 
 ## Alfabeto
 
@@ -25,68 +25,68 @@ Program     ::=     Expression
 Expression  ::=     primary-Expression
                     | Expression Operator primary-Expression
 
-		    primary-Expression  ::=     V-name
-		                                | TF-symbol
-						                            | (Expression)
-									                                | not (Expression)
+primary-Expression  ::=     V-name
+                            | TF-symbol
+                            | (Expression)
+                            | not (Expression)
 
-													V-name      ::=     Identifier
+V-name      ::=     Identifier
 
-													TF-symbol   ::=     true | false
+TF-symbol   ::=     true | false
 
-													Identifier  ::=     [PQRS][[:digit:]]*
+Identifier  ::=     [PQRS][[:digit:]]*
 
-													Operator    ::=     and | or | -> | <->
-													```
+Operator    ::=     and | or | -> | <->
+```
 
-													## Convenções
+## Convenções
 
-													### Token.String
+### Token.String
 
-													```
-													and     ---->   *
-													not     ---->   (+1) % 2
-													true    ---->   1
-													false   ---->   0
-													or
-													```
+```
+and     ---->   *
+not     ---->   (+1) % 2
+true    ---->   1
+false   ---->   0
+or
+```
 
-													### Conjunção (AND)
+### Conjunção (AND)
 
-													```
-													1 x 1   = 1
-													1 x 0   = 0
-													0 x 1   = 0
-													0 x 0   = 0
-													```
+```
+1 x 1   = 1
+1 x 0   = 0
+0 x 1   = 0
+0 x 0   = 0
+```
 
-													## Exemplos de Geração de Código
+## Exemplos de Geração de Código
 
-													### Exemplo de Implicação
+### Exemplo de Implicação
 
-													```
-													true        ->      false
-													P -> Q		=>      ~P \/ Q
+```
+true        ->      false
+P -> Q		=>      ~P \/ Q
 
-													LOADI 1
-													CALLI not
-													LOADI 0
-													CALLI or
-													```
+LOADI 1
+CALLI not
+LOADI 0
+CALLI or
+```
 
-													### Exemplo de SSE
+### Exemplo de SSE
 
-													```
-													true        <->     false
-													P <-> Q	<=>	(~P \/ Q) /\ (~Q \/ P)
+```
+true        <->     false
+P <-> Q	<=>	(~P \/ Q) /\ (~Q \/ P)
 
-													LOADI 1
-													CALLI not
-													LOADI 0
-													CALLI or
-													LOADI 0
-													CALLI not
-													LOADI 1
-													CALLI or
-													CALLI and
-													```
+LOADI 1
+CALLI not
+LOADI 0
+CALLI or
+LOADI 0
+CALLI not
+LOADI 1
+CALLI or
+CALLI and
+```
