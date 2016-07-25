@@ -1,0 +1,3 @@
+[submodule "Triangle"]
+	path = Triangle
+	url = git@github.com:claudsonm/Triangle.git
