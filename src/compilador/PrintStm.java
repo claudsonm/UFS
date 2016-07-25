@@ -1,4 +1,4 @@
-package stm;
+package compilador;
 
 public class PrintStm extends Stm {
 
