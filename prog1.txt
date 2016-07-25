@@ -1,0 +1,11 @@
+!( ( ( not (P and (Q34 or not R35 ) and (S5 -> (P9 <-> P95)) and true or not false) ) ) )
+!(false <-> false) and (true <-> false)
+let
+    var p : Integer;
+    var q : Integer
+in
+begin
+    p := false;
+    q := not ((p <-> false) or (p <-> true));
+    putint(q)
+end
