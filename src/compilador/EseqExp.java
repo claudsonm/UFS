@@ -9,8 +9,7 @@ public class EseqExp extends Exp{
 	 }
 	
 	@Override
-	String print() {
-		// TODO Auto-generated method stub
+	public String print() {
 		return stm.print() + " " + exp.print();
 	}
 }

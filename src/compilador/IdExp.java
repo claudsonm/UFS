@@ -6,8 +6,7 @@ public class IdExp extends Exp {
 	public IdExp(String i) { id = i; }
 	 
 	@Override
-	String print() {
-		// TODO Auto-generated method stub
-		return id ;
+	public String print() {
+		return id;
 	}
 }

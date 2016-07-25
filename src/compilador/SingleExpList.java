@@ -6,9 +6,8 @@ public class SingleExpList extends ExpList{
 	public SingleExpList(Exp e) { exp = e; }
 
 	@Override
-	String print() {
-		// TODO Auto-generated method stub
-		return null;
+	public String print() {
+		return exp.print();
 	}
 
 }

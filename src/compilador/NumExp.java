@@ -6,8 +6,7 @@ public class NumExp extends Exp{
 	 public NumExp(int n) { num = n; }
 	
 	@Override
-	String print() {
-		// TODO Auto-generated method stub
-		return null;
+	public String print() {
+		return ""+ num;
 	}
 }

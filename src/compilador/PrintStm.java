@@ -6,8 +6,7 @@ public class PrintStm extends Stm {
 	public PrintStm(ExpList es) { exps = es; }
 	
 	@Override
-	String print() {
-		// TODO Auto-generated method stub
-		return null;
+	public String print() {
+		return exps.print();
 	}
 }
