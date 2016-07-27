@@ -10,4 +10,9 @@ public class CompoundStm extends Stm{
 		return stm1.print() + " " + stm2.print();
 	}
 
+	public void interpretStatement(Memory mem) {
+		this.stm1.interpretStatement(mem);
+		this.stm2.interpretStatement(mem);
+	}
+
 }

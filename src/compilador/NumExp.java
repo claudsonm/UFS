@@ -9,4 +9,9 @@ public class NumExp extends Exp{
 	public String print() {
 		return ""+ num;
 	}
+
+	@Override
+	public int evaluate(Memory mem) {
+		return this.num;
+	}	
 }

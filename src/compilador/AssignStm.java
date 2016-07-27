@@ -10,5 +10,10 @@ public class AssignStm extends Stm {
 	public String print() {
 		return id + " := " + exp.print() + ";";
 	}
+
+	@Override
+	public void interpretStatement(Memory mem) {
+		mem.update(this.id, this.exp.evaluate(mem));
+	}
 	
 }

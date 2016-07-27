@@ -9,4 +9,10 @@ public class PrintStm extends Stm {
 	public String print() {
 		return "print(" + exps.print() + ")";
 	}
+
+	public void interpretStatement(Memory mem) {
+	    //throw new UnsupportedOperationException();
+	    System.out.println("# print(" + exps.evaluate(mem) + ")");
+	}
+	
 }

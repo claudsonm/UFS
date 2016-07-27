@@ -1,0 +1,25 @@
+// a := 5+3 ; b := (print(a, a-1), 10*a) ; print(b)
+Stm prog = new CompoundStm(
+    new AssignStm("a", new PlusExp(new NumExp(5), new NumExp(3))),
+
+    new CompoundStm(
+        new AssignStm("b", new EseqExp(
+            new PrintStm(new PairExpList(
+                new IdExp("a"),
+                new SingleExpList(new MinusExp(
+                    new IdExp("a"),
+                    new NumExp(1))
+                )
+            )),
+            new TimesExp(new NumExp(10), new IdExp("a")))),
+
+        new PrintStm(new SingleExpList(new IdExp("b")))
+    )
+);
+
+
+// x := 10+10; y := 10*10;
+Stm prog = new CompoundStm(
+    new AssignStm("x", new PlusExp(new NumExp(10), new NumExp(10))),
+    new AssignStm("y", new TimesExp(new NumExp(10), new NumExp(10)))
+);

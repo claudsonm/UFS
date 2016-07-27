@@ -1,8 +1,11 @@
 package compilador;
 
+import java.util.HashMap;
+
 public class Main {
 
     public static void main(String[] args) {
+        // a := 5+3 ; b := (print(a, a-1), 10*a) ; print(b)
         Stm prog = new CompoundStm(
             new AssignStm("a", new PlusExp(new NumExp(5), new NumExp(3))),
 
@@ -21,8 +24,12 @@ public class Main {
             )
         );
         
-        // a := 5+3 ; b := (print(a, a-1), 10*a) ; print(b)
         System.out.println(prog.print());
+        
+		Memory mem = new Memory(new HashMap<String, Integer>());
+		prog.interpretStatement(mem);
+		System.out.println(mem.toString());
+
     }
 
 }

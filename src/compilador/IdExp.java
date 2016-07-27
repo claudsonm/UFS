@@ -9,4 +9,9 @@ public class IdExp extends Exp {
 	public String print() {
 		return id;
 	}
+
+	@Override
+	public int evaluate(Memory mem) {
+		return mem.lookup(this.id);
+	}
 }
