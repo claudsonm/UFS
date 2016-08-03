@@ -1,4 +1,4 @@
-package compilador; 
+package straight_line; 
 
 public class CompoundStm extends Stm{
 	public Stm stm1,stm2;

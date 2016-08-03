@@ -1,4 +1,4 @@
-package compilador;
+package straight_line;
 
 public class DivExp extends Exp{
     public Exp left, right;

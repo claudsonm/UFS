@@ -1,4 +1,4 @@
-package compilador;
+package straight_line;
 
 public class EseqExp extends Exp{
 

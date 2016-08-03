@@ -1,4 +1,4 @@
-package compilador;
+package straight_line;
 
 public abstract class Stm {
 

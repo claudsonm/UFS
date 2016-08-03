@@ -1,7 +1,6 @@
-package compilador;
+package straight_line;
 
-public abstract class ExpList {
-
+public abstract class Exp {
 	abstract String print();
 	abstract int evaluate(Memory mem);
 }
