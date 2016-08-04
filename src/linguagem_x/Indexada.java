@@ -11,7 +11,7 @@ public class Indexada extends Var {
 
     @Override
     Object accept(Visitor vis) {
-        // TODO Auto-generated method stub
+        vis.visitIndexada(this);
         return null;
     }
 

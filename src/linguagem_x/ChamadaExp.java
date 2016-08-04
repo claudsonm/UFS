@@ -13,7 +13,7 @@ public class ChamadaExp extends Exp {
 
     @Override
     Object accept(Visitor vis) {
-        // TODO Auto-generated method stub
+        vis.visitChamadaExp(this);
         return null;
     }
 

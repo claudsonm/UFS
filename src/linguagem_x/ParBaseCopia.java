@@ -11,7 +11,7 @@ public class ParBaseCopia extends Parametro {
 
     @Override
     Object accept(Visitor vis) {
-        // TODO Auto-generated method stub
+        vis.visitParBaseCopia(this);
         return null;
     }
 

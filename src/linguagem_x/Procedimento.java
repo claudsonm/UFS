@@ -15,7 +15,7 @@ public class Procedimento extends Dec {
 
     @Override
     Object accept(Visitor vis) {
-        // TODO Auto-generated method stub
+        vis.visitProcedimento(this);
         return null;
     }
 

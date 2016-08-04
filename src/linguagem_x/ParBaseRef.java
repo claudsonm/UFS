@@ -11,7 +11,7 @@ public class ParBaseRef extends Parametro {
 
     @Override
     Object accept(Visitor vis) {
-        // TODO Auto-generated method stub
+        vis.visitParBaseRef(this);
         return null;
     }
 

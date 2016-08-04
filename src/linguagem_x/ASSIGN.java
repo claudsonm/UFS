@@ -11,7 +11,7 @@ public class ASSIGN extends Comando {
 
     @Override
     Object accept(Visitor vis) {
-        // TODO Auto-generated method stub
+        vis.visitAssign(this);
         return null;
     }
 

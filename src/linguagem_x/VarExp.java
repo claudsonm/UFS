@@ -9,7 +9,7 @@ public class VarExp extends Exp {
 
     @Override
     Object accept(Visitor vis) {
-        // TODO Auto-generated method stub
+        vis.visitVarExp(this);
         return null;
     }
 

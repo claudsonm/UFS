@@ -13,7 +13,7 @@ public class CHAMADA extends Comando {
 
     @Override
     Object accept(Visitor vis) {
-        // TODO Auto-generated method stub
+        vis.visitChamada(this);
         return null;
     }
 

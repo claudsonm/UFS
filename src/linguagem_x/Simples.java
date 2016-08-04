@@ -9,7 +9,7 @@ public class Simples extends Var {
 
     @Override
     Object accept(Visitor vis) {
-        // TODO Auto-generated method stub
+        vis.visitSimples(this);
         return null;
     }
 

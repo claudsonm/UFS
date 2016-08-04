@@ -13,7 +13,7 @@ public class ParArrayCopia extends Parametro {
 
     @Override
     Object accept(Visitor vis) {
-        // TODO Auto-generated method stub
+        vis.visitParArrayCopia(this);
         return null;
     }
 

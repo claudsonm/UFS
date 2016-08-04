@@ -13,7 +13,7 @@ public class TipoArray extends Tipo {
 
     @Override
     Object accept(Visitor vis) {
-        // TODO Auto-generated method stub
+        vis.visitTipoArray(this);
         return null;
     }
     

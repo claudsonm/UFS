@@ -13,7 +13,7 @@ public class BinExp extends Exp {
 
     @Override
     Object accept(Visitor vis) {
-        // TODO Auto-generated method stub
+        vis.visitBinExp(this);
         return null;
     }
 

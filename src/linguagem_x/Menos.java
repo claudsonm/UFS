@@ -9,7 +9,7 @@ public class Menos extends Exp {
 
     @Override
     Object accept(Visitor vis) {
-        // TODO Auto-generated method stub
+        vis.visitMenos(this);
         return null;
     }
     

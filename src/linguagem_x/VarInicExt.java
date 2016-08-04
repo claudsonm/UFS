@@ -15,7 +15,7 @@ public class VarInicExt extends DVar {
     
     @Override
     Object accept(Visitor vis) {
-        // TODO Auto-generated method stub
+        vis.visitVarInicExt(this);
         return null;
     }
 }

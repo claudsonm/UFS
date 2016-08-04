@@ -9,7 +9,7 @@ public class Nao extends Exp {
 
     @Override
     Object accept(Visitor vis) {
-        // TODO Auto-generated method stub
+        vis.visitNao(this);
         return null;
     }
 

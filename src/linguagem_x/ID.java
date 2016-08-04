@@ -1,10 +1,10 @@
 package linguagem_x;
 
 public class ID {
-    String id;
+    String nome;
     
     public ID(String nome) {
-        this.id = nome;
+        this.nome = nome;
     }
 
 }

@@ -1,5 +1,5 @@
 package linguagem_x;
 
-public abstract class Tipo extends Dec {
-
+public abstract class Tipo {
+    abstract Object accept(Visitor vis);
 }

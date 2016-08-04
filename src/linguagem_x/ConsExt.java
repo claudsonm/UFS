@@ -15,7 +15,7 @@ public class ConsExt extends DCons {
 
     @Override
     Object accept(Visitor vis) {
-        // TODO Auto-generated method stub
+        vis.visitConsExt(this);
         return null;
     }
 

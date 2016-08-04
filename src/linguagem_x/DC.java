@@ -9,7 +9,7 @@ public class DC extends DCons {
 
     @Override
     Object accept(Visitor vis) {
-        // TODO Auto-generated method stub
+        vis.visitDC(this);
         return null;
     }
 

@@ -9,7 +9,7 @@ public class LiteralBool extends Exp {
 
     @Override
     Object accept(Visitor vis) {
-        // TODO Auto-generated method stub
+        vis.visitLiteralBool(this);
         return null;
     }
 

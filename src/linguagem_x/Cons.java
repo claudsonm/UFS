@@ -13,7 +13,7 @@ public class Cons extends DCons {
     
     @Override
     Object accept(Visitor vis) {
-        // TODO Auto-generated method stub
+        vis.visitCons(this);
         return null;
     }
 

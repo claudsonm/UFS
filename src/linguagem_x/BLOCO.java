@@ -11,7 +11,7 @@ public class BLOCO extends Comando {
 
     @Override
     Object accept(Visitor vis) {
-        // TODO Auto-generated method stub
+        vis.visitBloco(this);
         return null;
     }
 

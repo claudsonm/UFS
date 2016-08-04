@@ -17,7 +17,7 @@ public class Funcao extends Dec {
 
     @Override
     Object accept(Visitor vis) {
-        // TODO Auto-generated method stub
+        vis.visitFuncao(this);
         return null;
     }
 

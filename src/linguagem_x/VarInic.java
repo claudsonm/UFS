@@ -13,7 +13,7 @@ public class VarInic extends DVar {
     
     @Override
     Object accept(Visitor vis) {
-        // TODO Auto-generated method stub
+        vis.visitVarInic(this);
         return null;
     }
     

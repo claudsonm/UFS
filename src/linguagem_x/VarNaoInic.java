@@ -11,7 +11,7 @@ public class VarNaoInic extends DVar {
 
     @Override
     Object accept(Visitor vis) {
-        // TODO Auto-generated method stub
+        vis.visitVarNaoInic(this);
         return null;
     }
 }

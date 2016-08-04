@@ -11,7 +11,7 @@ public class WHILE extends Comando {
 
     @Override
     Object accept(Visitor vis) {
-        // TODO Auto-generated method stub
+        vis.visitWhile(this);
         return null;
     }
 

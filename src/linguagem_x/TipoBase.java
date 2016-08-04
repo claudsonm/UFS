@@ -9,7 +9,7 @@ public class TipoBase extends Tipo {
 
     @Override
     Object accept(Visitor vis) {
-        // TODO Auto-generated method stub
+        vis.visitTipoBase(this);
         return null;
     }
 

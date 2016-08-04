@@ -9,7 +9,7 @@ public class LiteralInt extends Exp {
 
     @Override
     Object accept(Visitor vis) {
-        // TODO Auto-generated method stub
+        vis.visitLiteralInt(this);
         return null;
     }
 

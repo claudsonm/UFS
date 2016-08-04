@@ -13,7 +13,7 @@ public class ParArrayRef extends Parametro {
 
     @Override
     Object accept(Visitor vis) {
-        // TODO Auto-generated method stub
+        vis.visitParArrayRef(this);
         return null;
     }
 

@@ -17,7 +17,7 @@ public class ConsComp extends DCons {
 
     @Override
     Object accept(Visitor vis) {
-        // TODO Auto-generated method stub
+        vis.visitConsComp(this);
         return null;
     }
 

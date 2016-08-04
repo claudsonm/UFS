@@ -9,7 +9,7 @@ public class DecVar extends Dec {
     
     @Override
     Object accept(Visitor vis) {
-        // TODO Auto-generated method stub
+        vis.visitDecVar(this);
         return null;
     }
 

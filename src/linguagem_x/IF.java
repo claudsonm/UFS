@@ -13,7 +13,7 @@ public class IF extends Comando {
 
     @Override
     Object accept(Visitor vis) {
-        // TODO Auto-generated method stub
+        vis.visitIf(this);
         return null;
     }
 

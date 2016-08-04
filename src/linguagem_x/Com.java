@@ -9,7 +9,7 @@ public class Com extends Comando {
 
     @Override
     Object accept(Visitor vis) {
-        // TODO Auto-generated method stub
+        vis.visitCom(this);
         return null;
     }
 
