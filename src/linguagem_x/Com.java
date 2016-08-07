@@ -1,6 +1,6 @@
 package linguagem_x;
 
-public class Com extends Comando {
+public class Com extends DVarConsCom {
     Comando comando;
     
     public Com(Comando com) {

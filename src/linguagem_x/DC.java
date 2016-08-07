@@ -1,6 +1,6 @@
 package linguagem_x;
 
-public class DC extends DCons {
+public class DC extends DVarConsCom {
     DCons cons;
     
     public DC(DCons cons) {
