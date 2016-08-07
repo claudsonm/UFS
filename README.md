@@ -7,3 +7,4 @@ Selecione o branch referente a disciplina que deseja visualizar utilizando o men
 * [Linguagens Formais e Tradutores](https://github.com/claudsonm/ufs/tree/LFT)
 * [Linguagens de Programação para Sistemas de Informação](https://github.com/claudsonm/ufs/tree/LPSI)
   * [Triangle](https://github.com/claudsonm/UFS/tree/LPSI/java)
+* [Sistemas Operacionais](https://github.com/claudsonm/UFS/tree/SO)
