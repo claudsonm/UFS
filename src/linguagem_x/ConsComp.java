@@ -4,11 +4,11 @@ import java.util.List;
 
 public class ConsComp extends DCons {
     Tipo tipo;
-    ID id;
-    List<ID> lista;
+    String id;
+    List<String> lista;
     Exp exp;
     
-    public ConsComp(Tipo tipo, ID id, List<ID> lista, Exp exp) {
+    public ConsComp(Tipo tipo, String id, List<String> lista, Exp exp) {
         this.tipo = tipo;
         this.id = id;
         this.lista = lista;

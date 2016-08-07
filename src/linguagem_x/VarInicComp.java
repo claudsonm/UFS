@@ -4,11 +4,11 @@ import java.util.List;
 
 public class VarInicComp extends DVar {
     Tipo nomeTipo;
-    ID id;
-    List<ID> listaID;
+    String id;
+    List<String> listaID;
     Exp exp;
     
-    public VarInicComp(Tipo nome, ID id, List<ID> lista, Exp exp) {
+    public VarInicComp(Tipo nome, String id, List<String> lista, Exp exp) {
         this.nomeTipo = nome;
         this.id = id;
         this.listaID = lista;

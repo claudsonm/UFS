@@ -3,10 +3,10 @@ package linguagem_x;
 import java.util.List;
 
 public class ChamadaExp extends Exp {
-    ID id;
+    String id;
     List<Exp> listaExp;
     
-    public ChamadaExp(ID id, List<Exp> lista) {
+    public ChamadaExp(String id, List<Exp> lista) {
         this.id = id;
         this.listaExp = lista;
     }

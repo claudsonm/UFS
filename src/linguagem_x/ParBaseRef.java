@@ -2,9 +2,9 @@ package linguagem_x;
 
 public class ParBaseRef extends Parametro {
     TBase tipo;
-    ID id;
+    String id;
     
-    public ParBaseRef(TBase tipo, ID id) {
+    public ParBaseRef(TBase tipo, String id) {
         this.tipo = tipo;
         this.id = id;
     }

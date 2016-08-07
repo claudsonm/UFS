@@ -2,9 +2,9 @@ package linguagem_x;
 
 public class ParBaseCopia extends Parametro {
     TBase tipo;
-    ID id;
+    String id;
     
-    public ParBaseCopia(TBase tipo, ID id) {
+    public ParBaseCopia(TBase tipo, String id) {
         this.tipo = tipo;
         this.id = id;
     }

@@ -2,9 +2,9 @@ package linguagem_x;
 
 public class VarNaoInic extends DVar {
     Tipo nomeTipo;
-    ID id;
+    String id;
     
-    public VarNaoInic(Tipo nomeTipo, ID id) {
+    public VarNaoInic(Tipo nomeTipo, String id) {
         this.nomeTipo = nomeTipo;
         this.id = id;
     }

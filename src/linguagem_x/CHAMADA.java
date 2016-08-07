@@ -3,10 +3,10 @@ package linguagem_x;
 import java.util.List;
 
 public class CHAMADA extends Comando {
-    ID id;
+    String id;
     List<Exp> listaExp;
     
-    public CHAMADA(ID id, List<Exp> lista) {
+    public CHAMADA(String id, List<Exp> lista) {
         this.id = id;
         this.listaExp = lista;
     }

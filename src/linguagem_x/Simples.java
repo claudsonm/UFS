@@ -1,9 +1,9 @@
 package linguagem_x;
 
 public class Simples extends Var {
-    ID id;
+    String id;
     
-    public Simples(ID id) {
+    public Simples(String id) {
         this.id = id;
     }
 

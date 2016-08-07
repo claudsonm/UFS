@@ -224,7 +224,7 @@ public class Checker extends Visitor {
 
     @Override
     Object visitVarNaoInic(VarNaoInic v) {
-        tabela.put(v.id.nome, v.nomeTipo);
+        tabela.put(v.id, v.nomeTipo);
         return null;
     }
 

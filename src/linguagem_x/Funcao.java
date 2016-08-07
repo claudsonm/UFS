@@ -4,11 +4,11 @@ import java.util.List;
 
 public class Funcao extends Dec {
     Tipo tipo;
-    ID id;
+    String id;
     List<Parametro> listaParam;
     Exp exp;
     
-    public Funcao(Tipo tipo, ID id, List<Parametro> lista, Exp exp) {
+    public Funcao(Tipo tipo, String id, List<Parametro> lista, Exp exp) {
         this.tipo = tipo;
         this.id = id;
         this.listaParam = lista;

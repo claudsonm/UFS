@@ -2,10 +2,10 @@ package linguagem_x;
 
 public class VarInic extends DVar {
     Tipo nomeTipo;
-    ID id;
+    String id;
     Exp exp;
     
-    public VarInic(Tipo nome, ID id, Exp exp) {
+    public VarInic(Tipo nome, String id, Exp exp) {
         this.nomeTipo = nome;
         this.id = id;
         this.exp = exp;
