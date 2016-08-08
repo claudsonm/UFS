@@ -6,6 +6,11 @@ import java.util.List;
 public class Main {
 
     public static void main(String[] args) {
+        programa1();
+        programa2();
+    }
+    
+    public static void programa1() {
         /* =======================================================
          * Programa #1 em Linguagem X
          * Realiza alguns cálculos na circunferência
@@ -172,6 +177,83 @@ public class Main {
             new ASSIGN(new Simples("par"), new LiteralBool(false))
         );
         /* END-FIXME */
+        
+        Programa p = new Programa(d);
+        System.out.println(p.declaracoes);
+    }
+    
+    public static void programa2() {
+        /* =======================================================
+         * Programa #2 em Linguagem X
+         * Realiza o cálculo da hipotenusa 
+
+         * var real lado1 := 6.6;
+         * var int lado2 := 5;
+         * 
+         * function real tamanhoHipotenusa(var real l1,var real l2)
+         *      (l1 * l1) + (l2 * l2);
+         * 
+         * 
+         * var real hipotenusa;
+         * hipotenusa := tamanhoHipotenusa(lado1, lado2); // erro, real + float
+         * 
+         * var real resultados[1] := {hipotenusa};
+         */
+        
+        // Lista contendo todas as declarações do programa
+        List<Dec> d = new ArrayList<Dec>();
+        
+        // Lista de parâmetros das funções (neste caso, igual para as duas)
+        List<Parametro> parametros = new ArrayList<Parametro>();
+        parametros.add( new ParBaseCopia(TBase.Real, "l1") );
+        parametros.add( new ParBaseCopia(TBase.Real, "l2") );
+        
+        // Declara e inicializa as variáveis 
+        d.add( new DecVar(new VarInic(new TipoBase(TBase.Real), "lado1", new LiteralInt(6))) );
+        d.add( new DecVar(new VarInic(new TipoBase(TBase.Int), "lado2", new LiteralInt(5))) );
+        
+        // Declara as funções
+        d.add(
+            new Funcao(new TipoBase(TBase.Real), "tamanhoHipotenusa", parametros,
+                new BinExp(BinOp.Mul,
+                    new BinExp(BinOp.Mul, new VarExp(new Simples("l1")), new VarExp(new Simples("l1"))),
+                    new BinExp(BinOp.Mul, new VarExp(new Simples("l2")), new VarExp(new Simples("l2")))
+                )
+            )
+        );
+
+        
+        // Declara a variavel hipotenusa
+        d.add( new DecVar(new VarNaoInic(new TipoBase(TBase.Real), "hipotenusa")) );
+        
+        // Lista de parametros que serão passados nas chamadas das funções
+        List<Exp> passagemParametros = new ArrayList<Exp>();
+        passagemParametros.add( new VarExp(new Simples("lado1")) );
+        passagemParametros.add( new VarExp(new Simples("lado2")) );
+        
+        /**
+         * FIXME Na BNF comandos e expressões não foram herdados de Dec
+         * Por isso as instruções abaixo não podem ser adicionados no programa
+         */
+        // Realiza as atribuições a variável hipotenusa
+        new ASSIGN( new Simples("hipotenusa"), new ChamadaExp("tamanhoHipotenusa", passagemParametros) );
+        /* END-FIXME */
+        
+        // Lista com a expressão que define o tamanho do array
+        List<Exp> tamanhoArray = new ArrayList<Exp>();
+        tamanhoArray.add(new LiteralInt(1));
+        
+        // Expressões que definem os valores de cada posição do array
+        List<Exp> valoresArray = new ArrayList<Exp>();
+        valoresArray.add( new VarExp(new Simples("hipotenusa")) );
+      
+        // Declaração e inicialização do array
+        d.add(
+            new DecVar(
+                new VarInicExt(new TipoArray(TBase.Real, tamanhoArray), "resultados", valoresArray)
+            )
+        );
+        
         
         Programa p = new Programa(d);
         System.out.println(p.declaracoes);
