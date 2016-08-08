@@ -5,22 +5,26 @@ import java.util.ArrayList;
 public class FCFS {
     public static void processa(ArrayList<Processo> lista) {
         int numProcessos = lista.size();
-        int tempoEspera = 0; //na fila
+        int tempoEspera = 0;
         int tempoCPU = 0;
         
         System.out.print("FCFS ");
         while ( ! lista.isEmpty() ) {
             Processo p = lista.remove(0);
-            if ( ! lista.isEmpty() )
-                tempoEspera += tempoEspera + p.tempoEstimado;
+            tempoEspera += tempoCPU - p.tempoChegada;
             tempoCPU += p.tempoEstimado;
-            
-            System.out.print(tempoCPU + "," + tempoEspera + " | ");
         }
         
+        double mediaRetorno = (1.0*(tempoCPU + tempoEspera))/numProcessos;
+        //double mediaResposta = (1.0*tempoCPU)/numProcessos;
         double mediaEspera = (1.0*tempoEspera)/numProcessos;
         
-        System.out.println("\n\nTempo de espera: " + tempoEspera);
+        
+        // Turnaround Time
+        System.out.println("\nTempo de retorno medio: " + mediaRetorno);
+        // Response Time
+        System.out.println("Tempo de resposta medio: " + mediaEspera);
+        // Wait Time
         System.out.println("Tempo de espera medio: " + mediaEspera);
     }
 }

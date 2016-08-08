@@ -12,7 +12,7 @@ public class Main {
         int chegada, duracao, id = 1;
         ArrayList<Processo> lista = new ArrayList<Processo>();
         
-        while( entrada.hasNextLine() ) {
+        while( entrada.hasNext() ) {
             chegada = entrada.nextInt();
             duracao = entrada.nextInt();
             lista.add(new Processo(id, chegada, duracao));
