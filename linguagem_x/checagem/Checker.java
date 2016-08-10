@@ -2,7 +2,7 @@ package checagem;
 
 import java.util.Map;
 import sintaxe_abstrata.*;
-import ambiente.*;
+
 
 public class Checker extends Visitor {
     Map<String, Tipo> tabela;
@@ -65,8 +65,7 @@ public class Checker extends Visitor {
 
     @Override
     public Object visitCom(Com c) {
-        // TODO Auto-generated method stub
-        return null;
+        return c.comando.accept(this);
     }
 
     @Override
@@ -119,8 +118,11 @@ public class Checker extends Visitor {
 
     @Override
     public Object visitIf(IF i) {
-        // TODO Auto-generated method stub
-        return null;
+    	Boolean r = (Boolean) i.exp.accept(this);
+    	if (r){
+    		return i.comandoVerdade.accept(this);
+    	}
+        return i.comandoFalso.accept(this);
     }
 
     @Override
@@ -143,14 +145,22 @@ public class Checker extends Visitor {
 
     @Override
     public Object visitMenos(Menos m) {
-        // TODO Auto-generated method stub
-        return null;
+        return m.exp.accept(this);
     }
 
     @Override
     public Object visitNao(Nao n) {
-        // TODO Auto-generated method stub
-        return null;
+        TipoBase b = (TipoBase) n.exp.accept(this);
+        if (b.base == TBase.Bool){
+        	return ! (Boolean) n.exp.accept(this);
+        } else {
+            try {
+                throw new Exception("BinExp: Tipos invalidos!");
+            } catch (Exception e1) {
+                e1.printStackTrace();
+            }
+        }
+		return null;
     }
 
     @Override
@@ -232,7 +242,9 @@ public class Checker extends Visitor {
 
     @Override
     public Object visitWhile(WHILE w) {
-        // TODO Auto-generated method stub
-        return null;
+    	while ((Boolean) w.exp.accept(this)){
+    		w.comando.accept(this);
+    	}
+    	return null;
     }
 }

@@ -1,9 +1,9 @@
 package sintaxe_abstrata;
 
 public class IF extends Comando {
-    Exp exp;
-    Comando comandoVerdade;
-    Comando comandoFalso;
+    public Exp exp;
+    public Comando comandoVerdade;
+    public Comando comandoFalso;
     
     public IF(Exp exp, Comando com1, Comando com2) {
         this.exp = exp;
@@ -12,7 +12,7 @@ public class IF extends Comando {
     }
 
     @Override
-    Object accept(Visitor vis) {
+	public Object accept(Visitor vis) {
         vis.visitIf(this);
         return null;
     }
