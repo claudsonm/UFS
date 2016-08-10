@@ -2,6 +2,7 @@ package interpretador;
 
 import java.util.ArrayList;
 import java.util.List;
+import checagem.*;
 
 import sintaxe_abstrata.*;
 
@@ -10,6 +11,14 @@ public class Main {
     public static void main(String[] args) {
         programa1();
         programa2();
+        
+        TipoBaseSemantico x = TipoBaseSemantico.Real;
+        TipoBaseSemantico y = TipoBaseSemantico.Int;
+        
+        TipoArraySemantico vet1 = new TipoArraySemantico(TipoBaseSemantico.Real, 3);
+        TipoArraySemantico vet2 = new TipoArraySemantico(TipoBaseSemantico.Real, 3);
+        System.out.println(x.equals(y));
+        System.out.println(vet1.equals(vet2));
     }
     
     public static void programa1() {
