@@ -13,11 +13,20 @@ public class Checker extends Visitor {
     public AmbienteFuncProc aFuncProc = new AmbienteFuncProc();
     
     public Checker() {
+        /**
+         * FIXME
+         * O código abaixo é apenas para fins de exemplo, não tem significância nenhuma 
+         */
+        // Insere a "variável" "x" do tipo "real" na tabela de símbolos
         VinculavelConsVar xVinc = (VinculavelConsVar) aConsVar.getConsVar("x", true, TipoBaseSemantico.Real);
         
+        // Insere a "função" "calculaSoma" do tipo "real" na tabela de símbolos
         List<PassagemTipoSemantico> p = new ArrayList<PassagemTipoSemantico>();
         p.add(new PassagemTipoSemantico(TipoBaseSemantico.Real));
         VinculavelFuncProc x = (VinculavelFuncProc) aFuncProc.getFuncProc("calculaSoma", p);
+        /**
+         * END-FIXME
+         */
     }
 
     @Override

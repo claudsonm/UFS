@@ -10,6 +10,14 @@ import checagem.*;
 public class AmbienteConsVar {
     public static final HashMap<String, Vinculavel> tabela = new HashMap<>();
     
+    /**
+     * Procura ou cria na tabela de símbolos uma variável ou constante
+     * 
+     * @param id
+     * @param b
+     * @param t
+     * @return
+     */
     public VinculavelConsVar getConsVar(String id, boolean b, TipoSemantico t) {
         VinculavelConsVar x = (VinculavelConsVar) tabela.get(id);
         if(x == null) {
