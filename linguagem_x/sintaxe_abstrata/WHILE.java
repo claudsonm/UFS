@@ -1,8 +1,8 @@
 package sintaxe_abstrata;
 
 public class WHILE extends Comando {
-    Exp exp;
-    Comando comando;
+    public Exp exp;
+    public Comando comando;
     
     public WHILE(Exp exp, Comando com) {
         this.exp = exp;
@@ -10,7 +10,7 @@ public class WHILE extends Comando {
     }
 
     @Override
-    Object accept(Visitor vis) {
+    public Object accept(Visitor vis) {
         vis.visitWhile(this);
         return null;
     }

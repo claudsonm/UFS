@@ -12,7 +12,7 @@ public class CHAMADA extends Comando {
     }
 
     @Override
-    Object accept(Visitor vis) {
+    public Object accept(Visitor vis) {
         vis.visitChamada(this);
         return null;
     }
