@@ -1,5 +1,7 @@
 package checagem;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import sintaxe_abstrata.*;
 import ambiente.*;
@@ -8,22 +10,14 @@ import ambiente.*;
 public class Checker extends Visitor {
     Map<String, Tipo> tabela;
     public AmbienteConsVar aConsVar = new AmbienteConsVar();
+    public AmbienteFuncProc aFuncProc = new AmbienteFuncProc();
     
     public Checker() {
         VinculavelConsVar xVinc = (VinculavelConsVar) aConsVar.getConsVar("x", true, TipoBaseSemantico.Real);
-        VinculavelConsVar yVinc = (VinculavelConsVar) aConsVar.getConsVar("y", true, TipoBaseSemantico.Int);
-        VinculavelConsVar vet1Vinc = (VinculavelConsVar) aConsVar.getConsVar(
-            "vet1", true, new TipoArraySemantico(TipoBaseSemantico.Real, 3)
-        );
-        VinculavelConsVar vet2Vinc = (VinculavelConsVar) aConsVar.getConsVar(
-            "vet2", true, new TipoArraySemantico(TipoBaseSemantico.Real, 4)
-        );
-        VinculavelConsVar vet3Vinc = (VinculavelConsVar) aConsVar.getConsVar(
-            "vet2", true, new TipoArraySemantico(TipoBaseSemantico.Real, 4)
-        );
-        if (vet2Vinc.equals(vet3Vinc)) {
-            System.out.println("é igual");
-        }
+        
+        List<PassagemTipoSemantico> p = new ArrayList<PassagemTipoSemantico>();
+        p.add(new PassagemTipoSemantico(TipoBaseSemantico.Real));
+        VinculavelFuncProc x = (VinculavelFuncProc) aFuncProc.getFuncProc("calculaSoma", p);
     }
 
     @Override
