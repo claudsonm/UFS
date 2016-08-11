@@ -12,7 +12,7 @@ public class IF extends Comando {
     }
 
     @Override
-	public Object accept(Visitor vis) {
+    public Object accept(Visitor vis) {
         vis.visitIf(this);
         return null;
     }

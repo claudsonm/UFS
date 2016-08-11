@@ -1,8 +1,8 @@
 package sintaxe_abstrata;
 
 public class ASSIGN extends Comando {
-    Var var;
-    Exp exp;
+    public Var var;
+    public Exp exp;
     
     public ASSIGN(Var var, Exp exp) {
         this.var = var;

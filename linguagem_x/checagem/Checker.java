@@ -118,10 +118,8 @@ public class Checker extends Visitor {
 
     @Override
     public Object visitIf(IF i) {
-    	Boolean r = (Boolean) i.exp.accept(this);
-    	if (r){
-    		return i.comandoVerdade.accept(this);
-    	}
+        Boolean r = (Boolean) i.exp.accept(this);
+        if (r) return i.comandoVerdade.accept(this);
         return i.comandoFalso.accept(this);
     }
 
@@ -152,7 +150,7 @@ public class Checker extends Visitor {
     public Object visitNao(Nao n) {
         TipoBase b = (TipoBase) n.exp.accept(this);
         if (b.base == TBase.Bool){
-        	return ! (Boolean) n.exp.accept(this);
+            return ! (Boolean) n.exp.accept(this);
         } else {
             try {
                 throw new Exception("BinExp: Tipos invalidos!");
@@ -160,7 +158,7 @@ public class Checker extends Visitor {
                 e1.printStackTrace();
             }
         }
-		return null;
+        return null;
     }
 
     @Override
@@ -242,9 +240,9 @@ public class Checker extends Visitor {
 
     @Override
     public Object visitWhile(WHILE w) {
-    	while ((Boolean) w.exp.accept(this)){
-    		w.comando.accept(this);
-    	}
-    	return null;
+        while ((Boolean) w.exp.accept(this)){
+            w.comando.accept(this);
+        }
+        return null;
     }
 }

@@ -10,7 +10,7 @@ public class Indexada extends Var {
     }
 
     @Override
-    Object accept(Visitor vis) {
+    public Object accept(Visitor vis) {
         vis.visitIndexada(this);
         return null;
     }

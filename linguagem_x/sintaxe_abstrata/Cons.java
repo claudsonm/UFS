@@ -12,7 +12,7 @@ public class Cons extends DCons {
     }
     
     @Override
-    Object accept(Visitor vis) {
+    public Object accept(Visitor vis) {
         vis.visitCons(this);
         return null;
     }
