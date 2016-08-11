@@ -19,6 +19,8 @@ public class Main {
         TipoArraySemantico vet2 = new TipoArraySemantico(TipoBaseSemantico.Real, 3);
         System.out.println(x.equals(y));
         System.out.println(vet1.equals(vet2));
+        
+        Checker c = new Checker();
     }
     
     public static void programa1() {

@@ -2,10 +2,29 @@ package checagem;
 
 import java.util.Map;
 import sintaxe_abstrata.*;
+import ambiente.*;
 
 
 public class Checker extends Visitor {
     Map<String, Tipo> tabela;
+    public AmbienteConsVar aConsVar = new AmbienteConsVar();
+    
+    public Checker() {
+        VinculavelConsVar xVinc = (VinculavelConsVar) aConsVar.getConsVar("x", true, TipoBaseSemantico.Real);
+        VinculavelConsVar yVinc = (VinculavelConsVar) aConsVar.getConsVar("y", true, TipoBaseSemantico.Int);
+        VinculavelConsVar vet1Vinc = (VinculavelConsVar) aConsVar.getConsVar(
+            "vet1", true, new TipoArraySemantico(TipoBaseSemantico.Real, 3)
+        );
+        VinculavelConsVar vet2Vinc = (VinculavelConsVar) aConsVar.getConsVar(
+            "vet2", true, new TipoArraySemantico(TipoBaseSemantico.Real, 4)
+        );
+        VinculavelConsVar vet3Vinc = (VinculavelConsVar) aConsVar.getConsVar(
+            "vet2", true, new TipoArraySemantico(TipoBaseSemantico.Real, 4)
+        );
+        if (vet2Vinc.equals(vet3Vinc)) {
+            System.out.println("é igual");
+        }
+    }
 
     @Override
     public Object visitAssign(ASSIGN a) {

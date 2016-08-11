@@ -2,7 +2,7 @@ package checagem;
 
 import java.util.List;
 
-public class VinculavelFuncProc {
+public class VinculavelFuncProc extends Vinculavel {
     public boolean isFunc;
     
     /*

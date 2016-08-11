@@ -14,5 +14,10 @@ public class TipoArraySemantico implements TipoSemantico {
         TipoArraySemantico t2 = (TipoArraySemantico) t;
         return (t2.tipo == this.tipo && t2.dimensao == this.dimensao);
     }
+    
+    @Override
+    public String toString() {
+        return tipo.tipo + "[" + dimensao + "]";
+    }
 
 }
