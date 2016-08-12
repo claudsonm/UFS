@@ -1,14 +1,14 @@
 package sintaxe_abstrata;
 
 public class TipoBase extends Tipo {
-    public TBase base;
+    public TBase tipo;
     
     public TipoBase(TBase valor) {
-        this.base = valor;
+        this.tipo = valor;
     }
 
     @Override
-    Object accept(Visitor vis) {
+    public Object accept(Visitor vis) {
         vis.visitTipoBase(this);
         return null;
     }

@@ -3,10 +3,10 @@ package sintaxe_abstrata;
 import java.util.List;
 
 public class ConsComp extends DCons {
-    Tipo tipo;
-    String id;
-    List<String> lista;
-    Exp exp;
+    public Tipo tipo;
+    public String id;
+    public List<String> lista;
+    public Exp exp;
     
     public ConsComp(Tipo tipo, String id, List<String> lista, Exp exp) {
         this.tipo = tipo;
@@ -16,7 +16,7 @@ public class ConsComp extends DCons {
     }
 
     @Override
-    Object accept(Visitor vis) {
+    public Object accept(Visitor vis) {
         vis.visitConsComp(this);
         return null;
     }

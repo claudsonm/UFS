@@ -1,9 +1,9 @@
 package sintaxe_abstrata;
 
 public class ParArrayCopia extends Parametro {
-    TBase tipo;
-    Integer tam;
-    String id;
+    public TBase tipo;
+    public Integer tam;
+    public String id;
     
     public ParArrayCopia(TBase tipo, Integer tam, String id) {
         this.tipo = tipo;
@@ -12,7 +12,7 @@ public class ParArrayCopia extends Parametro {
     }
 
     @Override
-    Object accept(Visitor vis) {
+    public Object accept(Visitor vis) {
         vis.visitParArrayCopia(this);
         return null;
     }

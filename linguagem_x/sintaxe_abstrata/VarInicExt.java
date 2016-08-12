@@ -3,9 +3,9 @@ package sintaxe_abstrata;
 import java.util.List;
 
 public class VarInicExt extends DVar {
-    Tipo nomeTipo;
-    String id;
-    List<Exp> exp;
+    public Tipo nomeTipo;
+    public String id;
+    public List<Exp> exp;
     
     public VarInicExt(Tipo nome, String id, List<Exp> exp) {
         this.nomeTipo = nome;
@@ -14,7 +14,7 @@ public class VarInicExt extends DVar {
     }
     
     @Override
-    Object accept(Visitor vis) {
+    public Object accept(Visitor vis) {
         vis.visitVarInicExt(this);
         return null;
     }

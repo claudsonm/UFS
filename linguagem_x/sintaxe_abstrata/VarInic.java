@@ -1,9 +1,9 @@
 package sintaxe_abstrata;
 
 public class VarInic extends DVar {
-    Tipo nomeTipo;
-    String id;
-    Exp exp;
+    public Tipo nomeTipo;
+    public String id;
+    public Exp exp;
     
     public VarInic(Tipo nome, String id, Exp exp) {
         this.nomeTipo = nome;
@@ -12,7 +12,7 @@ public class VarInic extends DVar {
     }
     
     @Override
-    Object accept(Visitor vis) {
+    public Object accept(Visitor vis) {
         vis.visitVarInic(this);
         return null;
     }

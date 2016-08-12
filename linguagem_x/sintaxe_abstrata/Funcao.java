@@ -3,10 +3,10 @@ package sintaxe_abstrata;
 import java.util.List;
 
 public class Funcao extends Dec {
-    Tipo tipo;
-    String id;
-    List<Parametro> listaParam;
-    Exp exp;
+    public Tipo tipo;
+    public String id;
+    public List<Parametro> listaParam;
+    public Exp exp;
     
     public Funcao(Tipo tipo, String id, List<Parametro> lista, Exp exp) {
         this.tipo = tipo;
@@ -16,7 +16,7 @@ public class Funcao extends Dec {
     }
 
     @Override
-    Object accept(Visitor vis) {
+    public Object accept(Visitor vis) {
         vis.visitFuncao(this);
         return null;
     }

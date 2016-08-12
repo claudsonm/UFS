@@ -19,7 +19,7 @@ public class AmbienteFuncProc {
      * @param r
      * @return
      */
-    public VinculavelFuncProc getFuncProc(String id, List<TipoSemantico> p, TipoSemantico r) {
+    public VinculavelFuncProc lookupFuncProc(String id, List<TipoSemantico> p, TipoSemantico r) {
         VinculavelFuncProc x = (VinculavelFuncProc) tabela.get(id);
         if(x == null) {
             x = new VinculavelFuncProc(p, r);
@@ -36,7 +36,7 @@ public class AmbienteFuncProc {
      * @param p
      * @return
      */
-    public VinculavelFuncProc getFuncProc(String id, List<PassagemTipoSemantico> p) {
+    public VinculavelFuncProc lookupFuncProc(String id, List<PassagemTipoSemantico> p) {
         VinculavelFuncProc x = (VinculavelFuncProc) tabela.get(id);
         if(x == null) {
             x = new VinculavelFuncProc(p);

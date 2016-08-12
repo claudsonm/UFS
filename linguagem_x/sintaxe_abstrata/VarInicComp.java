@@ -3,10 +3,10 @@ package sintaxe_abstrata;
 import java.util.List;
 
 public class VarInicComp extends DVar {
-    Tipo nomeTipo;
-    String id;
-    List<String> listaID;
-    Exp exp;
+    public Tipo nomeTipo;
+    public String id;
+    public List<String> listaID;
+    public Exp exp;
     
     public VarInicComp(Tipo nome, String id, List<String> lista, Exp exp) {
         this.nomeTipo = nome;
@@ -16,7 +16,7 @@ public class VarInicComp extends DVar {
     }
     
     @Override
-    Object accept(Visitor vis) {
+    public Object accept(Visitor vis) {
         vis.visitVarInicComp(this);
         return null;
     }

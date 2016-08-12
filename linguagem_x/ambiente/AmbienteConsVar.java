@@ -18,8 +18,8 @@ public class AmbienteConsVar {
      * @param t
      * @return
      */
-    public VinculavelConsVar getConsVar(String id, boolean b, TipoSemantico t) {
-        VinculavelConsVar x = (VinculavelConsVar) tabela.get(id);
+    public VinculavelConsVar lookup(String id, boolean b, TipoSemantico t) {
+        VinculavelConsVar x = this.get(id);
         if(x == null) {
             x = new VinculavelConsVar(b, t);
             tabela.put(id, x);
@@ -28,5 +28,15 @@ public class AmbienteConsVar {
             );
         }
         return x;
+    }
+    
+    /**
+     * Procura e retorna a instância de um elemento na tabela de símbolos
+     * 
+     * @param id
+     * @return
+     */
+    public VinculavelConsVar get(String id) {
+        return (VinculavelConsVar) tabela.get(id);
     }
 }

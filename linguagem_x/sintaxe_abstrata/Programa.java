@@ -8,4 +8,8 @@ public class Programa {
     public Programa(List<Dec> dec) {
         declaracoes = dec;
     }
+    
+    public Object accept(Visitor vis) {
+        return vis.visitPrograma(this);
+    }
 }

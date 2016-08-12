@@ -10,7 +10,7 @@ public class VarNaoInic extends DVar {
     }
 
     @Override
-    Object accept(Visitor vis) {
+    public Object accept(Visitor vis) {
         vis.visitVarNaoInic(this);
         return null;
     }

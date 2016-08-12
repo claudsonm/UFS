@@ -1,9 +1,9 @@
 package sintaxe_abstrata;
 
 public class ParArrayRef extends Parametro {
-    TBase tipo;
-    Integer tam;
-    String id;
+    public TBase tipo;
+    public Integer tam;
+    public String id;
     
     public ParArrayRef(TBase tipo, Integer tam, String id) {
         this.tipo = tipo;
@@ -12,7 +12,7 @@ public class ParArrayRef extends Parametro {
     }
 
     @Override
-    Object accept(Visitor vis) {
+    public Object accept(Visitor vis) {
         vis.visitParArrayRef(this);
         return null;
     }

@@ -55,6 +55,8 @@ public abstract class Visitor {
     
     public abstract Object visitProcedimento(Procedimento p);
     
+    public abstract Object visitPrograma(Programa p);
+    
     public abstract Object visitSimples(Simples s);
     
     public abstract Object visitTipoArray(TipoArray t);

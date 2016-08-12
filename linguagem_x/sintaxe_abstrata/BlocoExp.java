@@ -3,8 +3,8 @@ package sintaxe_abstrata;
 import java.util.List;
 
 public class BlocoExp extends Exp {
-    List<DCons> listaCons;
-    Exp exp;
+    public List<DCons> listaCons;
+    public Exp exp;
     
     public BlocoExp(List<DCons> lista, Exp exp) {
         this.listaCons = lista;

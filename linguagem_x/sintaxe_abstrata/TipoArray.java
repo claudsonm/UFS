@@ -3,8 +3,8 @@ package sintaxe_abstrata;
 import java.util.List;
 
 public class TipoArray extends Tipo {
-    TBase base;
-    List<Exp> exp;
+    public TBase base;
+    public List<Exp> exp;
     
     public TipoArray(TBase tipo, List<Exp> lista) {
         this.base = tipo;
@@ -12,7 +12,7 @@ public class TipoArray extends Tipo {
     }
 
     @Override
-    Object accept(Visitor vis) {
+    public Object accept(Visitor vis) {
         vis.visitTipoArray(this);
         return null;
     }

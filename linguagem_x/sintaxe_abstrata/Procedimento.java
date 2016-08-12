@@ -3,9 +3,9 @@ package sintaxe_abstrata;
 import java.util.List;
 
 public class Procedimento extends Dec {
-    String id;
-    List<Parametro> listaParam;
-    Comando comando;
+    public String id;
+    public List<Parametro> listaParam;
+    public Comando comando;
     
     public Procedimento(String id, List<Parametro> lista, Comando com) {
         this.id = id;
@@ -14,7 +14,7 @@ public class Procedimento extends Dec {
     }
 
     @Override
-    Object accept(Visitor vis) {
+    public Object accept(Visitor vis) {
         vis.visitProcedimento(this);
         return null;
     }

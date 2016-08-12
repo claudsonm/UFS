@@ -9,18 +9,31 @@ import sintaxe_abstrata.*;
 public class Main {
 
     public static void main(String[] args) {
-        programa1();
-        programa2();
+        //programa1();
+        //programa2();
         
         TipoBaseSemantico x = TipoBaseSemantico.Real;
         TipoBaseSemantico y = TipoBaseSemantico.Int;
         
+        TipoBase esq = new TipoBase(TBase.Real);
+        TipoBase dir = new TipoBase(TBase.Real);
+        if (esq.tipo.equals(dir.tipo) && esq.tipo.nome != "bool") {
+            System.out.println(esq.tipo);
+        }
+        else {
+            try {
+                throw new Exception("BinExp: Tipos invalidos!");
+            } catch (Exception e1) {
+                e1.printStackTrace();
+            }
+        }
+        
         TipoArraySemantico vet1 = new TipoArraySemantico(TipoBaseSemantico.Real, 3);
         TipoArraySemantico vet2 = new TipoArraySemantico(TipoBaseSemantico.Real, 3);
-        System.out.println(x.equals(y));
-        System.out.println(vet1.equals(vet2));
+        //System.out.println(x.equals(y));
+        //System.out.println(vet1.equals(vet2));
         
-        Checker c = new Checker();
+        //Checker c = new Checker();
     }
     
     public static void programa1() {

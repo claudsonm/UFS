@@ -1,8 +1,8 @@
 package sintaxe_abstrata;
 
 public class ParBaseCopia extends Parametro {
-    TBase tipo;
-    String id;
+    public TBase tipo;
+    public String id;
     
     public ParBaseCopia(TBase tipo, String id) {
         this.tipo = tipo;
@@ -10,7 +10,7 @@ public class ParBaseCopia extends Parametro {
     }
 
     @Override
-    Object accept(Visitor vis) {
+    public Object accept(Visitor vis) {
         vis.visitParBaseCopia(this);
         return null;
     }

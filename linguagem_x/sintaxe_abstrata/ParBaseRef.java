@@ -1,8 +1,8 @@
 package sintaxe_abstrata;
 
 public class ParBaseRef extends Parametro {
-    TBase tipo;
-    String id;
+    public TBase tipo;
+    public String id;
     
     public ParBaseRef(TBase tipo, String id) {
         this.tipo = tipo;
@@ -10,7 +10,7 @@ public class ParBaseRef extends Parametro {
     }
 
     @Override
-    Object accept(Visitor vis) {
+    public Object accept(Visitor vis) {
         vis.visitParBaseRef(this);
         return null;
     }

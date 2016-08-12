@@ -1,7 +1,7 @@
 package sintaxe_abstrata;
 
 public class LiteralInt extends Exp {
-    int valor;
+    public int valor;
     
     public LiteralInt(int valor) {
         this.valor = valor;

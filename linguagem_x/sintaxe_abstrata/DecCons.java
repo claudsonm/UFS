@@ -1,14 +1,14 @@
 package sintaxe_abstrata;
 
 public class DecCons extends Dec {
-    DCons cons;
+    public DCons cons;
     
     public DecCons(DCons cons) {
         this.cons = cons;
     }
     
     @Override
-    Object accept(Visitor vis) {
+    public Object accept(Visitor vis) {
         vis.visitDecCons(this);
         return null;
     }
