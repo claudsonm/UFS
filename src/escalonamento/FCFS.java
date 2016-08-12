@@ -6,18 +6,31 @@ public class FCFS {
     public static void processa(ArrayList<Processo> lista) {
         int numProcessos = lista.size();
         int tempoEspera = 0;
-        int tempoCPU = 0;
+        int tempoConclusao = 0;
+        int tempoRetorno = 0;
+        int i = 0;
+        double mediaRetorno, mediaEspera;
         
         System.out.print("FCFS ");
-        while ( ! lista.isEmpty() ) {
-            Processo p = lista.remove(0);
-            tempoEspera += tempoCPU - p.tempoChegada;
-            tempoCPU += p.tempoEstimado;
+        for (Processo p : lista) {
+            if (i == 0) {
+                tempoEspera = 0;
+                tempoConclusao = p.tempoChegada + p.tempoEstimado;
+            }
+            else {
+                tempoEspera += tempoConclusao - p.tempoChegada;
+                tempoConclusao += p.tempoEstimado;
+            }
+            tempoRetorno += tempoConclusao - p.tempoChegada;
+            i++;
+            
+            //System.out.println(tempoEspera + " | " + tempoConclusao + " | " + tempoRetorno);
         }
+            
         
-        double mediaRetorno = (1.0*(tempoCPU + tempoEspera))/numProcessos;
-        //double mediaResposta = (1.0*tempoCPU)/numProcessos;
-        double mediaEspera = (1.0*tempoEspera)/numProcessos;
+        mediaRetorno = (1.0*tempoRetorno)/numProcessos;
+        //mediaResposta = (1.0*tempoCPU)/numProcessos;
+        mediaEspera = (1.0*tempoEspera)/numProcessos;
         
         
         // Turnaround Time
