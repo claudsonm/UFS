@@ -5,10 +5,7 @@ import java.util.ArrayList;
 public class FCFS {
     public static void processa(ArrayList<Processo> lista) {
         int numProcessos = lista.size();
-        int tempoEspera = 0;
-        int tempoConclusao = 0;
-        int tempoRetorno = 0;
-        int i = 0;
+        int tempoEspera = 0, tempoConclusao = 0, tempoRetorno = 0, i = 0;
         double mediaRetorno, mediaEspera;
         
         System.out.print("FCFS ");
