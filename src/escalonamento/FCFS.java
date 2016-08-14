@@ -23,21 +23,11 @@ public class FCFS {
             }
             tempoRetorno += tempoConclusao - p.tempoChegada;
             i++;
-            
-            //System.out.println(tempoEspera + " | " + tempoConclusao + " | " + tempoRetorno);
         }
-            
-        
+        // Turnaround    
         mediaRetorno = (1.0*tempoRetorno)/numProcessos;
-        //mediaResposta = (1.0*tempoCPU)/numProcessos;
         mediaEspera = (1.0*tempoEspera)/numProcessos;
         
-        
-        // Turnaround Time
-        System.out.println("\nTempo de retorno medio: " + mediaRetorno);
-        // Response Time
-        System.out.println("Tempo de resposta medio: " + mediaEspera);
-        // Wait Time
-        System.out.println("Tempo de espera medio: " + mediaEspera);
+        System.out.println(mediaRetorno + " " + mediaEspera + " " + mediaEspera);
     }
 }
