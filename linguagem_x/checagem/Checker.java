@@ -16,12 +16,24 @@ public class Checker extends Visitor {
          * O código abaixo é apenas para fins de exemplo, não tem significância nenhuma 
          */
         // Insere a "variável" "x" do tipo "real" na tabela de símbolos
-        VinculavelConsVar xVinc = (VinculavelConsVar) aConsVar.lookup("x", true, TipoBaseSemantico.Real);
+        /*VinculavelConsVar xVinc = (VinculavelConsVar) aConsVar.lookup("x", true, TipoBaseSemantico.Real);
+        VinculavelConsVar yVinc = new VinculavelConsVar(true, TipoBaseSemantico.Int);
+        System.out.println(aConsVar.tamanho());
+        aConsVar.tabela.put("x", yVinc);
+        System.out.println(aConsVar.get("x").tipo);
+        System.out.println(aConsVar.tamanho());
+        aConsVar.delete("x");
+        System.out.println(aConsVar.tamanho());*/
         
         // Insere a "função" "calculaSoma" do tipo "real" na tabela de símbolos
         List<PassagemTipoSemantico> p = new ArrayList<PassagemTipoSemantico>();
         p.add(new PassagemTipoSemantico(TipoBaseSemantico.Real));
-        VinculavelFuncProc x = (VinculavelFuncProc) aFuncProc.lookupFuncProc("calculaSoma", p);
+        //VinculavelFuncProc x = (VinculavelFuncProc) aFuncProc.lookupFuncProc("calculaSoma", p);
+        
+        aConsVar.add("x", true, TipoBaseSemantico.Int);
+        aConsVar.add("x", false, TipoBaseSemantico.Real, 1);
+        aConsVar.add("x", true, TipoBaseSemantico.Int, 1);
+        
         /**
          * END-FIXME
          */
@@ -306,7 +318,7 @@ public class Checker extends Visitor {
     @Override
     public Object visitVarInic(VarInic v) {
         TipoSemantico t = (TipoSemantico) v.nomeTipo.accept(this);
-        return aConsVar.lookup(v.id, true, t);
+        return aConsVar.add(v.id, true, t);
     }
 
     @Override
@@ -319,13 +331,13 @@ public class Checker extends Visitor {
     public Object visitVarInicExt(VarInicExt v) {
         // FIXME v.exp deve ser usada em algum momento...
         TipoSemantico t = (TipoSemantico) v.nomeTipo.accept(this);
-        return aConsVar.lookup(v.id, true, t);
+        return aConsVar.add(v.id, true, t);
     }
 
     @Override
     public Object visitVarNaoInic(VarNaoInic v) {
         TipoSemantico t = (TipoSemantico) v.nomeTipo.accept(this);
-        return aConsVar.lookup(v.id, true, t);
+        return aConsVar.add(v.id, true, t);
     }
 
     @Override
