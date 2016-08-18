@@ -31,8 +31,13 @@ public class Checker extends Visitor {
         //VinculavelFuncProc x = (VinculavelFuncProc) aFuncProc.lookupFuncProc("calculaSoma", p);
         
         aConsVar.add("x", true, TipoBaseSemantico.Int);
-        aConsVar.add("x", false, TipoBaseSemantico.Real, 1);
-        aConsVar.add("x", true, TipoBaseSemantico.Int, 1);
+        aConsVar.add("y", false, TipoBaseSemantico.Real);
+        aConsVar.comecaEscopo();
+        aConsVar.add("x", true, TipoBaseSemantico.Int);
+        aConsVar.terminaEscopo();
+        aConsVar.add("y", false, TipoBaseSemantico.Real);
+        aConsVar.comecaEscopo();
+        aConsVar.add("y", false, TipoBaseSemantico.Real);
         
         /**
          * END-FIXME

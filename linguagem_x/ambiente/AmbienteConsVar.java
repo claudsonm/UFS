@@ -2,6 +2,7 @@ package ambiente;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Stack;
 
 import checagem.*;
 
@@ -11,13 +12,54 @@ import checagem.*;
  * VinculavelConsVar.
  */
 public class AmbienteConsVar {
-    public static final HashMap<String, Vinculavel> tabela = new HashMap<>();
-    public static final HashMap<String, ArrayList<VinculavelConsVar>> tabela2 =
+    /**
+     * Hash Identificador -> VinculavelConsVar, que contém os dados sobre tipo. 
+     */
+    public static final HashMap<String, ArrayList<VinculavelConsVar>> tabela =
             new HashMap<String, ArrayList<VinculavelConsVar>>();
     
     /**
-     * Adiciona uma vinculável na lista do hash dentro do escopo padrão 0, se
-     * ainda não existir uma vinculável naquele mesmo nível de escopo.
+     * Nível atual de escopo da tabela de símbolos
+     */
+    public static int nivel = 0;
+    
+    /**
+     * Pilha que contém a lista com todos os identificadores de cada escopo.
+     */
+    public static Stack<ArrayList<String>> simbolosEscopo =
+            new Stack<ArrayList<String>>();
+    
+    /**
+     * Adiciona um identificador na pilha
+     * 
+     * @param id
+     */
+    private void adicionaPilha(String id) {
+        ArrayList<String> lista;
+        if (simbolosEscopo.isEmpty()) {
+            lista = new ArrayList<String>();
+            lista.add(id);
+            simbolosEscopo.push(lista);
+        }
+        else {
+            lista = simbolosEscopo.peek();
+            lista.add(id);
+        }
+    }
+    
+    /**
+     * Remove um identificador da pilha
+     * 
+     * @param id
+     */
+    public void deletaPilha(String id) {
+        ArrayList<String> lista = simbolosEscopo.peek();
+        lista.remove(id);
+    }
+    
+    /**
+     * Adiciona uma vinculável na lista do hash dentro do nível da tabela,
+     * se ainda não existir uma vinculável naquele mesmo nível de escopo.
      * 
      * @param id
      * @param b
@@ -25,29 +67,16 @@ public class AmbienteConsVar {
      * @return
      */
     public boolean add(String id, boolean b, TipoSemantico t) {
-        return this.add(id, b, t, 0);
-    }
-    
-    /**
-     * Adiciona uma vinculável na lista do hash dentro do escopo especificado,
-     * se ainda não existir uma vinculável naquele mesmo nível de escopo.
-     * 
-     * @param id
-     * @param b
-     * @param t
-     * @param nivel
-     * @return
-     */
-    public boolean add(String id, boolean b, TipoSemantico t, int nivel) {
         boolean r = false;
-        ArrayList<VinculavelConsVar> listaItens = tabela2.get(id);
+        ArrayList<VinculavelConsVar> listaItens = tabela.get(id);
         VinculavelConsVar x = new VinculavelConsVar(b, t, nivel);
         
         // Se a lista ainda não existe, cria
         if (listaItens == null) {
             listaItens = new ArrayList<VinculavelConsVar>();
             listaItens.add(x);
-            tabela2.put(id, listaItens);
+            tabela.put(id, listaItens);
+            this.adicionaPilha(id);
             System.out.println(
                 "Criando ConsVar no ambiente : " + x.isVar + " " + x.tipo + " " + id
             );
@@ -57,6 +86,7 @@ public class AmbienteConsVar {
             // A lista já existe, verifica se são escopos diferentes
             if (! listaItens.contains(x)) {
                 listaItens.add(x);
+                this.adicionaPilha(id);
                 System.out.println(
                     "Criando ConsVar no ambiente no [Escopo " + nivel + "]: " +
                     x.isVar + " " + x.tipo + " " + id 
@@ -69,25 +99,13 @@ public class AmbienteConsVar {
     }
     
     /**
-     * Retorna a instância de um elemento na tabela dentro do escopo padrão.
+     * Retorna a instância de um elemento na tabela dentro do escopo atual.
      * 
      * @param id
      * @return
      */
     public VinculavelConsVar get(String id) {
-        return this.get(id, 0);
-    }
-    
-    /**
-     * Retorna a instância de um elemento na tabela dentro do escopo
-     * especificado.
-     * 
-     * @param id
-     * @param nivel
-     * @return
-     */
-    public VinculavelConsVar get(String id, int nivel) {
-        ArrayList<VinculavelConsVar> listaItens = tabela2.get(id);
+        ArrayList<VinculavelConsVar> listaItens = tabela.get(id);
         for (VinculavelConsVar x : listaItens)
             if (x.nivelEscopo == nivel) return x;
         return null;
@@ -107,32 +125,45 @@ public class AmbienteConsVar {
      * Retorna true se a tabela contém o símbolo dentro do escopo especificado.
      * 
      * @param id
-     * @param nivel
+     * @param n
      * @return
      */
-    public boolean contem(String id, int nivel) {
-        ArrayList<VinculavelConsVar> listaItens = tabela2.get(id);
+    public boolean contem(String id, int n) {
+        ArrayList<VinculavelConsVar> listaItens = tabela.get(id);
         if (listaItens != null) {
             for (VinculavelConsVar x : listaItens)
-                if (x.nivelEscopo == nivel) return true;
+                if (x.nivelEscopo == n) return true;
         }
         return false;
     }
     
+    /**
+     * Remove um identificador da tabela de símbolos
+     * 
+     * @param id
+     * @return
+     */
     public VinculavelConsVar deleta(String id) {
-        return deleta(id, 0);
+        ArrayList<VinculavelConsVar> l = tabela.get(id);
+        return l.remove(l.size() - 1);
     }
     
-    public VinculavelConsVar deleta(String id, int nivel) {
-        // TODO
-        return null;
-    }
-    
+    /**
+     * Incrementa um nível de escopo
+     */
     public void comecaEscopo() {
-        // TODO
+        ArrayList<String> lista = new ArrayList<String>();
+        nivel++;
+        simbolosEscopo.push(lista);
     }
     
+    /**
+     * Decrementa um nível de escopo
+     */
     public void terminaEscopo() {
-        // TODO
+        ArrayList<String> lista = simbolosEscopo.pop();
+        for (String st : lista)
+            this.deleta(st);
+        nivel--;
     }
 }
