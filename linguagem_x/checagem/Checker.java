@@ -52,7 +52,7 @@ public class Checker extends Visitor {
     }
     
     /**
-     * Dada uma instância de TBase (abstrato) retorna uma equivalente do tipo
+     * Dada uma instância de TBase (sintático) retorna uma equivalente do tipo
      * TipoBaseSemantico (semântico).
      * 
      * @param b
@@ -232,44 +232,44 @@ public class Checker extends Visitor {
 
     @Override
     public Object visitIndexada(Indexada i) {
-        // TODO Auto-generated method stub
-        return null;
+        return i.var.accept(this);
     }
 
     @Override
     public Object visitLiteralBool(LiteralBool l) {
-        return l.valor;
+        return TipoBaseSemantico.Bool;
     }
 
     @Override
     public Object visitLiteralInt(LiteralInt l) {
-        return l.valor;
+        return TipoBaseSemantico.Int;
     }
     
     @Override
     public Object visitLiteralReal(LiteralReal l) {
-        // TODO Auto-generated method stub
-        return null;
+        return TipoBaseSemantico.Real;
     }
 
     @Override
     public Object visitMenos(Menos m) {
-        return m.exp.accept(this);
+         TipoSemantico t = (TipoSemantico) m.exp.accept(this);
+         if (t.equals(TipoBaseSemantico.Int) || t.equals(TipoBaseSemantico.Real))
+             return t;
+         else {
+             erros.reportar(101, "Operação uniária de Menos inválida para " + t);
+             return TipoBaseSemantico.Int;
+         }
     }
 
     @Override
     public Object visitNao(Nao n) {
-        TipoBase b = (TipoBase) n.exp.accept(this);
-        if (b.tipo == TBase.Bool)
-            return ! (Boolean) n.exp.accept(this);
+        TipoSemantico t = (TipoSemantico) n.exp.accept(this);
+        if (t.equals(TipoBaseSemantico.Bool))
+            return t;
         else {
-            try {
-                throw new Exception("Não: negação de " + b.tipo.nome + " não suportada!");
-            } catch (Exception e1) {
-                e1.printStackTrace();
-            }
+            erros.reportar(102, "Operação unária de Negação inválida para " + t);
+            return TipoBaseSemantico.Int;
         }
-        return null;
     }
 
     @Override
@@ -310,15 +310,21 @@ public class Checker extends Visitor {
     }
 
     @Override
-    public Object visitSimples(Simples s) {        
-        return aConsVar.get(s.id);
+    public Object visitSimples(Simples s) {
+        VinculavelConsVar v = aConsVar.get(s.id);
+        // Se for nulo reporta o erro e assume uma variável do tipo inteiro
+        if (v == null) {
+            erros.reportar(404, "Identificador " + s.id + " não encontrado no ambiente!");
+            v = new VinculavelConsVar(true, TipoBaseSemantico.Int);
+        }
+        return v;
     }
 
     @Override
     public Object visitTipoArray(TipoArray t) {
         TipoArraySemantico s = new TipoArraySemantico(
             this.converteParaSemantico(t.base),
-            3 // FIXME Determinar a dimensão
+            t.exp.size()
         );
         return s; 
     }
@@ -330,38 +336,47 @@ public class Checker extends Visitor {
 
     @Override
     public Object visitVarExp(VarExp v) {
-        return v.accept(this);
+        return v.var.accept(this);
     }
 
     @Override
     public Object visitVarInic(VarInic v) {
         TipoSemantico t = (TipoSemantico) v.nomeTipo.accept(this);
-        return aConsVar.add(v.id, true, t);
+        if (! aConsVar.add(v.id, true, t))
+            erros.reportar(200, "O identificador " + v.id + " não foi adicionado no ambiente.");
+        return null;
     }
 
     @Override
     public Object visitVarInicComp(VarInicComp v) {
-        // TODO Auto-generated method stub
+        TipoSemantico t = (TipoSemantico) v.nomeTipo.accept(this);
+        if (! aConsVar.add(v.id, true, t))
+            erros.reportar(200, "O identificador " + v.id + " não foi adicionado no ambiente.");
         return null;
     }
 
     @Override
     public Object visitVarInicExt(VarInicExt v) {
-        // FIXME v.exp deve ser usada em algum momento...
         TipoSemantico t = (TipoSemantico) v.nomeTipo.accept(this);
-        return aConsVar.add(v.id, true, t);
+        if (! aConsVar.add(v.id, true, t))
+            erros.reportar(200, "O identificador " + v.id + " não foi adicionado no ambiente.");
+        return null;
     }
 
     @Override
     public Object visitVarNaoInic(VarNaoInic v) {
         TipoSemantico t = (TipoSemantico) v.nomeTipo.accept(this);
-        return aConsVar.add(v.id, true, t);
+        if (! aConsVar.add(v.id, true, t))
+            erros.reportar(200, "O identificador " + v.id + " não foi adicionado no ambiente.");
+        return null;
     }
 
     @Override
     public Object visitWhile(WHILE w) {
-        while ((Boolean) w.exp.accept(this))
-            w.comando.accept(this);
+        TipoSemantico t = (TipoSemantico) w.exp.accept(this);
+        if (! t.equals(TipoBaseSemantico.Bool))
+            erros.reportar(103, "A expressão deve ser do tipo bool");
+        w.comando.accept(this);
         return null;
     }
 }
