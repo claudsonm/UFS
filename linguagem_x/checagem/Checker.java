@@ -4,11 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 import sintaxe_abstrata.*;
 import ambiente.*;
+import utilitarios.*;
 
 
 public class Checker extends Visitor {
     public AmbienteConsVar aConsVar = new AmbienteConsVar();
     public AmbienteFuncProc aFuncProc = new AmbienteFuncProc();
+    public RegistroErros erros = new RegistroErros();
     
     public Checker() {
         /**
@@ -25,6 +27,7 @@ public class Checker extends Visitor {
         aConsVar.delete("x");
         System.out.println(aConsVar.tamanho());*/
         
+        /*
         // Insere a "função" "calculaSoma" do tipo "real" na tabela de símbolos
         List<PassagemTipoSemantico> p = new ArrayList<PassagemTipoSemantico>();
         p.add(new PassagemTipoSemantico(TipoBaseSemantico.Real));
@@ -38,6 +41,10 @@ public class Checker extends Visitor {
         aConsVar.add("y", false, TipoBaseSemantico.Real);
         aConsVar.comecaEscopo();
         aConsVar.add("y", false, TipoBaseSemantico.Real);
+        
+        erros.reportar(01, "Que eu quiser");
+        erros.mostrar();
+        */
         
         /**
          * END-FIXME

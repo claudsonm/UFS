@@ -1,9 +1,9 @@
 package sintaxe_abstrata;
 
 public class LiteralReal extends Exp {
-    public float valor;
+    public double valor;
     
-    public LiteralReal(float valor) {
+    public LiteralReal(double valor) {
         this.valor = valor;
     }
 

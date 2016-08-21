@@ -10,10 +10,13 @@ public class Main {
 
     public static void main(String[] args) {
         //programa1();
-        //programa2();
-        
-        TipoBaseSemantico x = TipoBaseSemantico.Real;
-        TipoBaseSemantico y = TipoBaseSemantico.Int;
+        programa2();
+        //testes();        
+    }
+    
+    public static void testes() {
+        // TipoBaseSemantico x = TipoBaseSemantico.Real;
+        // TipoBaseSemantico y = TipoBaseSemantico.Int;
         
         TipoBase esq = new TipoBase(TBase.Real);
         TipoBase dir = new TipoBase(TBase.Real);
@@ -28,12 +31,12 @@ public class Main {
             }
         }
         
-        TipoArraySemantico vet1 = new TipoArraySemantico(TipoBaseSemantico.Real, 3);
-        TipoArraySemantico vet2 = new TipoArraySemantico(TipoBaseSemantico.Real, 3);
+        // TipoArraySemantico vet1 = new TipoArraySemantico(TipoBaseSemantico.Real, 3);
+        // TipoArraySemantico vet2 = new TipoArraySemantico(TipoBaseSemantico.Real, 3);
         //System.out.println(x.equals(y));
         //System.out.println(vet1.equals(vet2));
         
-        Checker c = new Checker();
+        // Checker c = new Checker();
     }
     
     public static void programa1() {
@@ -56,7 +59,7 @@ public class Main {
          * diametro := diametroCirculo(raio);
          * comprimento := PI * diametro;
          * 
-         * var real resultados[3] := {area, diametro, comprimento};
+         * var real[] resultados := {area, diametro, comprimento};
          * var int i := 0;
          * var real soma;
          * var bool par;
@@ -211,34 +214,35 @@ public class Main {
     public static void programa2() {
         /* =======================================================
          * Programa #2 em Linguagem X
-         * Realiza o cálculo da hipotenusa 
-
-         * var real lado1 := 6.6;
-         * var int lado2 := 5;
+         * Realiza o cálculo da hipotenusa
+         * =======================================================
          * 
-         * function real tamanhoHipotenusa(var real l1,var real l2)
+         * function real tamanhoHipotenusa(var real l1, var real l2)
          *      (l1 * l1) + (l2 * l2);
          * 
+         * procedure main() {
+         *     var real lado1 := 6.6;
+         *     var int lado2 := 5;
+         *     var real hipotenusa;
+         *     
+         *     hipotenusa := tamanhoHipotenusa(lado1, lado2); // erro, real + float
+         *     var real[] resultados := {hipotenusa};
+         * }
          * 
-         * var real hipotenusa;
-         * hipotenusa := tamanhoHipotenusa(lado1, lado2); // erro, real + float
-         * 
-         * var real resultados[1] := {hipotenusa};
          */
         
         // Lista contendo todas as declarações do programa
         List<Dec> d = new ArrayList<Dec>();
         
-        // Lista de parâmetros das funções (neste caso, igual para as duas)
+        /**********************************************************************
+         * Função hipotenusa
+         *********************************************************************/
+        // Lista de parâmetros da função hipotenusa
         List<Parametro> parametros = new ArrayList<Parametro>();
         parametros.add( new ParBaseCopia(TBase.Real, "l1") );
         parametros.add( new ParBaseCopia(TBase.Real, "l2") );
         
-        // Declara e inicializa as variáveis 
-        d.add( new DecVar(new VarInic(new TipoBase(TBase.Real), "lado1", new LiteralInt(6))) );
-        d.add( new DecVar(new VarInic(new TipoBase(TBase.Int), "lado2", new LiteralInt(5))) );
-        
-        // Declara as funções
+        // Declara a função hipotenusa
         d.add(
             new Funcao(new TipoBase(TBase.Real), "tamanhoHipotenusa", parametros,
                 new BinExp(BinOp.Mul,
@@ -247,23 +251,38 @@ public class Main {
                 )
             )
         );
-
         
-        // Declara a variavel hipotenusa
-        d.add( new DecVar(new VarNaoInic(new TipoBase(TBase.Real), "hipotenusa")) );
+        /**********************************************************************
+         * Procedimento main
+         *********************************************************************/
+        // Declarações de variáveis do procedimento main
+        List<DVarConsCom> instrucoesMain = new ArrayList<DVarConsCom>();
+        instrucoesMain.add(
+            new DV( new VarInic(new TipoBase(TBase.Real), "lado1", new LiteralReal(6.6)) )
+        );
+        instrucoesMain.add(
+            new DV( new VarInic(new TipoBase(TBase.Int), "lado2", new LiteralInt(5)) )
+        );
+        instrucoesMain.add(
+            new DV( new VarNaoInic(new TipoBase(TBase.Real), "hipotenusa") )
+        );
         
-        // Lista de parametros que serão passados nas chamadas das funções
+        
+        // Lista de parametros que serão passados na chamada da função hipotenusa
         List<Exp> passagemParametros = new ArrayList<Exp>();
         passagemParametros.add( new VarExp(new Simples("lado1")) );
         passagemParametros.add( new VarExp(new Simples("lado2")) );
         
-        /**
-         * FIXME Na BNF comandos e expressões não foram herdados de Dec
-         * Por isso as instruções abaixo não podem ser adicionados no programa
-         */
-        // Realiza as atribuições a variável hipotenusa
-        new ASSIGN( new Simples("hipotenusa"), new ChamadaExp("tamanhoHipotenusa", passagemParametros) );
-        /* END-FIXME */
+        // Realiza a atribuição a variável hipotenusa
+        instrucoesMain.add(
+            new Com(
+                new ASSIGN(
+                    new Simples("hipotenusa"),
+                    new ChamadaExp("tamanhoHipotenusa", passagemParametros)
+                )
+            )
+        );
+        
         
         // Lista com a expressão que define o tamanho do array
         List<Exp> tamanhoArray = new ArrayList<Exp>();
@@ -272,17 +291,25 @@ public class Main {
         // Expressões que definem os valores de cada posição do array
         List<Exp> valoresArray = new ArrayList<Exp>();
         valoresArray.add( new VarExp(new Simples("hipotenusa")) );
-      
+        
         // Declaração e inicialização do array
-        d.add(
-            new DecVar(
+        instrucoesMain.add(
+            new DV(
                 new VarInicExt(new TipoArray(TBase.Real, tamanhoArray), "resultados", valoresArray)
             )
         );
         
         
+        // Corpo do procedimento main
+        BLOCO corpoMain = new BLOCO(instrucoesMain);
+        // Declara o procedimento main
+        d.add( new Procedimento("main", new ArrayList<>(), corpoMain) );
+        
+        
         Programa p = new Programa(d);
-        System.out.println(p.declaracoes);
+        Checker c = new Checker();
+        c.visitPrograma(p);
+        c.erros.mostrar();
     }
 
 }
