@@ -30,36 +30,42 @@ public class AmbienteConsVar {
             new Stack<ArrayList<String>>();
     
     /**
-     * Adiciona um identificador na pilha
+     * Adiciona um identificador na lista do hash da tabela de símbolos.
      * 
      * @param id
+     * @param x
+     * @return
      */
-    private void adicionaPilha(String id) {
-        ArrayList<String> lista;
-        if (simbolosEscopo.isEmpty()) {
-            lista = new ArrayList<String>();
-            lista.add(id);
-            simbolosEscopo.push(lista);
+    private void adicionaTabela(String id, VinculavelConsVar x) {
+        ArrayList<VinculavelConsVar> listaItens = tabela.get(id);
+        
+        // Se a lista da tabela ainda não existe, cria
+        if (listaItens == null) {
+            listaItens = new ArrayList<VinculavelConsVar>();
+            listaItens.add(x);
+            tabela.put(id, listaItens);
         }
-        else {
-            lista = simbolosEscopo.peek();
-            lista.add(id);
-        }
+        else listaItens.add(x);
+        
+        System.out.println(
+            "Criando ConsVar no ambiente no [Escopo " + nivel + "]: " +
+            x.isVar + " " + x.tipo + " " + id 
+        );
     }
     
     /**
-     * Remove um identificador da pilha
+     * Remove um identificador da tabela de símbolos.
      * 
      * @param id
+     * @return
      */
-    public void deletaPilha(String id) {
-        ArrayList<String> lista = simbolosEscopo.peek();
-        lista.remove(id);
+    private VinculavelConsVar deletaTabela(String id) {
+        ArrayList<VinculavelConsVar> l = tabela.get(id);
+        return l.remove(l.size() - 1);
     }
     
     /**
-     * Adiciona uma vinculável na lista do hash dentro do nível da tabela,
-     * se ainda não existir uma vinculável naquele mesmo nível de escopo.
+     * Adiciona um identificador na pilha e na tabela de símbolos.
      * 
      * @param id
      * @param b
@@ -68,102 +74,79 @@ public class AmbienteConsVar {
      */
     public boolean add(String id, boolean b, TipoSemantico t) {
         boolean r = false;
-        ArrayList<VinculavelConsVar> listaItens = tabela.get(id);
-        VinculavelConsVar x = new VinculavelConsVar(b, t, nivel);
+        ArrayList<String> listaPilha;
         
-        // Se a lista ainda não existe, cria
-        if (listaItens == null) {
-            listaItens = new ArrayList<VinculavelConsVar>();
-            listaItens.add(x);
-            tabela.put(id, listaItens);
-            this.adicionaPilha(id);
-            System.out.println(
-                "Criando ConsVar no ambiente : " + x.isVar + " " + x.tipo + " " + id
-            );
+        if (simbolosEscopo.isEmpty()) {
+            listaPilha = new ArrayList<String>();
+            listaPilha.add(id);
+            simbolosEscopo.push(listaPilha);
+            VinculavelConsVar x = new VinculavelConsVar(b, t, nivel);
+            this.adicionaTabela(id, x);
             r = true;
         }
         else {
-            // A lista já existe, verifica se são escopos diferentes
-            if (! listaItens.contains(x)) {
-                listaItens.add(x);
-                this.adicionaPilha(id);
-                System.out.println(
-                    "Criando ConsVar no ambiente no [Escopo " + nivel + "]: " +
-                    x.isVar + " " + x.tipo + " " + id 
-                );
+            listaPilha = simbolosEscopo.peek();
+            if (listaPilha.contains(id)) System.out.println("Ja tem [" + b + " " + t + " " + id + "] !");
+            else {
+                listaPilha.add(id);
+                VinculavelConsVar x = new VinculavelConsVar(b, t, nivel);
+                this.adicionaTabela(id, x);
                 r = true;
             }
-            else System.out.println("Ja tem [" + x.isVar + " " + x.tipo + " " + id + "] !");
         }
+        
         return r;
     }
     
     /**
-     * Retorna a instância de um elemento na tabela dentro do escopo atual.
+     * Remove um identificador da pilha e da tabela de símbolos.
+     * 
+     * @param id
+     */
+    public void deleta(String id) {
+        ArrayList<String> listaPilha = simbolosEscopo.peek();
+        listaPilha.remove(id);
+        this.deletaTabela(id);
+    }
+    
+    /**
+     * Retorna a instância mais recente de um elemento na tabela de símbolos.
      * 
      * @param id
      * @return
      */
     public VinculavelConsVar get(String id) {
-        ArrayList<VinculavelConsVar> listaItens = tabela.get(id);
-        for (VinculavelConsVar x : listaItens)
-            if (x.nivelEscopo == nivel) return x;
-        return null;
+        ArrayList<VinculavelConsVar> l = tabela.get(id);
+        return l.get(l.size() - 1);
     }
     
     /**
-     * Retorna true se a tabela contém o símbolo dentro do escopo padrão.
+     * Retorna true se o identificador existe no escopo atual.
      * 
      * @param id
      * @return
      */
     public boolean contem(String id) {
-        return this.contem(id, 0);
-    }
-    
-    /**
-     * Retorna true se a tabela contém o símbolo dentro do escopo especificado.
-     * 
-     * @param id
-     * @param n
-     * @return
-     */
-    public boolean contem(String id, int n) {
-        ArrayList<VinculavelConsVar> listaItens = tabela.get(id);
-        if (listaItens != null) {
-            for (VinculavelConsVar x : listaItens)
-                if (x.nivelEscopo == n) return true;
-        }
-        return false;
-    }
-    
-    /**
-     * Remove um identificador da tabela de símbolos
-     * 
-     * @param id
-     * @return
-     */
-    public VinculavelConsVar deleta(String id) {
-        ArrayList<VinculavelConsVar> l = tabela.get(id);
-        return l.remove(l.size() - 1);
+        ArrayList<String> listaPilha = simbolosEscopo.peek();
+        return listaPilha.contains(id);
     }
     
     /**
      * Incrementa um nível de escopo
      */
     public void comecaEscopo() {
-        ArrayList<String> lista = new ArrayList<String>();
+        ArrayList<String> listaPilha = new ArrayList<String>();
         nivel++;
-        simbolosEscopo.push(lista);
+        simbolosEscopo.push(listaPilha);
     }
     
     /**
      * Decrementa um nível de escopo
      */
     public void terminaEscopo() {
-        ArrayList<String> lista = simbolosEscopo.pop();
-        for (String st : lista)
-            this.deleta(st);
+        ArrayList<String> listaPilha = simbolosEscopo.pop();
+        for (String st : listaPilha)
+            this.deletaTabela(st);
         nivel--;
     }
 }
