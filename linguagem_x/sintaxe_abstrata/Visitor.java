@@ -41,6 +41,8 @@ public abstract class Visitor {
     
     public abstract Object visitLiteralInt(LiteralInt l);
     
+    public abstract Object visitLiteralReal(LiteralReal l);
+    
     public abstract Object visitMenos(Menos m);
     
     public abstract Object visitNao(Nao n);

@@ -238,6 +238,12 @@ public class Checker extends Visitor {
     public Object visitLiteralInt(LiteralInt l) {
         return l.valor;
     }
+    
+    @Override
+    public Object visitLiteralReal(LiteralReal l) {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
     @Override
     public Object visitMenos(Menos m) {
