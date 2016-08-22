@@ -37,6 +37,8 @@ public abstract class Visitor {
     
     public abstract Object visitIndexada(Indexada i);
     
+    public abstract Object visitIntParaReal(IntParaReal i);
+    
     public abstract Object visitLiteralBool(LiteralBool l);
     
     public abstract Object visitLiteralInt(LiteralInt l);

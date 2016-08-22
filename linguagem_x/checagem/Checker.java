@@ -14,8 +14,8 @@ public class Checker extends Visitor {
     
     public Checker() {
         /**
-         * FIXME
-         * O código abaixo é apenas para fins de exemplo, não tem significância nenhuma 
+         * O código abaixo é apenas para fins de exemplo
+         * Não tem significância nenhuma 
          */
         // Insere a "variável" "x" do tipo "real" na tabela de símbolos
         /*VinculavelConsVar xVinc = (VinculavelConsVar) aConsVar.lookup("x", true, TipoBaseSemantico.Real);
@@ -45,10 +45,6 @@ public class Checker extends Visitor {
         erros.reportar(01, "Que eu quiser");
         erros.mostrar();
         */
-        
-        /**
-         * END-FIXME
-         */
     }
     
     /**
@@ -73,10 +69,30 @@ public class Checker extends Visitor {
                 return null;
         }
     }
+    
+    /**
+     * Dado um TBase (sintático) e uma dimensão, retorna um equivalente
+     * do tipo TipoArraySemantico (semântico).
+     * 
+     * @param b Tipo base sintático (sintaxe abstrata)
+     * @param d Dimensão do array
+     * @return  TipoArraySemantico
+     */
+    private TipoArraySemantico converteParaSemantico(TBase b, int d) {
+        return new TipoArraySemantico(converteParaSemantico(b), d);
+    }
 
     @Override
     public Object visitAssign(ASSIGN a) {
         // TODO Auto-generated method stub
+        TipoSemantico tVar = (TipoSemantico) a.var.accept(this);
+        TipoSemantico tExp = (TipoSemantico) a.exp.accept(this);
+        
+        /*if (tVar.equals(TipoBaseSemantico.Real))
+            tExp = (TipoSemantico) (a.exp = new IntParaReal(a.exp)).accept(this);
+        
+        */
+            
         return null;
     }
 
@@ -139,15 +155,21 @@ public class Checker extends Visitor {
 
     @Override
     public Object visitBloco(BLOCO b) {
+        aConsVar.comecaEscopo();
         for (DVarConsCom c : b.lista)
             c.accept(this);
+        aConsVar.terminaEscopo();
         return null;
     }
 
     @Override
     public Object visitBlocoExp(BlocoExp b) {
-        // TODO Auto-generated method stub
-        return null;
+        aConsVar.comecaEscopo();
+        for (DCons d : b.listaCons)
+            d.accept(this);
+        TipoSemantico t = (TipoSemantico) b.exp.accept(this);
+        aConsVar.terminaEscopo();
+        return t;
     }
 
     @Override
@@ -164,45 +186,53 @@ public class Checker extends Visitor {
 
     @Override
     public Object visitCom(Com c) {
-        return c.comando.accept(this);
+        c.comando.accept(this);
+        return null;
     }
 
     @Override
     public Object visitCons(Cons c) {
-        // TODO Auto-generated method stub
+        TipoSemantico t = (TipoSemantico) c.tipo.accept(this);
+        aConsVar.add(c.id, false, t);
         return null;
     }
 
     @Override
     public Object visitConsComp(ConsComp c) {
-        // TODO Auto-generated method stub
+        TipoSemantico t = (TipoSemantico) c.tipo.accept(this);
+        aConsVar.add(c.id, false, t);
         return null;
     }
 
     @Override
     public Object visitConsExt(ConsExt c) {
-        // TODO Auto-generated method stub
+        TipoSemantico t = (TipoSemantico) c.tipo.accept(this);
+        aConsVar.add(c.id, false, t);
         return null;
     }
 
     @Override
     public Object visitDC(DC d) {
-        return d.cons.accept(this);
+        d.cons.accept(this);
+        return null;
     }
 
     @Override
     public Object visitDecCons(DecCons d) {
-        return d.cons.accept(this);
+        d.cons.accept(this);
+        return null;
     }
 
     @Override
     public Object visitDecVar(DecVar d) {
-        return d.var.accept(this);
+        d.var.accept(this);
+        return null;
     }
 
     @Override
     public Object visitDV(DV d) {
-        return d.var.accept(this);
+        d.var.accept(this);
+        return null;
     }
 
     @Override
@@ -225,14 +255,22 @@ public class Checker extends Visitor {
 
     @Override
     public Object visitIf(IF i) {
-        Boolean r = (Boolean) i.exp.accept(this);
-        if (r) return i.comandoVerdade.accept(this);
-        return i.comandoFalso.accept(this);
+        TipoSemantico t = (TipoSemantico) i.exp.accept(this);
+        if (! t.equals(TipoBaseSemantico.Bool))
+            erros.reportar(203, "IF com expressão do tipo " + t + " inválido.");
+        i.comandoVerdade.accept(this);
+        i.comandoFalso.accept(this);
+        return null;
     }
 
     @Override
     public Object visitIndexada(Indexada i) {
         return i.var.accept(this);
+    }
+    
+    @Override
+    public Object visitIntParaReal(IntParaReal i) {
+        return TipoBaseSemantico.Real;
     }
 
     @Override
@@ -274,31 +312,48 @@ public class Checker extends Visitor {
 
     @Override
     public Object visitParArrayCopia(ParArrayCopia p) {
-        // TODO Auto-generated method stub
+        aConsVar.add(p.id, true, converteParaSemantico(p.tipo, p.dimensao));
         return null;
     }
 
     @Override
     public Object visitParArrayRef(ParArrayRef p) {
-        // TODO Auto-generated method stub
+        aConsVar.add(p.id, true, converteParaSemantico(p.tipo, p.dimensao));
         return null;
     }
 
     @Override
     public Object visitParBaseCopia(ParBaseCopia p) {
-        // TODO Auto-generated method stub        
+        aConsVar.add(p.id, true, converteParaSemantico(p.tipo));
         return null;
     }
 
     @Override
     public Object visitParBaseRef(ParBaseRef p) {
-        // TODO Auto-generated method stub
+        aConsVar.add(p.id, true, converteParaSemantico(p.tipo));
         return null;
     }
 
     @Override
     public Object visitProcedimento(Procedimento p) {
-        // TODO Auto-generated method stub
+        if (! aFuncProc.contem(p.id)) {
+            List<PassagemTipoSemantico> l = new ArrayList<PassagemTipoSemantico>();
+            /**
+             * TODO
+             * O for abaixo não esta 100% correto
+             * Converter a lista de parametros sintática para semântica, ex:
+             * l.add(new PassagemTipoSemantico(TipoBaseSemantico.Real));
+             */
+            for (Parametro param : p.listaParam)
+                l.add( (PassagemTipoSemantico) param.accept(this) );
+            
+            aConsVar.comecaEscopo();
+            aFuncProc.lookupFuncProc(p.id, l);
+            p.comando.accept(this);
+            aConsVar.terminaEscopo();
+        }
+        else erros.reportar(200, "O identificador " + p.id + " já está no ambiente.");
+        
         return null;
     }
     

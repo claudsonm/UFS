@@ -45,4 +45,14 @@ public class AmbienteFuncProc {
         }
         return x;
     }
+    
+    /**
+     * Retorna true se o identificador já existe na tabela de símbolos.
+     * 
+     * @param id Nome da função ou procedimento a ser verificado
+     * @return
+     */
+    public boolean contem(String id) {
+        return tabela.containsKey(id);
+    }
 }
