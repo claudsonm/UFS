@@ -13,8 +13,7 @@ public class ParArrayRef extends Parametro {
 
     @Override
     public Object accept(Visitor vis) {
-        vis.visitParArrayRef(this);
-        return null;
+        return vis.visitParArrayRef(this);
     }
 
 }

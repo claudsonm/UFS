@@ -11,8 +11,7 @@ public class ParBaseCopia extends Parametro {
 
     @Override
     public Object accept(Visitor vis) {
-        vis.visitParBaseCopia(this);
-        return null;
+        return vis.visitParBaseCopia(this);
     }
 
 }

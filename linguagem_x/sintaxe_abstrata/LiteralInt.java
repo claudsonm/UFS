@@ -9,8 +9,7 @@ public class LiteralInt extends Exp {
 
     @Override
     public Object accept(Visitor vis) {
-        vis.visitLiteralInt(this);
-        return null;
+        return vis.visitLiteralInt(this);
     }
 
 }

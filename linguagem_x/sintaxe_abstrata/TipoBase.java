@@ -9,8 +9,7 @@ public class TipoBase extends Tipo {
 
     @Override
     public Object accept(Visitor vis) {
-        vis.visitTipoBase(this);
-        return null;
+        return vis.visitTipoBase(this);
     }
 
 }

@@ -9,7 +9,6 @@ public class LiteralReal extends Exp {
 
     @Override
     public Object accept(Visitor vis) {
-        vis.visitLiteralReal(this);
-        return null;
+        return vis.visitLiteralReal(this);
     }
 }

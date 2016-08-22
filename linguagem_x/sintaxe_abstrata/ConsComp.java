@@ -17,8 +17,7 @@ public class ConsComp extends DCons {
 
     @Override
     public Object accept(Visitor vis) {
-        vis.visitConsComp(this);
-        return null;
+        return vis.visitConsComp(this);
     }
 
 }

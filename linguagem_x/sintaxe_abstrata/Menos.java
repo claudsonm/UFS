@@ -9,8 +9,7 @@ public class Menos extends Exp {
 
     @Override
     public Object accept(Visitor vis) {
-        vis.visitMenos(this);
-        return null;
+        return vis.visitMenos(this);
     }
     
 }

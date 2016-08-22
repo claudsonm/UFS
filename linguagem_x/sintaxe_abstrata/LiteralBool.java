@@ -9,8 +9,7 @@ public class LiteralBool extends Exp {
 
     @Override
     public Object accept(Visitor vis) {
-        vis.visitLiteralBool(this);
-        return null;
+        return vis.visitLiteralBool(this);
     }
 
 }

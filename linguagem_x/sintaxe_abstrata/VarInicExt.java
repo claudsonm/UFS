@@ -15,7 +15,6 @@ public class VarInicExt extends DVar {
     
     @Override
     public Object accept(Visitor vis) {
-        vis.visitVarInicExt(this);
-        return null;
+        return vis.visitVarInicExt(this);
     }
 }

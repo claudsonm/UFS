@@ -13,8 +13,7 @@ public class BlocoExp extends Exp {
 
     @Override
     public Object accept(Visitor vis) {
-        vis.visitBlocoExp(this);
-        return null;
+        return vis.visitBlocoExp(this);
     }
 
 }

@@ -54,7 +54,7 @@ public class Checker extends Visitor {
      * @param b
      * @return
      */
-    private TipoBaseSemantico converteParaSemantico(TBase b) {
+    private TipoBaseSemantico paraSemantico(TBase b) {
         switch (b.nome) {
             case "int":
                 return TipoBaseSemantico.Int;
@@ -78,22 +78,29 @@ public class Checker extends Visitor {
      * @param d Dimensão do array
      * @return  TipoArraySemantico
      */
-    private TipoArraySemantico converteParaSemantico(TBase b, int d) {
-        return new TipoArraySemantico(converteParaSemantico(b), d);
+    private TipoArraySemantico paraSemantico(TBase b, int d) {
+        return new TipoArraySemantico(paraSemantico(b), d);
     }
 
     @Override
     public Object visitAssign(ASSIGN a) {
-        // TODO Auto-generated method stub
-        TipoSemantico tVar = (TipoSemantico) a.var.accept(this);
+        VinculavelConsVar tVar = (VinculavelConsVar) a.var.accept(this);
         TipoSemantico tExp = (TipoSemantico) a.exp.accept(this);
         
-        /*if (tVar.equals(TipoBaseSemantico.Real))
-            tExp = (TipoSemantico) (a.exp = new IntParaReal(a.exp)).accept(this);
-        
-        */
+        if (! tVar.isVar) {
+            erros.reportar(303, "Impossível realizar atribuição em constante");
+        }
+        if (tVar.tipo.equals(TipoBaseSemantico.Real)
+                && tExp.equals(TipoBaseSemantico.Int)) {
+            a.exp = new IntParaReal(a.exp);
+            tExp = (TipoSemantico) a.exp.accept(this);
+        }
+        if (! tVar.tipo.equals(tExp)) {
+            erros.reportar(400, "Não é possível atribuir " + tExp + " em "
+                           + tVar.tipo);
+        }
             
-        return null;
+        return tVar.tipo;
     }
 
     @Override
@@ -110,8 +117,9 @@ public class Checker extends Visitor {
             case "<":
                 esq = (TipoBase) e.expEsq.accept(this);
                 dir = (TipoBase) e.expDir.accept(this);
-                if (esq.tipo.equals(dir.tipo) && esq.tipo.nome != "bool")
+                if (esq.tipo.equals(dir.tipo) && esq.tipo.nome != "bool") {
                     tipoRetorno = esq.tipo;
+                }
                 else {
                     try {
                         throw new Exception("BinExp: Tipos invalidos!");
@@ -124,8 +132,9 @@ public class Checker extends Visitor {
             case "=":
                 esq = (TipoBase) e.expEsq.accept(this);
                 dir = (TipoBase) e.expDir.accept(this);
-                if (esq.tipo.equals(dir.tipo))
+                if (esq.tipo.equals(dir.tipo)) {
                     tipoRetorno = esq.tipo;
+                }
                 else {
                     try {
                         throw new Exception("BinExp: Tipos invalidos!");
@@ -139,8 +148,9 @@ public class Checker extends Visitor {
             case "or":
                 esq = (TipoBase) e.expEsq.accept(this);
                 dir = (TipoBase) e.expDir.accept(this);
-                if (esq.tipo.equals(dir.tipo) && esq.tipo.nome == "bool")
+                if (esq.tipo.equals(dir.tipo) && esq.tipo.nome == "bool") {
                     tipoRetorno = esq.tipo;
+                }
                 else {
                     try {
                         throw new Exception("BinExp: Tipos invalidos!");
@@ -156,8 +166,9 @@ public class Checker extends Visitor {
     @Override
     public Object visitBloco(BLOCO b) {
         aConsVar.comecaEscopo();
-        for (DVarConsCom c : b.lista)
+        for (DVarConsCom c : b.lista) {
             c.accept(this);
+        }
         aConsVar.terminaEscopo();
         return null;
     }
@@ -165,8 +176,9 @@ public class Checker extends Visitor {
     @Override
     public Object visitBlocoExp(BlocoExp b) {
         aConsVar.comecaEscopo();
-        for (DCons d : b.listaCons)
+        for (DCons d : b.listaCons) {
             d.accept(this);
+        }
         TipoSemantico t = (TipoSemantico) b.exp.accept(this);
         aConsVar.terminaEscopo();
         return t;
@@ -180,8 +192,18 @@ public class Checker extends Visitor {
 
     @Override
     public Object visitChamadaExp(ChamadaExp c) {
-        // TODO Auto-generated method stub
-        return null;
+        VinculavelFuncProc f = aFuncProc.get(c.id);
+        /*
+         * TODO
+         * Verificar se é funcão ou procedimento e fazer a checagem dos tipos
+         * dos parametros. Esboço
+         * 
+         * if (f.isFunc) 
+         *      // checagem de parametros com c.listaExp e f.paramFunc
+         * else
+         *      // checagem de parametros com c.listaExp e f.paramProc
+         */
+        return f.tipoRetorno;
     }
 
     @Override
@@ -239,9 +261,10 @@ public class Checker extends Visitor {
     public Object visitFuncao(Funcao f) {
         // FIXME Esse método ta bugado, só um esboço
         // Obtém os tipos da lista de parâmetros
-        List<VinculavelConsVar> listaParamVinculavel = new ArrayList<VinculavelConsVar>();
-        for (Parametro p : f.listaParam)
-            listaParamVinculavel.add((VinculavelConsVar) p.accept(this));
+        List<VinculavelConsVar> lParamVinc = new ArrayList<VinculavelConsVar>();
+        for (Parametro p : f.listaParam) {
+            lParamVinc.add((VinculavelConsVar) p.accept(this));
+        }
         
         // Obtém o tipo de retorno da função
         TipoSemantico retorno = (TipoSemantico) f.tipo.accept(this); 
@@ -256,8 +279,9 @@ public class Checker extends Visitor {
     @Override
     public Object visitIf(IF i) {
         TipoSemantico t = (TipoSemantico) i.exp.accept(this);
-        if (! t.equals(TipoBaseSemantico.Bool))
+        if (! t.equals(TipoBaseSemantico.Bool)) {
             erros.reportar(203, "IF com expressão do tipo " + t + " inválido.");
+        }
         i.comandoVerdade.accept(this);
         i.comandoFalso.accept(this);
         return null;
@@ -291,8 +315,10 @@ public class Checker extends Visitor {
     @Override
     public Object visitMenos(Menos m) {
          TipoSemantico t = (TipoSemantico) m.exp.accept(this);
-         if (t.equals(TipoBaseSemantico.Int) || t.equals(TipoBaseSemantico.Real))
+         if (t.equals(TipoBaseSemantico.Int)
+                 || t.equals(TipoBaseSemantico.Real)) {
              return t;
+         }
          else {
              erros.reportar(101, "Operação uniária de Menos inválida para " + t);
              return TipoBaseSemantico.Int;
@@ -302,8 +328,9 @@ public class Checker extends Visitor {
     @Override
     public Object visitNao(Nao n) {
         TipoSemantico t = (TipoSemantico) n.exp.accept(this);
-        if (t.equals(TipoBaseSemantico.Bool))
+        if (t.equals(TipoBaseSemantico.Bool)) {
             return t;
+        }
         else {
             erros.reportar(102, "Operação unária de Negação inválida para " + t);
             return TipoBaseSemantico.Int;
@@ -312,25 +339,25 @@ public class Checker extends Visitor {
 
     @Override
     public Object visitParArrayCopia(ParArrayCopia p) {
-        aConsVar.add(p.id, true, converteParaSemantico(p.tipo, p.dimensao));
+        aConsVar.add(p.id, true, paraSemantico(p.tipo, p.dimensao));
         return null;
     }
 
     @Override
     public Object visitParArrayRef(ParArrayRef p) {
-        aConsVar.add(p.id, true, converteParaSemantico(p.tipo, p.dimensao));
+        aConsVar.add(p.id, true, paraSemantico(p.tipo, p.dimensao));
         return null;
     }
 
     @Override
     public Object visitParBaseCopia(ParBaseCopia p) {
-        aConsVar.add(p.id, true, converteParaSemantico(p.tipo));
+        aConsVar.add(p.id, true, paraSemantico(p.tipo));
         return null;
     }
 
     @Override
     public Object visitParBaseRef(ParBaseRef p) {
-        aConsVar.add(p.id, true, converteParaSemantico(p.tipo));
+        aConsVar.add(p.id, true, paraSemantico(p.tipo));
         return null;
     }
 
@@ -344,23 +371,26 @@ public class Checker extends Visitor {
              * Converter a lista de parametros sintática para semântica, ex:
              * l.add(new PassagemTipoSemantico(TipoBaseSemantico.Real));
              */
-            for (Parametro param : p.listaParam)
+            for (Parametro param : p.listaParam) {
                 l.add( (PassagemTipoSemantico) param.accept(this) );
+            }
             
-            aConsVar.comecaEscopo();
+            // aConsVar.comecaEscopo();
             aFuncProc.lookupFuncProc(p.id, l);
             p.comando.accept(this);
-            aConsVar.terminaEscopo();
+            // aConsVar.terminaEscopo();
         }
-        else erros.reportar(200, "O identificador " + p.id + " já está no ambiente.");
+        else erros.reportar(200, "O identificador " + p.id
+                            + " já está no ambiente.");
         
         return null;
     }
     
     @Override
     public Object visitPrograma(Programa p) {
-        for (Dec d : p.declaracoes)
+        for (Dec d : p.declaracoes) {
             d.accept(this);
+        }
         return null;
     }
 
@@ -369,7 +399,8 @@ public class Checker extends Visitor {
         VinculavelConsVar v = aConsVar.get(s.id);
         // Se for nulo reporta o erro e assume uma variável do tipo inteiro
         if (v == null) {
-            erros.reportar(404, "Identificador " + s.id + " não encontrado no ambiente!");
+            erros.reportar(404, "Identificador " + s.id
+                           + " não encontrado no ambiente!");
             v = new VinculavelConsVar(true, TipoBaseSemantico.Int);
         }
         return v;
@@ -378,7 +409,7 @@ public class Checker extends Visitor {
     @Override
     public Object visitTipoArray(TipoArray t) {
         TipoArraySemantico s = new TipoArraySemantico(
-            this.converteParaSemantico(t.base),
+            this.paraSemantico(t.base),
             t.exp.size()
         );
         return s; 
@@ -386,7 +417,7 @@ public class Checker extends Visitor {
 
     @Override
     public Object visitTipoBase(TipoBase t) {
-        return this.converteParaSemantico(t.tipo);
+        return this.paraSemantico(t.tipo);
     }
 
     @Override
@@ -397,40 +428,49 @@ public class Checker extends Visitor {
     @Override
     public Object visitVarInic(VarInic v) {
         TipoSemantico t = (TipoSemantico) v.nomeTipo.accept(this);
-        if (! aConsVar.add(v.id, true, t))
-            erros.reportar(200, "O identificador " + v.id + " não foi adicionado no ambiente.");
+        if (! aConsVar.add(v.id, true, t)) {
+            erros.reportar(200, "O identificador " + v.id
+                           + " não foi adicionado no ambiente.");
+        }
         return null;
     }
 
     @Override
     public Object visitVarInicComp(VarInicComp v) {
         TipoSemantico t = (TipoSemantico) v.nomeTipo.accept(this);
-        if (! aConsVar.add(v.id, true, t))
-            erros.reportar(200, "O identificador " + v.id + " não foi adicionado no ambiente.");
+        if (! aConsVar.add(v.id, true, t)) {
+            erros.reportar(200, "O identificador " + v.id
+                           + " não foi adicionado no ambiente.");
+        }
         return null;
     }
 
     @Override
     public Object visitVarInicExt(VarInicExt v) {
         TipoSemantico t = (TipoSemantico) v.nomeTipo.accept(this);
-        if (! aConsVar.add(v.id, true, t))
-            erros.reportar(200, "O identificador " + v.id + " não foi adicionado no ambiente.");
+        if (! aConsVar.add(v.id, true, t)) {
+            erros.reportar(200, "O identificador " + v.id
+                           + " não foi adicionado no ambiente.");
+        }
         return null;
     }
 
     @Override
     public Object visitVarNaoInic(VarNaoInic v) {
         TipoSemantico t = (TipoSemantico) v.nomeTipo.accept(this);
-        if (! aConsVar.add(v.id, true, t))
-            erros.reportar(200, "O identificador " + v.id + " não foi adicionado no ambiente.");
+        if (! aConsVar.add(v.id, true, t)) {
+            erros.reportar(200, "O identificador " + v.id
+                           + " não foi adicionado no ambiente.");
+        }
         return null;
     }
 
     @Override
     public Object visitWhile(WHILE w) {
         TipoSemantico t = (TipoSemantico) w.exp.accept(this);
-        if (! t.equals(TipoBaseSemantico.Bool))
+        if (! t.equals(TipoBaseSemantico.Bool)) {
             erros.reportar(103, "A expressão deve ser do tipo bool");
+        }
         w.comando.accept(this);
         return null;
     }

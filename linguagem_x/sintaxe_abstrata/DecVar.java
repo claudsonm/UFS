@@ -9,8 +9,7 @@ public class DecVar extends Dec {
     
     @Override
     public Object accept(Visitor vis) {
-        vis.visitDecVar(this);
-        return null;
+        return vis.visitDecVar(this);
     }
 
 }

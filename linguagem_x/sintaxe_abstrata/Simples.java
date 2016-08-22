@@ -9,8 +9,7 @@ public class Simples extends Var {
 
     @Override
     public Object accept(Visitor vis) {
-        vis.visitSimples(this);
-        return null;
+        return vis.visitSimples(this);
     }
 
 }

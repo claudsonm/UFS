@@ -17,8 +17,7 @@ public class Funcao extends Dec {
 
     @Override
     public Object accept(Visitor vis) {
-        vis.visitFuncao(this);
-        return null;
+        return vis.visitFuncao(this);
     }
 
 }

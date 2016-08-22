@@ -13,8 +13,7 @@ public class ParArrayCopia extends Parametro {
 
     @Override
     public Object accept(Visitor vis) {
-        vis.visitParArrayCopia(this);
-        return null;
+        return vis.visitParArrayCopia(this);
     }
 
 }

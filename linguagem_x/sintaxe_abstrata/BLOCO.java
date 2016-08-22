@@ -11,8 +11,7 @@ public class BLOCO extends Comando {
 
     @Override
     public Object accept(Visitor vis) {
-        vis.visitBloco(this);
-        return null;
+        return vis.visitBloco(this);
     }
 
 }

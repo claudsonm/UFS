@@ -11,8 +11,7 @@ public class ASSIGN extends Comando {
 
     @Override
     public Object accept(Visitor vis) {
-        vis.visitAssign(this);
-        return null;
+        return vis.visitAssign(this);
     }
 
 }

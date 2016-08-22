@@ -11,8 +11,7 @@ public class WHILE extends Comando {
 
     @Override
     public Object accept(Visitor vis) {
-        vis.visitWhile(this);
-        return null;
+        return vis.visitWhile(this);
     }
 
 }

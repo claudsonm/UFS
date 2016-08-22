@@ -11,8 +11,7 @@ public class ParBaseRef extends Parametro {
 
     @Override
     public Object accept(Visitor vis) {
-        vis.visitParBaseRef(this);
-        return null;
+        return vis.visitParBaseRef(this);
     }
 
 }

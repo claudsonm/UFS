@@ -15,8 +15,7 @@ public class Procedimento extends Dec {
 
     @Override
     public Object accept(Visitor vis) {
-        vis.visitProcedimento(this);
-        return null;
+        return vis.visitProcedimento(this);
     }
 
 }

@@ -9,8 +9,7 @@ public class Com extends DVarConsCom {
 
     @Override
     public Object accept(Visitor vis) {
-        vis.visitCom(this);
-        return null;
+        return vis.visitCom(this);
     }
 
 }

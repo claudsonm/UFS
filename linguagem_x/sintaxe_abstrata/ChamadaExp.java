@@ -3,8 +3,8 @@ package sintaxe_abstrata;
 import java.util.List;
 
 public class ChamadaExp extends Exp {
-    String id;
-    List<Exp> listaExp;
+    public String id;
+    public List<Exp> listaExp;
     
     public ChamadaExp(String id, List<Exp> lista) {
         this.id = id;
@@ -13,8 +13,7 @@ public class ChamadaExp extends Exp {
 
     @Override
     public Object accept(Visitor vis) {
-        vis.visitChamadaExp(this);
-        return null;
+        return vis.visitChamadaExp(this);
     }
 
 }

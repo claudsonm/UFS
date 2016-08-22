@@ -47,6 +47,16 @@ public class AmbienteFuncProc {
     }
     
     /**
+     * Procura a função ou procedimento dado o nome do identificador
+     * 
+     * @param id Nome da função ou procedimento
+     * @return
+     */
+    public VinculavelFuncProc get(String id) {
+        return (VinculavelFuncProc) tabela.get(id);
+    }
+    
+    /**
      * Retorna true se o identificador já existe na tabela de símbolos.
      * 
      * @param id Nome da função ou procedimento a ser verificado

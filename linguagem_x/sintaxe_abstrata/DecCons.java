@@ -9,8 +9,7 @@ public class DecCons extends Dec {
     
     @Override
     public Object accept(Visitor vis) {
-        vis.visitDecCons(this);
-        return null;
+        return vis.visitDecCons(this);
     }
 
 }

@@ -9,8 +9,7 @@ public class VarExp extends Exp {
 
     @Override
     public Object accept(Visitor vis) {
-        vis.visitVarExp(this);
-        return null;
+        return vis.visitVarExp(this);
     }
 
 }

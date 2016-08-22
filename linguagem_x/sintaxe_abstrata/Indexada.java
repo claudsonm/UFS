@@ -11,8 +11,7 @@ public class Indexada extends Var {
 
     @Override
     public Object accept(Visitor vis) {
-        vis.visitIndexada(this);
-        return null;
+        return vis.visitIndexada(this);
     }
 
 }

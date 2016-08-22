@@ -13,8 +13,7 @@ public class VarInic extends DVar {
     
     @Override
     public Object accept(Visitor vis) {
-        vis.visitVarInic(this);
-        return null;
+        return vis.visitVarInic(this);
     }
     
 }

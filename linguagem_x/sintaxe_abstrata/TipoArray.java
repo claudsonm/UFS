@@ -13,8 +13,7 @@ public class TipoArray extends Tipo {
 
     @Override
     public Object accept(Visitor vis) {
-        vis.visitTipoArray(this);
-        return null;
+        return vis.visitTipoArray(this);
     }
     
 }

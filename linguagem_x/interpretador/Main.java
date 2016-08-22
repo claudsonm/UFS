@@ -246,8 +246,10 @@ public class Main {
         d.add(
             new Funcao(new TipoBase(TBase.Real), "tamanhoHipotenusa", parametros,
                 new BinExp(BinOp.Mul,
-                    new BinExp(BinOp.Mul, new VarExp(new Simples("l1")), new VarExp(new Simples("l1"))),
-                    new BinExp(BinOp.Mul, new VarExp(new Simples("l2")), new VarExp(new Simples("l2")))
+                    new BinExp(BinOp.Mul, new VarExp(new Simples("l1")),
+                            new VarExp(new Simples("l1"))),
+                    new BinExp(BinOp.Mul, new VarExp(new Simples("l2")),
+                            new VarExp(new Simples("l2")))
                 )
             )
         );
@@ -257,16 +259,12 @@ public class Main {
          *********************************************************************/
         // Declarações de variáveis do procedimento main
         List<DVarConsCom> instrucoesMain = new ArrayList<DVarConsCom>();
-        instrucoesMain.add(
-            new DV( new VarInic(new TipoBase(TBase.Real), "lado1", new LiteralReal(6.6)) )
-        );
-        instrucoesMain.add(
-            new DV( new VarInic(new TipoBase(TBase.Int), "lado2", new LiteralInt(5)) )
-        );
-        instrucoesMain.add(
-            new DV( new VarNaoInic(new TipoBase(TBase.Real), "hipotenusa") )
-        );
-        
+        instrucoesMain.add( new DV( new VarInic(new TipoBase(TBase.Real),
+                            "lado1", new LiteralReal(6.6)) ) );
+        instrucoesMain.add( new DV( new VarInic(new TipoBase(TBase.Int),
+                            "lado2", new LiteralInt(5)) ) );
+        instrucoesMain.add( new DV( new VarNaoInic(new TipoBase(TBase.Real),
+                            "hipotenusa") ) );
         
         // Lista de parametros que serão passados na chamada da função hipotenusa
         List<Exp> passagemParametros = new ArrayList<Exp>();
@@ -293,18 +291,13 @@ public class Main {
         valoresArray.add( new VarExp(new Simples("hipotenusa")) );
         
         // Declaração e inicialização do array
-        instrucoesMain.add(
-            new DV(
-                new VarInicExt(new TipoArray(TBase.Real, tamanhoArray), "resultados", valoresArray)
-            )
-        );
-        
+        instrucoesMain.add( new DV( new VarInicExt(new TipoArray(TBase.Real,
+                            tamanhoArray), "resultados", valoresArray) ) );
         
         // Corpo do procedimento main
         BLOCO corpoMain = new BLOCO(instrucoesMain);
         // Declara o procedimento main
         d.add( new Procedimento("main", new ArrayList<>(), corpoMain) );
-        
         
         Programa p = new Programa(d);
         Checker c = new Checker();

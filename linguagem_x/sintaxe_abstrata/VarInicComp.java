@@ -17,7 +17,6 @@ public class VarInicComp extends DVar {
     
     @Override
     public Object accept(Visitor vis) {
-        vis.visitVarInicComp(this);
-        return null;
+        return vis.visitVarInicComp(this);
     }
 }

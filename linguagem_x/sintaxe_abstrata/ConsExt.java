@@ -15,8 +15,7 @@ public class ConsExt extends DCons {
 
     @Override
     public Object accept(Visitor vis) {
-        vis.visitConsExt(this);
-        return null;
+        return vis.visitConsExt(this);
     }
 
 }

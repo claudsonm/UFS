@@ -13,8 +13,7 @@ public class BinExp extends Exp {
 
     @Override
     public Object accept(Visitor vis) {
-        vis.visitBinExp(this);
-        return null;
+        return vis.visitBinExp(this);
     }
 
 }

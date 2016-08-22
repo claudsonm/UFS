@@ -11,7 +11,6 @@ public class VarNaoInic extends DVar {
 
     @Override
     public Object accept(Visitor vis) {
-        vis.visitVarNaoInic(this);
-        return null;
+        return vis.visitVarNaoInic(this);
     }
 }
