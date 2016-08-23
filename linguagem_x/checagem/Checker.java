@@ -105,6 +105,10 @@ public class Checker extends Visitor {
 
     @Override
     public Object visitBinExp(BinExp e) {
+        /**
+         * TODO
+         * Coerçoes
+         */
         TBase tipoRetorno = null;
         TipoBase esq, dir;
         
@@ -309,11 +313,6 @@ public class Checker extends Visitor {
 
     @Override
     public Object visitFuncao(Funcao f) {
-        // FIXME Esse método ta bugado, só um esboço
-        // Obtém os tipos da lista de parâmetros
-        //List<VinculavelConsVar> lParamVinc = new ArrayList<VinculavelConsVar>();
-        
-        // Obtém o tipo de retorno da função
         TipoSemantico retorno = (TipoSemantico) f.tipo.accept(this);
         
         List<PassagemTipoSemantico> l = new ArrayList<PassagemTipoSemantico>();
@@ -338,6 +337,7 @@ public class Checker extends Visitor {
 
     @Override
     public Object visitIndexada(Indexada i) {
+        // TODO
         return i.var.accept(this);
     }
     
@@ -382,20 +382,18 @@ public class Checker extends Visitor {
         }
         else {
             erros.reportar(102, "Operação unária de Negação inválida para " + t);
-            return TipoBaseSemantico.Int;
+            return TipoBaseSemantico.Bool;
         }
     }
 
     @Override
     public Object visitParArrayCopia(ParArrayCopia p) {
-        aConsVar.add(p.id, true, paraSemantico(p.tipo, p.dimensao));
-        return null;
+        return new PassagemTipoSemantico(paraSemantico(p.tipo, p.dimensao));
     }
 
     @Override
     public Object visitParArrayRef(ParArrayRef p) {
-        aConsVar.add(p.id, true, paraSemantico(p.tipo, p.dimensao));
-        return null;
+        return new PassagemTipoSemantico(paraSemantico(p.tipo, p.dimensao), false);
     }
 
     @Override
@@ -412,24 +410,15 @@ public class Checker extends Visitor {
     public Object visitProcedimento(Procedimento p) {
         if (! aFuncProc.contem(p.id)) {
             List<PassagemTipoSemantico> l = new ArrayList<PassagemTipoSemantico>();
-            /**
-             * TODO
-             * O for abaixo não esta 100% correto
-             * Converter a lista de parametros sintática para semântica, ex:
-             * l.add(new PassagemTipoSemantico(TipoBaseSemantico.Real));
-             */
             for (Parametro param : p.listaParam) {
-                l.add( (PassagemTipoSemantico) param.accept(this) );
+                l.add((PassagemTipoSemantico) param.accept(this));
             }
             
-            // aConsVar.comecaEscopo();
             aFuncProc.lookupFuncProc(p.id, l);
             p.comando.accept(this);
-            // aConsVar.terminaEscopo();
         }
         else {
-            erros.reportar(200, "O identificador " + p.id
-                    + " já está no ambiente.");
+            erros.reportar(200, "O procedimento " + p.id + " já está no ambiente.");
         }
         
         return null;
