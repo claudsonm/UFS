@@ -97,7 +97,7 @@ public class Checker extends Visitor {
         }
         if (! tVar.tipo.equals(tExp)) {
             erros.reportar(400, "Não é possível atribuir " + tExp + " em "
-                           + tVar.tipo);
+                    + tVar.tipo);
         }
             
         return tVar.tipo;
@@ -186,7 +186,57 @@ public class Checker extends Visitor {
 
     @Override
     public Object visitChamada(CHAMADA c) {
-        // TODO Auto-generated method stub
+        VinculavelFuncProc vinculo = aFuncProc.get(c.id);
+        
+        if (vinculo == null) {
+            erros.reportar(404, "Procedimento " + c.id
+                    + " não encontrado no ambiente!");
+        }
+        if (vinculo.isFunc) {
+            erros.reportar(001, "O identificador chamado é uma função, utilize"
+                    + " CHAMADA apenas com procedimentos.");
+        }
+        if (c.listaExp.size() != vinculo.paramProc.size()){
+            erros.reportar(002, "O número de parâmetros da chamada é diferente"
+                    + " dos parâmetros da assinatura do procedimento.");
+        }
+        else {
+            PassagemTipoSemantico p1;
+            Object p2;
+            
+            for (int i = 0, count = c.listaExp.size(); i < count; i++) {
+                p1 = vinculo.paramProc.get(i);
+                p2 = c.listaExp.get(i).accept(this);
+                
+                if (! p1.isCopia) {
+                    // Se a passagem de parâmetros é por referência
+                    
+                    if (p2 instanceof VinculavelConsVar) {
+                        VinculavelConsVar v = (VinculavelConsVar) p2;
+                        if (! v.isVar) {
+                            erros.reportar(220, "O procedimento " + c.id
+                                    + " exige passagem de parâmetros por"
+                                    + "referência. Constantes são inválidas!");
+                        }
+                        if (! v.tipo.equals(p1.tipo)) {
+                            erros.reportar(202, "O parâmetro da chamada é"
+                                    + "incompatível com o parâmetro da"
+                                    + " assinatura.");
+                        }
+                    }
+                    else {
+                        erros.reportar(333, "O procedimento " + c.id + "exige"
+                                + " passagem de parâmetros por referência."
+                                + " Para chamá-lo passe uma variável.");
+                    }
+                }
+                
+                if (! p1.tipo.equals((TipoSemantico) p2)) {
+                    erros.reportar(202, "O parâmetro da chamada é incompatível"
+                            + " com o parâmetro da assinatura.");
+                }
+            }
+        }
         return null;
     }
 
@@ -377,8 +427,10 @@ public class Checker extends Visitor {
             p.comando.accept(this);
             // aConsVar.terminaEscopo();
         }
-        else erros.reportar(200, "O identificador " + p.id
-                            + " já está no ambiente.");
+        else {
+            erros.reportar(200, "O identificador " + p.id
+                    + " já está no ambiente.");
+        }
         
         return null;
     }
@@ -397,7 +449,7 @@ public class Checker extends Visitor {
         // Se for nulo reporta o erro e assume uma variável do tipo inteiro
         if (v == null) {
             erros.reportar(404, "Identificador " + s.id
-                           + " não encontrado no ambiente!");
+                    + " não encontrado no ambiente!");
             v = new VinculavelConsVar(true, TipoBaseSemantico.Int);
         }
         return v;
@@ -427,7 +479,7 @@ public class Checker extends Visitor {
         TipoSemantico t = (TipoSemantico) v.nomeTipo.accept(this);
         if (! aConsVar.add(v.id, true, t)) {
             erros.reportar(200, "O identificador " + v.id
-                           + " não foi adicionado no ambiente.");
+                    + " não foi adicionado no ambiente.");
         }
         return null;
     }
@@ -437,7 +489,7 @@ public class Checker extends Visitor {
         TipoSemantico t = (TipoSemantico) v.nomeTipo.accept(this);
         if (! aConsVar.add(v.id, true, t)) {
             erros.reportar(200, "O identificador " + v.id
-                           + " não foi adicionado no ambiente.");
+                    + " não foi adicionado no ambiente.");
         }
         return null;
     }
@@ -447,7 +499,7 @@ public class Checker extends Visitor {
         TipoSemantico t = (TipoSemantico) v.nomeTipo.accept(this);
         if (! aConsVar.add(v.id, true, t)) {
             erros.reportar(200, "O identificador " + v.id
-                           + " não foi adicionado no ambiente.");
+                    + " não foi adicionado no ambiente.");
         }
         return null;
     }
@@ -457,7 +509,7 @@ public class Checker extends Visitor {
         TipoSemantico t = (TipoSemantico) v.nomeTipo.accept(this);
         if (! aConsVar.add(v.id, true, t)) {
             erros.reportar(200, "O identificador " + v.id
-                           + " não foi adicionado no ambiente.");
+                    + " não foi adicionado no ambiente.");
         }
         return null;
     }

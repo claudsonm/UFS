@@ -26,7 +26,7 @@ public class AmbienteFuncProc {
             x = new VinculavelFuncProc(p, r);
             tabela.put(id, x);
             System.out.println("Criando FuncProc no ambiente : " + x.isFunc
-                               + " " + id + "(" + x.paramFunc + ")");
+                    + " " + id + "(" + x.paramFunc + ")");
         }
         return x;
     }
@@ -43,7 +43,8 @@ public class AmbienteFuncProc {
         if(x == null) {
             x = new VinculavelFuncProc(p);
             tabela.put(id, x);
-            System.out.println("Criando FuncProc no ambiente : " + x.isFunc + " " + id);
+            System.out.println("Criando FuncProc no ambiente : " + x.isFunc
+                    + " " + id + "(" + x.paramProc + ")");
         }
         return x;
     }
