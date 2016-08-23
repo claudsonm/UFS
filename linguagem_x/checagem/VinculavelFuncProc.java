@@ -7,8 +7,9 @@ public class VinculavelFuncProc extends Vinculavel {
     
     /*
      * Atributos das funções: f(int, real): real
+     * Nota: alterado para que func e proc recebam o tipo PassagemTipoSemantico
      */
-    public List<TipoSemantico> paramFunc;
+    public List<PassagemTipoSemantico> paramFunc;
     public TipoSemantico tipoRetorno;
     
     /*
@@ -22,7 +23,7 @@ public class VinculavelFuncProc extends Vinculavel {
      * @param p
      * @param r
      */
-    public VinculavelFuncProc(List<TipoSemantico> p, TipoSemantico r) {
+    public VinculavelFuncProc(List<PassagemTipoSemantico> p, TipoSemantico r) {
         this.isFunc = true;
         this.paramFunc = p;
         this.tipoRetorno = r;

@@ -261,18 +261,17 @@ public class Checker extends Visitor {
     public Object visitFuncao(Funcao f) {
         // FIXME Esse método ta bugado, só um esboço
         // Obtém os tipos da lista de parâmetros
-        List<VinculavelConsVar> lParamVinc = new ArrayList<VinculavelConsVar>();
-        for (Parametro p : f.listaParam) {
-            lParamVinc.add((VinculavelConsVar) p.accept(this));
-        }
+        //List<VinculavelConsVar> lParamVinc = new ArrayList<VinculavelConsVar>();
         
         // Obtém o tipo de retorno da função
-        TipoSemantico retorno = (TipoSemantico) f.tipo.accept(this); 
+        TipoSemantico retorno = (TipoSemantico) f.tipo.accept(this);
         
+        List<PassagemTipoSemantico> l = new ArrayList<PassagemTipoSemantico>();
+        for (Parametro p : f.listaParam) {
+            l.add((PassagemTipoSemantico) p.accept(this));
+        }
         
-        List<TipoSemantico> passagemParam = new ArrayList<TipoSemantico>();
-        
-        aFuncProc.lookupFuncProc(f.id, passagemParam, retorno);
+        aFuncProc.lookupFuncProc(f.id, l, retorno);
         return retorno;
     }
 
@@ -351,14 +350,12 @@ public class Checker extends Visitor {
 
     @Override
     public Object visitParBaseCopia(ParBaseCopia p) {
-        aConsVar.add(p.id, true, paraSemantico(p.tipo));
-        return null;
+        return new PassagemTipoSemantico(paraSemantico(p.tipo));
     }
 
     @Override
     public Object visitParBaseRef(ParBaseRef p) {
-        aConsVar.add(p.id, true, paraSemantico(p.tipo));
-        return null;
+        return new PassagemTipoSemantico(paraSemantico(p.tipo), false);
     }
 
     @Override

@@ -25,4 +25,9 @@ public class PassagemTipoSemantico {
         this.tipo = t;
         this.isCopia = b;
     }
+    
+    @Override
+    public String toString() {
+        return (isCopia) ? "(valor, " + tipo + ")" : "(ref, " + tipo + ")"; 
+    }
 }

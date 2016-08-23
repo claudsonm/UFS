@@ -19,12 +19,14 @@ public class AmbienteFuncProc {
      * @param r
      * @return
      */
-    public VinculavelFuncProc lookupFuncProc(String id, List<TipoSemantico> p, TipoSemantico r) {
+    public VinculavelFuncProc lookupFuncProc(String id,
+            List<PassagemTipoSemantico> p, TipoSemantico r) {
         VinculavelFuncProc x = (VinculavelFuncProc) tabela.get(id);
         if(x == null) {
             x = new VinculavelFuncProc(p, r);
             tabela.put(id, x);
-            System.out.println("Criando FuncProc no ambiente : " + x.isFunc + " " + id);
+            System.out.println("Criando FuncProc no ambiente : " + x.isFunc
+                               + " " + id + "(" + x.paramFunc + ")");
         }
         return x;
     }
