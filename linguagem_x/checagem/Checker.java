@@ -186,8 +186,21 @@ public class Checker extends Visitor {
 
     @Override
     public Object visitChamada(CHAMADA c) {
-        // TODO Auto-generated method stub
-        return null;
+        VinculavelFuncProc vinculo = aFuncProc.get(c.id);
+        TipoSemantico t = ((vinculo != null) && (vinculo.isFunc)) ? vinculo.tipoRetorno : null;
+        if (t == null){
+          //ERRO - Func não declarada
+        }
+        if (c.listaExp.size() != vinculo.paramFunc.size()){
+            //ERRO - Chamada: Número de paramêtros difere do declarado
+        } else{
+            for (int i = 0; i < c.listaExp.size(); i++){
+                TipoSemantico t1 = (TipoSemantico) c.listaExp.get(i).accept(this);
+                TipoSemantico t2 = (TipoSemantico) vinculo.paramFunc.get(i);
+                //verificar se t1 e t2 são compativeis
+            }
+        }
+        return t;
     }
 
     @Override
