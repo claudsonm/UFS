@@ -193,70 +193,133 @@ public class Checker extends Visitor {
         VinculavelFuncProc vinculo = aFuncProc.get(c.id);
         
         if (vinculo == null) {
-            erros.reportar(404, "Procedimento " + c.id
-                    + " não encontrado no ambiente!");
-        }
-        if (vinculo.isFunc) {
-            erros.reportar(001, "O identificador chamado é uma função, utilize"
-                    + " CHAMADA apenas com procedimentos.");
-        }
-        if (c.listaExp.size() != vinculo.paramProc.size()){
-            erros.reportar(002, "O número de parâmetros da chamada é diferente"
-                    + " dos parâmetros da assinatura do procedimento.");
+            erros.reportar(404, "Procedimento " + c.id + " não encontrado no "
+                    + "ambiente!");
         }
         else {
-            PassagemTipoSemantico p1;
-            Object p2;
-            
-            for (int i = 0, count = c.listaExp.size(); i < count; i++) {
-                p1 = vinculo.paramProc.get(i);
-                p2 = c.listaExp.get(i).accept(this);
+            if (vinculo.isFunc) {
+                erros.reportar(001, "O identificador chamado é uma função,"
+                        + " utilize CHAMADA apenas com procedimentos.");
+            }
+            if (c.listaExp.size() != vinculo.paramProc.size()){
+                erros.reportar(002, "O número de parâmetros da chamada é "
+                        + "diferente dos parâmetros da assinatura do "
+                        + "procedimento.");
+            }
+            else {
+                PassagemTipoSemantico p1; // parâmetro formal
+                Object p2; // parâmetro real
                 
-                if (! p1.isCopia) {
-                    // Se a passagem de parâmetros é por referência
+                for (int i = 0, count = c.listaExp.size(); i < count; i++) {
+                    p1 = vinculo.paramProc.get(i);
+                    Exp e = c.listaExp.get(i);
+                    p2 = e.accept(this);
+                    
+                    if (! p1.isCopia) {
+                        // Se a passagem de parâmetros é por referência
+                        if (p2 instanceof VinculavelConsVar) {
+                            VinculavelConsVar v = (VinculavelConsVar) p2;
+                            if (! v.isVar) {
+                                erros.reportar(220, "O procedimento " + c.id
+                                        + " exige passagem de parâmetros por"
+                                        + "referência. Constantes são inválidas!");
+                            }
+                        }
+                        else {
+                            erros.reportar(333, "O procedimento " + c.id
+                                    + "exige passagem de parâmetros por "
+                                    + "referência. Para chamá-lo passe uma "
+                                    + "variável.");
+                        }
+                    }
                     
                     if (p2 instanceof VinculavelConsVar) {
                         VinculavelConsVar v = (VinculavelConsVar) p2;
-                        if (! v.isVar) {
-                            erros.reportar(220, "O procedimento " + c.id
-                                    + " exige passagem de parâmetros por"
-                                    + "referência. Constantes são inválidas!");
+                        if (v.tipo.equals(TipoBaseSemantico.Int)
+                                && p1.tipo.equals(TipoBaseSemantico.Real)) {
+                            // Adiciona o TypeCast na hierarquia de classes
+                            e = new IntParaReal(e);
                         }
-                        if (! v.tipo.equals(p1.tipo)) {
-                            erros.reportar(202, "O parâmetro da chamada é"
+                        else if (! v.tipo.equals(p1.tipo)) {
+                            erros.reportar(202, "O parâmetro da chamada é "
                                     + "incompatível com o parâmetro da"
-                                    + " assinatura.");
+                                    + " assinatura do procedimento.");
                         }
                     }
                     else {
-                        erros.reportar(333, "O procedimento " + c.id + "exige"
-                                + " passagem de parâmetros por referência."
-                                + " Para chamá-lo passe uma variável.");
+                        if ( ((TipoSemantico) p2).equals(TipoBaseSemantico.Int)
+                                && p1.tipo.equals(TipoBaseSemantico.Real)) {
+                            // Adiciona o TypeCast na hierarquia de classes
+                            e = new IntParaReal(e);
+                        }
+                        else if (! p1.tipo.equals((TipoSemantico) p2)) {
+                            erros.reportar(202, "O parâmetro da chamada é "
+                                    + "incompatível com o parâmetro da assinatura");
+                        }
                     }
-                }
-                
-                if (! p1.tipo.equals((TipoSemantico) p2)) {
-                    erros.reportar(202, "O parâmetro da chamada é incompatível"
-                            + " com o parâmetro da assinatura.");
                 }
             }
         }
+        
         return null;
     }
 
     @Override
     public Object visitChamadaExp(ChamadaExp c) {
         VinculavelFuncProc f = aFuncProc.get(c.id);
-        /*
-         * TODO
-         * Verificar se é funcão ou procedimento e fazer a checagem dos tipos
-         * dos parametros. Esboço
-         * 
-         * if (f.isFunc) 
-         *      // checagem de parametros com c.listaExp e f.paramFunc
-         * else
-         *      // checagem de parametros com c.listaExp e f.paramProc
-         */
+        
+        if (f == null) {
+            erros.reportar(404, "Função " + c.id + " não encontrada no "
+                    + "ambiente!");
+        }
+        else {
+            if (! f.isFunc) {
+                erros.reportar(001, "O identificador chamado é um procedimento,"
+                        + " utilize ChamadaExp apenas com funções.");
+            }
+            if (c.listaExp.size() != f.paramFunc.size()){
+                erros.reportar(002, "O número de parâmetros da chamada é "
+                        + "diferente dos parâmetros da assinatura da "
+                        + "função.");
+            }
+            else {
+                PassagemTipoSemantico p1; // parâmetro formal
+                Object p2; // parâmetro real
+                
+                for (int i = 0, count = c.listaExp.size(); i < count; i++) {
+                    p1 = f.paramFunc.get(i);
+                    Exp e = c.listaExp.get(i);
+                    p2 = e.accept(this);
+                    
+                    if (p2 instanceof VinculavelConsVar) {
+                        VinculavelConsVar v = (VinculavelConsVar) p2;
+                        if (v.tipo.equals(TipoBaseSemantico.Int)
+                                && p1.tipo.equals(TipoBaseSemantico.Real)) {
+                            // Adiciona o TypeCast na hierarquia de classes
+                            e = new IntParaReal(e);
+                        }
+                        else if (! v.tipo.equals(p1.tipo)) {
+                            erros.reportar(202, "O parâmetro da chamada é "
+                                    + "incompatível com o parâmetro da"
+                                    + " assinatura da função.");
+                        }
+                    }
+                    else {
+                        if ( ((TipoSemantico) p2).equals(TipoBaseSemantico.Int)
+                                && p1.tipo.equals(TipoBaseSemantico.Real)) {
+                            // Adiciona o TypeCast na hierarquia de classes
+                            e = new IntParaReal(e);
+                        }
+                        else if (! p1.tipo.equals((TipoSemantico) p2)) {
+                            erros.reportar(202, "O parâmetro da chamada é "
+                                    + "incompatível com o parâmetro da assinatura"
+                                    + " da função");
+                        }
+                    }
+                }
+            }
+        }
+        
         return f.tipoRetorno;
     }
 

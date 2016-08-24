@@ -225,7 +225,7 @@ public class Main {
          *     var int lado2 := 5;
          *     var real hipotenusa;
          *     
-         *     hipotenusa := tamanhoHipotenusa(lado1, lado2); // erro, real + float
+         *     hipotenusa := tamanhoHipotenusa(lado1, lado2); // erro, real + int
          *     var real[] resultados := {hipotenusa};
          * }
          * 
