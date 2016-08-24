@@ -47,10 +47,8 @@ public class AmbienteConsVar {
         }
         else listaItens.add(x);
         
-        System.out.println(
-            "Criando ConsVar no ambiente no [Escopo " + nivel + "]: " +
-            x.isVar + " " + x.tipo + " " + id 
-        );
+        System.out.println("Criando ConsVar no ambiente no [Escopo " + nivel
+                + "]: " + (x.isVar ? "var" : "cons") + " " + x.tipo + " " + id);
     }
     
     /**
