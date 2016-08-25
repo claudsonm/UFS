@@ -105,64 +105,86 @@ public class Checker extends Visitor {
 
     @Override
     public Object visitBinExp(BinExp e) {
-        /**
-         * TODO
-         * Coerçoes
-         */
-        TBase tipoRetorno = null;
-        TipoBase esq, dir;
+        TipoSemantico tipoRetorno = null, tEsq, tDir;
+        Object esq = e.expEsq.accept(this);
+        Object dir = e.expDir.accept(this);
+        
+        tEsq = (esq instanceof VinculavelConsVar)
+                ? ((VinculavelConsVar) esq).tipo
+                : (TipoSemantico) esq;
+        
+        tDir = (dir instanceof VinculavelConsVar)
+                ? ((VinculavelConsVar) dir).tipo
+                : (TipoSemantico) dir;
         
         switch (e.operacao.token) {
-            case "+":
-            case "-":
-            case "*":
-            case "/":
-            case "%":
-            case "<":
-                esq = (TipoBase) e.expEsq.accept(this);
-                dir = (TipoBase) e.expDir.accept(this);
-                if (esq.tipo.equals(dir.tipo) && esq.tipo.nome != "bool") {
-                    tipoRetorno = esq.tipo;
+        case "+":
+        case "-":
+        case "*":
+        case "/":
+        case "%":
+            if (tEsq.equals(TipoBaseSemantico.Bool)
+                    || tDir.equals(TipoBaseSemantico.Bool)) {
+                // Algum lado da operação é boolean
+                erros.reportar(101, "Operação [" + e.operacao.token + "] não"
+                        + " permitida com booleanos.");
+                // Retornando int apenas para prosseguir a checagem sem erros
+                tipoRetorno = TipoBaseSemantico.Int;
+            }
+            else {
+                // Ambos os lados são numéricos
+                if (tEsq.equals(tDir)) {
+                    tipoRetorno = tEsq;
+                }
+                else if (tEsq.equals(TipoBaseSemantico.Real)
+                        && tDir.equals(TipoBaseSemantico.Int)) {
+                    e.expDir = new IntParaReal(e.expDir);
+                    tipoRetorno = TipoBaseSemantico.Real;
                 }
                 else {
-                    try {
-                        throw new Exception("BinExp: Tipos invalidos!");
-                    } catch (Exception e1) {
-                        e1.printStackTrace();
-                    }
+                    e.expEsq = new IntParaReal(e.expEsq);
+                    tipoRetorno = TipoBaseSemantico.Real;
                 }
-                break;
-            
-            case "=":
-                esq = (TipoBase) e.expEsq.accept(this);
-                dir = (TipoBase) e.expDir.accept(this);
-                if (esq.tipo.equals(dir.tipo)) {
-                    tipoRetorno = esq.tipo;
-                }
-                else {
-                    try {
-                        throw new Exception("BinExp: Tipos invalidos!");
-                    } catch (Exception e1) {
-                        e1.printStackTrace();
-                    }
-                }
-                break;
-            
-            case "and":
-            case "or":
-                esq = (TipoBase) e.expEsq.accept(this);
-                dir = (TipoBase) e.expDir.accept(this);
-                if (esq.tipo.equals(dir.tipo) && esq.tipo.nome == "bool") {
-                    tipoRetorno = esq.tipo;
-                }
-                else {
-                    try {
-                        throw new Exception("BinExp: Tipos invalidos!");
-                    } catch (Exception e1) {
-                        e1.printStackTrace();
-                    }
-                }
-                break;
+            }
+            break;
+        
+        case "<":
+        case "=":
+            if (tEsq.equals(tDir)) {
+                tipoRetorno = TipoBaseSemantico.Bool;
+            }
+            else if (tEsq.equals(TipoBaseSemantico.Real)
+                    && tDir.equals(TipoBaseSemantico.Int)) {
+                e.expDir = new IntParaReal(e.expDir);
+                tipoRetorno = TipoBaseSemantico.Bool;
+            }
+            else if (tEsq.equals(TipoBaseSemantico.Int)
+                    && tDir.equals(TipoBaseSemantico.Real)) {
+                e.expEsq = new IntParaReal(e.expEsq);
+                tipoRetorno = TipoBaseSemantico.Bool;
+            }
+            else {
+                erros.reportar(101, "Impossível realizar a operação ["
+                        + e.operacao.token + "] entre os tipos" + tEsq
+                        + " e " + tDir); 
+                // Retornando bool apenas para prosseguir a checagem sem erros
+                tipoRetorno = TipoBaseSemantico.Bool;
+            }
+            break;
+        
+        case "and":
+        case "or":
+            if (tEsq.equals(tDir) && tEsq.equals(TipoBaseSemantico.Bool)) {
+                tipoRetorno = tEsq;
+            }
+            else {
+                erros.reportar(101, "Impossível realizar a operação ["
+                        + e.operacao.token + "] entre os tipos" + tEsq
+                        + " e " + tDir);
+                // Retornando bool apenas para prosseguir a checagem sem erros
+                tipoRetorno = TipoBaseSemantico.Bool;
+            }
+            break;
         }
         return tipoRetorno;
     }
@@ -379,10 +401,12 @@ public class Checker extends Visitor {
         TipoSemantico retorno = (TipoSemantico) f.tipo.accept(this);
         
         List<PassagemTipoSemantico> l = new ArrayList<PassagemTipoSemantico>();
+        aConsVar.comecaEscopo();
         for (Parametro p : f.listaParam) {
             l.add((PassagemTipoSemantico) p.accept(this));
         }
-        
+        f.exp.accept(this);
+        aConsVar.terminaEscopo();
         aFuncProc.lookupFuncProc(f.id, l, retorno);
         return retorno;
     }
@@ -401,7 +425,8 @@ public class Checker extends Visitor {
     @Override
     public Object visitIndexada(Indexada i) {
         // TODO
-        return i.var.accept(this);
+        //return i.var.accept(this);
+        return TipoBaseSemantico.Real;
     }
     
     @Override
@@ -451,21 +476,25 @@ public class Checker extends Visitor {
 
     @Override
     public Object visitParArrayCopia(ParArrayCopia p) {
+        aConsVar.add(p.id, true, paraSemantico(p.tipo, p.dimensao));
         return new PassagemTipoSemantico(paraSemantico(p.tipo, p.dimensao));
     }
 
     @Override
     public Object visitParArrayRef(ParArrayRef p) {
+        aConsVar.add(p.id, true, paraSemantico(p.tipo, p.dimensao));
         return new PassagemTipoSemantico(paraSemantico(p.tipo, p.dimensao), false);
     }
 
     @Override
     public Object visitParBaseCopia(ParBaseCopia p) {
+        aConsVar.add(p.id, true, paraSemantico(p.tipo));
         return new PassagemTipoSemantico(paraSemantico(p.tipo));
     }
 
     @Override
     public Object visitParBaseRef(ParBaseRef p) {
+        aConsVar.add(p.id, true, paraSemantico(p.tipo));
         return new PassagemTipoSemantico(paraSemantico(p.tipo), false);
     }
 
@@ -570,7 +599,8 @@ public class Checker extends Visitor {
     public Object visitWhile(WHILE w) {
         TipoSemantico t = (TipoSemantico) w.exp.accept(this);
         if (! t.equals(TipoBaseSemantico.Bool)) {
-            erros.reportar(103, "A expressão deve ser do tipo bool");
+            erros.reportar(103, "A condição do WHILE deve ser do tipo bool."
+                    + " Um " + t + " foi passado.");
         }
         w.comando.accept(this);
         return null;

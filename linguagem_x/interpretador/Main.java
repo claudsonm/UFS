@@ -9,8 +9,8 @@ import sintaxe_abstrata.*;
 public class Main {
 
     public static void main(String[] args) {
-        //programa1();
-        programa2();
+        programa1();
+        //programa2();
         //testes();        
     }
     
@@ -55,22 +55,23 @@ public class Main {
          *     2 * r;
          * 
          * var real area, comprimento, diametro;
-         * area := areaCirculo(raio);
-         * diametro := diametroCirculo(raio);
-         * comprimento := PI * diametro;
          * 
-         * var real[] resultados := {area, diametro, comprimento};
-         * var int i := 0;
-         * var real soma;
-         * var bool par;
-         * 
-         * while(i < 3){
-         *     soma := soma + resultados[i];
-         *     i := i + 1;
+         * procedimento main () {
+         *     area := areaCirculo(raio);
+         *     diametro := diametroCirculo(raio);
+         *     comprimento := PI * diametro;
+         *     
+         *     var real[] resultados := {area, diametro, comprimento};
+         *     var int i := 0;
+         *     var real soma;
+         *     var bool par;
+         *     while(i < 3){
+         *         soma := soma + resultados[i];
+         *         i := i + 1;
+         *     }
+         *     if (soma % 2 = 0) par := true;
+         *     else par := false;
          * }
-         * 
-         * if (soma % 2 = 0) par := true;
-         * else par := false;
          * 
          */
         
@@ -82,47 +83,57 @@ public class Main {
         parametros.add( new ParBaseCopia(TBase.Real, "r") );
         
         // Declara e inicializa a constante PI e a variável raio
-        d.add( new DecCons(new Cons(new TipoBase(TBase.Real), "PI", new LiteralInt(3))) );
-        d.add( new DecVar(new VarInic(new TipoBase(TBase.Real), "raio", new LiteralInt(6))) );
+        d.add(new DecCons(new Cons(new TipoBase(TBase.Real), "PI",
+              new LiteralReal(3.14))) );
+        d.add(new DecVar(new VarInic(new TipoBase(TBase.Real), "raio",
+              new LiteralInt(6))) );
         
         // Declara as funções areaCirculo e diametroCirculo
         d.add(
             new Funcao(new TipoBase(TBase.Real), "areaCirculo", parametros,
                 new BinExp(BinOp.Mul,
-                    new BinExp(BinOp.Mul, new VarExp(new Simples("r")), new VarExp(new Simples("r"))),
-                    new BinExp(BinOp.Mul, new VarExp(new Simples("PI")), new LiteralInt(2))
+                    new BinExp(BinOp.Mul, new VarExp(new Simples("r")),
+                               new VarExp(new Simples("r"))),
+                    new BinExp(BinOp.Mul, new VarExp(new Simples("PI")),
+                               new LiteralInt(2))
                 )
             )
         );
         d.add(
             new Funcao(new TipoBase(TBase.Real), "diametroCirculo", parametros,
-                new BinExp(BinOp.Mul, new VarExp(new Simples("r")), new LiteralInt(2))
+                new BinExp(BinOp.Mul, new VarExp(new Simples("r")),
+                           new LiteralInt(2))
             )
         );
         
         // Declara as variáveis area, comprimento e diametro
-        d.add( new DecVar(new VarNaoInic(new TipoBase(TBase.Real), "area")) );
-        d.add( new DecVar(new VarNaoInic(new TipoBase(TBase.Real), "comprimento")) );
-        d.add( new DecVar(new VarNaoInic(new TipoBase(TBase.Real), "diametro")) );
+        d.add(new DecVar(new VarNaoInic(new TipoBase(TBase.Real), "area")) );
+        d.add(new DecVar(new VarNaoInic(new TipoBase(TBase.Real), "comprimento")) );
+        d.add(new DecVar(new VarNaoInic(new TipoBase(TBase.Real), "diametro")) );
         
         // Lista de parametros que serão passados nas chamadas das funções
         List<Exp> passagemParametros = new ArrayList<Exp>();
         passagemParametros.add( new VarExp(new Simples("raio")) );
         
-        /**
-         * FIXME Na BNF comandos e expressões não foram herdados de Dec
-         * Por isso as instruções abaixo não podem ser adicionados no programa
-         */
+        
+        // Comandos do main
+        List<DVarConsCom> instrucoesMain = new ArrayList<DVarConsCom>();
+        
         // Realiza as atribuições às variáveis area, diametro e comprimento
-        new ASSIGN( new Simples("area"), new ChamadaExp("areaCirculo", passagemParametros) );
-        new ASSIGN( new Simples("diametro"), new ChamadaExp("diametroCirculo", passagemParametros) );
-        new ASSIGN(
-            new Simples("comprimento"),
-            new BinExp(
-                BinOp.Mul, new VarExp(new Simples("PI")), new VarExp(new Simples("diametro"))
+        instrucoesMain.add(new Com(new ASSIGN(new Simples("area"),
+                new ChamadaExp("areaCirculo", passagemParametros))) );
+        instrucoesMain.add(new Com(new ASSIGN(new Simples("diametro"),
+                new ChamadaExp("diametroCirculo", passagemParametros))) );
+        instrucoesMain.add(
+            new Com(new ASSIGN(new Simples("comprimento"),
+                new BinExp(
+                    BinOp.Mul,
+                    new VarExp(new Simples("PI")),
+                    new VarExp(new Simples("diametro")) 
+                ))
             )
         );
-        /* END-FIXME */
+        
         
         // Lista com a expressão que define o tamanho do array
         List<Exp> tamanhoArray = new ArrayList<Exp>();
@@ -135,23 +146,18 @@ public class Main {
         valoresArray.add( new VarExp(new Simples("comprimento")) );
         
         // Declaração e inicialização do array
-        d.add(
-            new DecVar(
-                new VarInicExt(new TipoArray(TBase.Real, tamanhoArray), "resultados", valoresArray)
-            )
-        );
+        instrucoesMain.add(new DV(new VarInicExt(new TipoArray(TBase.Real,
+                tamanhoArray), "resultados", valoresArray)) );
         
         // Declaração e inicialização da variável i
-        d.add( new DecVar(new VarInic(new TipoBase(TBase.Int), "i", new LiteralInt(0))) );
+        instrucoesMain.add(new DV(new VarInic(new TipoBase(TBase.Int), "i",
+                new LiteralInt(0))) );
         
         // Declaração das variáveis soma e par
-        d.add( new DecVar(new VarNaoInic(new TipoBase(TBase.Real), "soma")) );
-        d.add( new DecVar(new VarNaoInic(new TipoBase(TBase.Bool), "par")) );
+        instrucoesMain.add(new DV(new VarNaoInic(new TipoBase(TBase.Real), "soma")) );
+        instrucoesMain.add(new DV(new VarNaoInic(new TipoBase(TBase.Bool), "par")) );
         
-        /**
-         * FIXME Na BNF comandos e expressões não foram herdados de Dec
-         * Por isso as instruções abaixo não podem ser adicionados no programa
-         */
+        
         // Lista de comandos a serem executados no bloco while
         List<DVarConsCom> comandosLopp = new ArrayList<DVarConsCom>();
         comandosLopp.add(
@@ -161,11 +167,8 @@ public class Main {
                     new BinExp(
                         BinOp.Som,
                         new VarExp(new Simples("soma")),
-                        new VarExp(
-                            new Indexada(
-                                new Simples("resultados"), new VarExp(new Simples("i"))
-                            )
-                        )
+                        new VarExp(new Indexada(new Simples("resultados"),
+                                new VarExp(new Simples("i")) ) )
                     )
                 )
             )
@@ -182,33 +185,47 @@ public class Main {
         );
         
         // Declaração do bloco while
-        new WHILE(
-            new BinExp(
-                BinOp.Menor,
-                new VarExp(new Simples("i")),
-                new LiteralInt(3)
-            ),
-            new BLOCO(comandosLopp)
+        instrucoesMain.add(
+            new Com(
+                new WHILE(
+                    new BinExp(
+                        BinOp.Menor,
+                        new VarExp(new Simples("i")),
+                        new LiteralInt(3)
+                    ),
+                    new BLOCO(comandosLopp)
+                )
+            )
         );
         
         // Declaração do bloco if
-        new IF(
-            new BinExp(
-                BinOp.Igual,
-                new LiteralInt(0),
-                new BinExp(
-                    BinOp.Mod,
-                    new VarExp(new Simples("soma")),
-                    new LiteralInt(2)
+        instrucoesMain.add(
+            new Com(
+                new IF(
+                    new BinExp(
+                        BinOp.Igual,
+                        new LiteralInt(0),
+                        new BinExp(
+                            BinOp.Mod,
+                            new VarExp(new Simples("soma")),
+                            new LiteralInt(2)
+                        )
+                    ),
+                    new ASSIGN(new Simples("par"), new LiteralBool(true)),
+                    new ASSIGN(new Simples("par"), new LiteralBool(false))
                 )
-            ),
-            new ASSIGN(new Simples("par"), new LiteralBool(true)),
-            new ASSIGN(new Simples("par"), new LiteralBool(false))
+            )
         );
-        /* END-FIXME */
+        
+        // Corpo do procedimento main
+        BLOCO corpoMain = new BLOCO(instrucoesMain);
+        // Declara o procedimento main
+        d.add(new Procedimento("main", new ArrayList<>(), corpoMain) );
         
         Programa p = new Programa(d);
-        System.out.println(p.declaracoes);
+        Checker c = new Checker();
+        c.visitPrograma(p);
+        c.erros.mostrar();
     }
     
     public static void programa2() {

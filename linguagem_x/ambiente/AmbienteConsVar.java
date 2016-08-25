@@ -115,7 +115,7 @@ public class AmbienteConsVar {
      */
     public VinculavelConsVar get(String id) {
         ArrayList<VinculavelConsVar> l = tabela.get(id);
-        return l.get(l.size() - 1);
+        return (l == null) ? null : l.get(l.size() - 1);
     }
     
     /**
