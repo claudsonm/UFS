@@ -11,6 +11,9 @@ public class TipoArraySemantico implements TipoSemantico {
 
     @Override
     public boolean equals(TipoSemantico t) {
+        if (t instanceof TipoBaseSemantico) {
+            return false;
+        }
         TipoArraySemantico t2 = (TipoArraySemantico) t;
         return (t2.tipo == this.tipo && t2.dimensao == this.dimensao);
     }

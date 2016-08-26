@@ -123,7 +123,15 @@ public class Checker extends Visitor {
         case "*":
         case "/":
         case "%":
-            if (tEsq.equals(TipoBaseSemantico.Bool)
+            if (tEsq instanceof TipoArraySemantico
+                    || tDir instanceof TipoArraySemantico) {
+                // Algum lado da operação é a instância completa de um array
+                erros.reportar(405, "Operação [" + e.operacao.token + "] não "
+                        + "permitida com a instância completa de um array.");
+                // Retornando int apenas para prosseguir a checagem sem erros
+                tipoRetorno = TipoBaseSemantico.Int;
+            }
+            else if (tEsq.equals(TipoBaseSemantico.Bool)
                     || tDir.equals(TipoBaseSemantico.Bool)) {
                 // Algum lado da operação é boolean
                 erros.reportar(101, "Operação [" + e.operacao.token + "] não"
@@ -398,17 +406,26 @@ public class Checker extends Visitor {
 
     @Override
     public Object visitFuncao(Funcao f) {
-        TipoSemantico retorno = (TipoSemantico) f.tipo.accept(this);
-        
-        List<PassagemTipoSemantico> l = new ArrayList<PassagemTipoSemantico>();
-        aConsVar.comecaEscopo();
-        for (Parametro p : f.listaParam) {
-            l.add((PassagemTipoSemantico) p.accept(this));
+        if (! aFuncProc.contem(f.id)) {
+            TipoSemantico retorno = (TipoSemantico) f.tipo.accept(this);
+            List<PassagemTipoSemantico> l = new ArrayList<PassagemTipoSemantico>();
+            aConsVar.comecaEscopo();
+            for (Parametro p : f.listaParam) {
+                l.add((PassagemTipoSemantico) p.accept(this));
+            }
+            TipoSemantico r2 = (TipoSemantico) f.exp.accept(this);
+            if (! retorno.equals(r2)) {
+                erros.reportar(201, "O tipo de retorno da função não é o mesmo"
+                        + " retornado pela expressão.");
+            }
+            aConsVar.terminaEscopo();
+            aFuncProc.lookupFuncProc(f.id, l, retorno);
+            return retorno;
         }
-        f.exp.accept(this);
-        aConsVar.terminaEscopo();
-        aFuncProc.lookupFuncProc(f.id, l, retorno);
-        return retorno;
+        else {
+            erros.reportar(200, "A função " + f.id + " já está no ambiente.");
+            return null;
+        }
     }
 
     @Override
@@ -424,9 +441,29 @@ public class Checker extends Visitor {
 
     @Override
     public Object visitIndexada(Indexada i) {
-        // TODO
-        //return i.var.accept(this);
-        return TipoBaseSemantico.Real;
+        TipoSemantico t = ((VinculavelConsVar) i.var.accept(this)).tipo;
+        
+        if (t instanceof TipoBaseSemantico) {
+            erros.reportar(303, "Não é possível realizar a indexação em"
+                    + " identificadores do tipo base, apenas arrays!");
+        }
+        else {
+            // Variável com as informações de tipo e dimensão do array
+            TipoArraySemantico t1 = (TipoArraySemantico) t;
+            
+            // Verifica se o tipo da expressão do índice é válida
+            VinculavelConsVar t2 = (VinculavelConsVar) i.exp.accept(this);
+            if (! t2.tipo.equals(TipoBaseSemantico.Int)) {
+                erros.reportar(101, "O tipo " + t2.tipo + " não é um índice "
+                        + "válido!");
+            }
+            
+            // TODO Verificar se a dimensão é válida
+            
+            // Define o retorno como sendo o tipo dos elementos do array
+            t = t1.tipo;
+        }
+        return t;
     }
     
     @Override
@@ -502,12 +539,13 @@ public class Checker extends Visitor {
     public Object visitProcedimento(Procedimento p) {
         if (! aFuncProc.contem(p.id)) {
             List<PassagemTipoSemantico> l = new ArrayList<PassagemTipoSemantico>();
+            aConsVar.comecaEscopo();
             for (Parametro param : p.listaParam) {
                 l.add((PassagemTipoSemantico) param.accept(this));
             }
-            
-            aFuncProc.lookupFuncProc(p.id, l);
             p.comando.accept(this);
+            aConsVar.terminaEscopo();
+            aFuncProc.lookupFuncProc(p.id, l);
         }
         else {
             erros.reportar(200, "O procedimento " + p.id + " já está no ambiente.");
