@@ -1,15 +1,20 @@
 package interpretador;
 
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import checagem.*;
 
+import checagem.*;
 import sintaxe_abstrata.*;
+import analisador_lexico.*;
 
 public class Main {
 
     public static void main(String[] args) {
-        programa1();
+        analiseLexica();
+        //programa1();
         //programa2();
         //testes();        
     }
@@ -320,6 +325,24 @@ public class Main {
         Checker c = new Checker();
         c.visitPrograma(p);
         c.erros.mostrar();
+    }
+    
+    public static void analiseLexica() {
+        try {
+            AnalisadorLexico l = new AnalisadorLexico(
+                    new FileReader("linguagem_x//utilitarios//prog1x.txt"));
+            while (true) {
+                try {
+                    Token t = l.yylex();
+                    if (t == null) break;
+                    System.out.println(t.toString());
+                } catch (IOException e) {
+                    System.out.println(e.getMessage());
+                }
+            }
+        } catch (FileNotFoundException e1) {
+            System.out.println(e1.getMessage());
+        }
     }
 
 }
