@@ -1,26 +1,29 @@
 package analisador_lexico;
 
+import java_cup.runtime.Symbol;
+
 /**
  * Os tokens retornados pelo analizador léxico
  *
  */
-public class Token {
+public class Token extends Symbol {
     
-    public int tipo;
     public int linha;
     public int coluna;
-    public Object valor;
+    
+    public Token(int tipo, int linha, int coluna, Object valor) {
+        this(tipo, linha, coluna, -1, -1, valor);
+    }
   
-    Token (int tipo, int linha, int coluna, Object valor) {
-        this.tipo = tipo;
+    public Token(int tipo, int linha, int coluna, int esq, int dir, Object valor) {
+        super(tipo, esq, dir, valor);
         this.linha = linha;
         this.coluna = coluna;
-        this.valor = valor;
     }
 
     public String toString() {
         String msg;
-        switch (tipo) {
+        switch (sym) {
      // Palavras-chave
         case 8:
             msg = "VAR | ";
@@ -157,6 +160,6 @@ public class Token {
             msg = "";
             break;
         }
-        return (valor == null ? msg : valor + " | ") + "index: " + tipo + " [" + linha + " : " + coluna + "]";
+        return (value == null ? msg : value + " | ") + "index: " + sym + " [" + linha + " : " + coluna + "]";
     }
 }

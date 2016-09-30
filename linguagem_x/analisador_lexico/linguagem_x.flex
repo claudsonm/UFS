@@ -3,9 +3,12 @@
  */
 
 package analisador_lexico;
+
+import java_cup.runtime.*;
 %%
 %public
 %class AnalisadorLexico
+%cup
 %implements iSimbolo
 %type Token
 %line
@@ -175,3 +178,4 @@ SingleCharacter = [^\r\n\'\\]
 /* error fallback */
 [^]                              { throw new RuntimeException("Illegal character \""+yytext()+
                                                               "\" at line "+yyline+", column "+yycolumn); }
+<<EOF>>                          { return token(EOF); }
