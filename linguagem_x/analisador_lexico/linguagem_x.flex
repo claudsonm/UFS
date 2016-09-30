@@ -92,7 +92,6 @@ SingleCharacter = [^\r\n\'\\]
   "]"                            { return token(RBRACK); }
   ";"                            { return token(SEMICOLON); }
   ","                            { return token(COMMA); }
-  "."                            { return token(DOT); }
   
   /* operators */
   ":="                           { return token(EQ); }

@@ -1,0 +1,16 @@
+/* =======================================================
+* Programa #2 em Linguagem X
+* Realiza o cálculo da hipotenusa
+* ======================================================*/
+
+function real tamanhoHipotenusa(var real l1, var real l2)
+     (l1 * l1) + (l2 * l2);
+
+procedure main() {
+    var real lado1 := 6.6;
+    var int lado2 := 5;
+    var real hipotenusa;
+    
+    hipotenusa := tamanhoHipotenusa(lado1, lado2); // erro, real + int
+    var real[] resultados := {hipotenusa};
+}

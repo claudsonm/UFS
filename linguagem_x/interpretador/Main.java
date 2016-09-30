@@ -13,7 +13,8 @@ import analisador_lexico.*;
 public class Main {
 
     public static void main(String[] args) {
-        analiseLexica();
+        //analiseLexica();
+        analiseSintatica();
         //programa1();
         //programa2();
         //testes();        
@@ -333,8 +334,11 @@ public class Main {
                     new FileReader("linguagem_x//utilitarios//prog1x.txt"));
             while (true) {
                 try {
-                    Token t = l.yylex();
-                    if (t == null) break;
+                    Token t = l.next_token();
+                    if (t == null || t.sym == 0) {
+                        System.out.println("EOF");
+                        break;
+                    }
                     System.out.println(t.toString());
                 } catch (IOException e) {
                     System.out.println(e.getMessage());
@@ -342,6 +346,17 @@ public class Main {
             }
         } catch (FileNotFoundException e1) {
             System.out.println(e1.getMessage());
+        }
+    }
+    
+    public static void analiseSintatica() {
+        try {
+            AnalisadorSintatico p = new AnalisadorSintatico(
+                    new AnalisadorLexico(new FileReader("linguagem_x//utilitarios//prog1x.txt")));
+            Object result = p.parse().value;
+            System.out.println(result.toString());
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
         }
     }
 

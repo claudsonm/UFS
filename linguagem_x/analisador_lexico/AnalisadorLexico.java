@@ -196,19 +196,19 @@ public class AnalisadorLexico implements java_cup.runtime.Scanner, iSimbolo {
   private static final int [] ZZ_ACTION = zzUnpackAction();
 
   private static final String ZZ_ACTION_PACKED_0 =
-    "\3\0\1\1\2\2\1\3\1\4\1\5\2\6\1\7"+
-    "\1\10\1\11\1\12\14\5\1\13\1\14\1\15\1\16"+
-    "\1\17\1\20\1\21\1\22\1\1\1\23\1\24\1\25"+
-    "\1\26\1\27\1\30\1\31\2\32\1\33\2\1\2\34"+
-    "\1\1\1\2\1\0\1\35\1\36\1\37\1\35\1\0"+
-    "\1\40\1\0\4\5\1\41\2\5\1\42\7\5\1\43"+
-    "\1\44\1\45\1\46\1\47\1\50\1\51\1\52\1\53"+
-    "\1\54\1\55\10\44\1\0\1\35\2\0\1\56\1\57"+
-    "\3\5\1\60\7\5\1\61\1\62\1\63\1\64\1\65"+
-    "\1\66\1\67\1\70\1\0\1\71\1\72\1\73\1\74"+
-    "\1\75\1\76\4\5\1\0\1\77\1\5\1\100\1\5"+
-    "\1\0\2\5\1\0\2\5\1\0\1\101\1\5\1\0"+
-    "\1\102\1\0\1\103";
+    "\3\0\1\1\2\2\1\3\1\4\1\5\2\6\1\1"+
+    "\1\7\1\10\1\11\14\5\1\12\1\13\1\14\1\15"+
+    "\1\16\1\17\1\20\1\21\1\1\1\22\1\23\1\24"+
+    "\1\25\1\26\1\27\1\30\2\31\1\32\2\1\2\33"+
+    "\1\1\1\2\1\0\1\34\1\35\1\36\1\34\1\0"+
+    "\1\37\1\0\4\5\1\40\2\5\1\41\7\5\1\42"+
+    "\1\43\1\44\1\45\1\46\1\47\1\50\1\51\1\52"+
+    "\1\53\1\54\10\43\1\0\1\34\2\0\1\55\1\56"+
+    "\3\5\1\57\7\5\1\60\1\61\1\62\1\63\1\64"+
+    "\1\65\1\66\1\67\1\0\1\70\1\71\1\72\1\73"+
+    "\1\74\1\75\4\5\1\0\1\76\1\5\1\77\1\5"+
+    "\1\0\2\5\1\0\2\5\1\0\1\100\1\5\1\0"+
+    "\1\101\1\0\1\102";
 
   private static int [] zzUnpackAction() {
     int [] result = new int[148];
@@ -907,271 +907,267 @@ public class AnalisadorLexico implements java_cup.runtime.Scanner, iSimbolo {
             { throw new RuntimeException("Illegal character \""+yytext()+
                                                               "\" at line "+yyline+", column "+yycolumn);
             }
-          case 68: break;
+          case 67: break;
           case 2: 
             { /* ignore */
             }
-          case 69: break;
+          case 68: break;
           case 3: 
             { return token(DIV);
             }
-          case 70: break;
+          case 69: break;
           case 4: 
             { return token(MULT);
             }
-          case 71: break;
+          case 70: break;
           case 5: 
             { return token(IDENTIFIER, yytext());
             }
-          case 72: break;
+          case 71: break;
           case 6: 
             { return token(INTEGER_LITERAL, new Integer(yytext()));
             }
-          case 73: break;
+          case 72: break;
           case 7: 
-            { return token(DOT);
-            }
-          case 74: break;
-          case 8: 
             { return token(MINUS);
             }
-          case 75: break;
-          case 9: 
+          case 73: break;
+          case 8: 
             { yybegin(STRING); string.setLength(0);
             }
-          case 76: break;
-          case 10: 
+          case 74: break;
+          case 9: 
             { yybegin(CHARLITERAL);
             }
-          case 77: break;
-          case 11: 
+          case 75: break;
+          case 10: 
             { return token(LPAREN);
             }
-          case 78: break;
-          case 12: 
+          case 76: break;
+          case 11: 
             { return token(RPAREN);
             }
-          case 79: break;
-          case 13: 
+          case 77: break;
+          case 12: 
             { return token(LBRACE);
             }
-          case 80: break;
-          case 14: 
+          case 78: break;
+          case 13: 
             { return token(RBRACE);
             }
-          case 81: break;
-          case 15: 
+          case 79: break;
+          case 14: 
             { return token(LBRACK);
             }
-          case 82: break;
-          case 16: 
+          case 80: break;
+          case 15: 
             { return token(RBRACK);
             }
-          case 83: break;
-          case 17: 
+          case 81: break;
+          case 16: 
             { return token(SEMICOLON);
             }
-          case 84: break;
-          case 18: 
+          case 82: break;
+          case 17: 
             { return token(COMMA);
             }
-          case 85: break;
-          case 19: 
+          case 83: break;
+          case 18: 
             { return token(EQEQ);
             }
-          case 86: break;
-          case 20: 
+          case 84: break;
+          case 19: 
             { return token(GT);
             }
-          case 87: break;
-          case 21: 
+          case 85: break;
+          case 20: 
             { return token(LT);
             }
-          case 88: break;
-          case 22: 
+          case 86: break;
+          case 21: 
             { return token(NOT);
             }
-          case 89: break;
-          case 23: 
+          case 87: break;
+          case 22: 
             { return token(PLUS);
             }
-          case 90: break;
-          case 24: 
+          case 88: break;
+          case 23: 
             { return token(MOD);
             }
-          case 91: break;
-          case 25: 
+          case 89: break;
+          case 24: 
             { string.append( yytext() );
             }
-          case 92: break;
-          case 26: 
+          case 90: break;
+          case 25: 
             { throw new RuntimeException("Unterminated string at end of line");
             }
-          case 93: break;
-          case 27: 
+          case 91: break;
+          case 26: 
             { yybegin(YYINITIAL); return token(STRING_LITERAL, string.toString());
             }
-          case 94: break;
-          case 28: 
+          case 92: break;
+          case 27: 
             { throw new RuntimeException("Unterminated character literal at end of line");
             }
-          case 95: break;
-          case 29: 
+          case 93: break;
+          case 28: 
             { return token(FLOATING_POINT_LITERAL, new Double(yytext()));
             }
-          case 96: break;
-          case 30: 
+          case 94: break;
+          case 29: 
             { return token(INTEGER_LITERAL, new Long(yytext().substring(0,yylength()-1)));
             }
-          case 97: break;
-          case 31: 
+          case 95: break;
+          case 30: 
             { return token(FLOATING_POINT_LITERAL, new Float(yytext().substring(0,yylength()-1)));
             }
-          case 98: break;
-          case 32: 
+          case 96: break;
+          case 31: 
             { return token(FLOATING_POINT_LITERAL, new Double(yytext().substring(0,yylength()-1)));
             }
-          case 99: break;
-          case 33: 
+          case 97: break;
+          case 32: 
             { return token(OR);
             }
-          case 100: break;
-          case 34: 
+          case 98: break;
+          case 33: 
             { return token(IF);
             }
-          case 101: break;
-          case 35: 
+          case 99: break;
+          case 34: 
             { return token(EQ);
             }
-          case 102: break;
-          case 36: 
+          case 100: break;
+          case 35: 
             { throw new RuntimeException("Illegal escape sequence \""+yytext()+"\"");
             }
-          case 103: break;
-          case 37: 
+          case 101: break;
+          case 36: 
             { string.append( '\"' );
             }
-          case 104: break;
-          case 38: 
+          case 102: break;
+          case 37: 
             { string.append( '\'' );
             }
-          case 105: break;
-          case 39: 
+          case 103: break;
+          case 38: 
             { string.append( '\\' );
             }
-          case 106: break;
-          case 40: 
+          case 104: break;
+          case 39: 
             { string.append( '\r' );
             }
-          case 107: break;
-          case 41: 
+          case 105: break;
+          case 40: 
             { string.append( '\b' );
             }
-          case 108: break;
-          case 42: 
+          case 106: break;
+          case 41: 
             { string.append( '\n' );
             }
-          case 109: break;
-          case 43: 
+          case 107: break;
+          case 42: 
             { string.append( '\t' );
             }
-          case 110: break;
-          case 44: 
+          case 108: break;
+          case 43: 
             { string.append( '\f' );
             }
-          case 111: break;
-          case 45: 
+          case 109: break;
+          case 44: 
             { yybegin(YYINITIAL); return token(CHARACTER_LITERAL, yytext().charAt(0));
             }
-          case 112: break;
-          case 46: 
+          case 110: break;
+          case 45: 
             { return token(VAR);
             }
-          case 113: break;
-          case 47: 
+          case 111: break;
+          case 46: 
             { return token(AND);
             }
-          case 114: break;
-          case 48: 
+          case 112: break;
+          case 47: 
             { return token(INT);
             }
-          case 115: break;
-          case 49: 
+          case 113: break;
+          case 48: 
             { yybegin(YYINITIAL); return token(CHARACTER_LITERAL, '\"');
             }
-          case 116: break;
-          case 50: 
+          case 114: break;
+          case 49: 
             { yybegin(YYINITIAL); return token(CHARACTER_LITERAL, '\'');
             }
-          case 117: break;
-          case 51: 
+          case 115: break;
+          case 50: 
             { yybegin(YYINITIAL); return token(CHARACTER_LITERAL, '\\');
             }
-          case 118: break;
-          case 52: 
+          case 116: break;
+          case 51: 
             { yybegin(YYINITIAL); return token(CHARACTER_LITERAL, '\r');
             }
-          case 119: break;
-          case 53: 
+          case 117: break;
+          case 52: 
             { yybegin(YYINITIAL); return token(CHARACTER_LITERAL, '\b');
             }
-          case 120: break;
-          case 54: 
+          case 118: break;
+          case 53: 
             { yybegin(YYINITIAL); return token(CHARACTER_LITERAL, '\n');
             }
-          case 121: break;
-          case 55: 
+          case 119: break;
+          case 54: 
             { yybegin(YYINITIAL); return token(CHARACTER_LITERAL, '\t');
             }
-          case 122: break;
-          case 56: 
+          case 120: break;
+          case 55: 
             { yybegin(YYINITIAL); return token(CHARACTER_LITERAL, '\f');
             }
-          case 123: break;
-          case 57: 
+          case 121: break;
+          case 56: 
             { return token(REAL);
             }
-          case 124: break;
-          case 58: 
+          case 122: break;
+          case 57: 
             { return token(BOOLEAN);
             }
-          case 125: break;
-          case 59: 
+          case 123: break;
+          case 58: 
             { return token(CONS);
             }
-          case 126: break;
-          case 60: 
+          case 124: break;
+          case 59: 
             { return token(BOOLEAN_LITERAL, true);
             }
-          case 127: break;
-          case 61: 
+          case 125: break;
+          case 60: 
             { return token(THEN);
             }
-          case 128: break;
-          case 62: 
+          case 126: break;
+          case 61: 
             { return token(ELSE);
             }
-          case 129: break;
-          case 63: 
+          case 127: break;
+          case 62: 
             { return token(BOOLEAN_LITERAL, false);
             }
-          case 130: break;
-          case 64: 
+          case 128: break;
+          case 63: 
             { return token(WHILE);
             }
-          case 131: break;
-          case 65: 
+          case 129: break;
+          case 64: 
             { return token(FUNCTION);
             }
-          case 132: break;
-          case 66: 
+          case 130: break;
+          case 65: 
             { return token(PROCEDURE);
             }
-          case 133: break;
-          case 67: 
+          case 131: break;
+          case 66: 
             { return token(INTEGER_LITERAL, new Integer(Integer.MIN_VALUE));
             }
-          case 134: break;
+          case 132: break;
           default:
             zzScanError(ZZ_NO_MATCH);
         }

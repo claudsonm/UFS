@@ -21,7 +21,7 @@ public class Token extends Symbol {
         this.coluna = coluna;
     }
 
-    public String toString() {
+    /*public String toString() {
         String msg;
         switch (sym) {
      // Palavras-chave
@@ -161,5 +161,10 @@ public class Token extends Symbol {
             break;
         }
         return (value == null ? msg : value + " | ") + "index: " + sym + " [" + linha + " : " + coluna + "]";
+    }
+    */
+    
+    public String toString() {
+        return "line "+linha+", column "+coluna+", sym: "+sym+(value == null ? "" : (", value: '"+value+"'"));
     }
 }
