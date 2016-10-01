@@ -12,5 +12,5 @@ procedure main() {
     var real hipotenusa;
     
     hipotenusa := tamanhoHipotenusa(lado1, lado2); // erro, real + int
-    var real[] resultados := {hipotenusa};
+    var real resultados[] := {hipotenusa};
 }

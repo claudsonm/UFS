@@ -3,23 +3,27 @@
 * Realiza alguns cálculos na circunferência
 * =======================================================*/
 
+var int x, y, k := true;
+var real raio := ((6+1) / -(7*5));
 cons real PI := 3.14;
-var real raio := 6;
+var real resultados[] := {area, diametro, area(2)};
  
 function real areaCirculo(var real r)
     2 * PI * (r * r);
 
-function real diametroCirculo(var real r)
+function real diametroCirculo(var real r) {
     2 * r;
+    a + 2; // teste
+}
 
 var real area, comprimento, diametro;
 
-procedimento main () {
+procedure main () {
     area := areaCirculo(raio);
     diametro := diametroCirculo(raio);
     comprimento := PI * diametro;
     
-    var real[] resultados := {area, diametro, comprimento};
+    var real resultados[] := {area, diametro, comprimento};
     var int i := 0;
     var real soma;
     var bool par;
@@ -27,6 +31,8 @@ procedimento main () {
         soma := soma + resultados[i];
         i := i + 1;
     }
-    if (soma % 2 = 0) par := true;
+    if (soma % 2 = 0) then par := true;
     else par := false;
 }
+
+procedure troca(int x, int o) if (x > y) then x := y;

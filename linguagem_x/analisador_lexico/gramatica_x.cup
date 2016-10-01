@@ -1,0 +1,279 @@
+/**
+ * Especificação do analisador sintático para a Linguaguem X
+ * java -jar ../utilitarios/java-cup-11a.jar -interface -parser AnalisadorSintatico -symbols iSimbolo gramatica_x.cup
+ */
+package analisador_lexico;
+
+import java_cup.runtime.*;
+
+parser code  {:
+    public void report_error(String message, Object info) {
+        StringBuilder m = new StringBuilder("Error ");
+
+        if (info instanceof java_cup.runtime.Symbol) {
+            m.append( "("+info.toString()+")" );
+        }
+        m.append(" : "+message);
+        System.out.println(m);
+    }
+   
+    public void report_fatal_error(String message, Object info) {
+        report_error(message, info);
+        throw new RuntimeException("Fatal Syntax Error");
+    }
+:};
+
+
+// Palavras-chave
+terminal VAR, CONS;
+terminal BOOLEAN, INT, REAL;
+terminal FUNCTION;
+terminal PROCEDURE;
+terminal IF, THEN, ELSE;
+terminal WHILE;
+
+terminal LBRACK, RBRACK, LBRACE, RBRACE, LPAREN, RPAREN;
+terminal SEMICOLON, COMMA;
+terminal EQ, EQEQ;
+terminal PLUS, MINUS, MULT, DIV, MOD, UMINUS;
+terminal LT, GT;
+terminal AND, OR, NOT;
+
+// Terminais Literais
+terminal java.lang.Number INTEGER_LITERAL;
+terminal java.lang.Number FLOATING_POINT_LITERAL;
+terminal java.lang.Boolean BOOLEAN_LITERAL;
+terminal java.lang.Character CHARACTER_LITERAL;
+terminal java.lang.String STRING_LITERAL;
+terminal java.lang.String IDENTIFIER;
+
+
+// Produções
+non terminal program;
+non terminal dec_list_opt, dec_list, dec, dec_var, dec_cons, dec_func, dec_proc;
+non terminal tipo, numerico, literal;
+non terminal expressao, primaria, chamada, lista_expressao, exp_opt;
+non terminal comando, comando_restrito, while, assign;
+non terminal bloco, bloco_comandos_opt, bloco_comandos, dec_comandos;
+non terminal declarador_vars, declarador_var, declarador_var_id;
+non terminal inicializador_var, inicializador_array;
+non terminal ass_func, corpo_func, lista_param_formal_opt, lista_param_formal;
+non terminal param_formal, param_ref, param_copia;
+non terminal bloco_exp, dec_bloco_exp_opt, dec_bloco_exp, dec_exp;
+non terminal ass_proc, lista_param_formal_proc_opt, lista_param_formal_proc;
+
+
+// Precedência dos operadores
+precedence right EQ;
+precedence left EQEQ, GT, LT; // Operadores relacionais
+precedence left PLUS, MINUS, OR; // Operadores de adição
+precedence left MULT, DIV, MOD, AND; // Operadores de multiplicação
+precedence nonassoc UMINUS;
+
+
+start with program;
+
+
+/******************************************************************************
+ * ESTRUTURA DE UM PROGRAMA EM X
+ *****************************************************************************/
+program ::= dec_list_opt ;
+
+dec_list_opt ::=
+    |   dec_list
+    ;
+
+dec_list ::=
+        dec
+    |   dec_list dec
+    ;
+
+dec ::=
+        dec_var
+    |   dec_cons
+    |   dec_func
+    |   dec_proc
+    ;
+
+/******************************************************************************
+ * PRODUÇÕES FUNDAMENTAIS
+ *****************************************************************************/
+tipo ::=
+        numerico
+    |   BOOLEAN
+    ;
+
+numerico ::=
+        INT
+    |   REAL
+    ;
+
+literal ::=
+        INTEGER_LITERAL
+    |   FLOATING_POINT_LITERAL
+    |   BOOLEAN_LITERAL
+    |   CHARACTER_LITERAL
+    |   STRING_LITERAL
+    ;
+
+expressao ::=
+        primaria
+    |   expressao PLUS expressao
+    |   expressao MINUS expressao
+    |   expressao MULT expressao
+    |   expressao DIV expressao
+    |   expressao MOD expressao
+    |   expressao GT expressao
+    |   expressao LT expressao
+    |   expressao EQEQ expressao
+    |   expressao AND expressao
+    |   expressao OR expressao
+    |   MINUS expressao %prec UMINUS
+    |   NOT expressao
+    ;
+
+primaria ::=
+        LPAREN expressao RPAREN
+    |   literal
+    |   IDENTIFIER
+    |   IDENTIFIER LBRACK expressao RBRACK
+    |   chamada
+    ;
+
+chamada ::= IDENTIFIER LPAREN exp_opt RPAREN ;
+
+exp_opt ::=
+    |   lista_expressao
+    ;
+
+lista_expressao ::=
+        expressao
+    |   lista_expressao COMMA expressao
+    ;
+
+comando ::=
+        bloco
+    |   IF LPAREN expressao RPAREN THEN comando
+    |   IF LPAREN expressao RPAREN THEN comando_restrito ELSE comando
+    |   while
+    |   assign
+    |   chamada
+    ;
+
+// Proibe IF's sem ELSE dentro de um THEN em um IF-THEN-ELSE
+comando_restrito ::=
+        bloco
+    |   IF LPAREN expressao RPAREN THEN comando_restrito ELSE comando_restrito
+    |   WHILE LPAREN expressao RPAREN comando_restrito
+    |   assign
+    |   chamada
+    ;
+
+while ::= WHILE LPAREN expressao RPAREN comando ;
+
+assign ::= IDENTIFIER EQ expressao SEMICOLON ;
+
+bloco ::= LBRACE bloco_comandos_opt RBRACE ;
+
+bloco_comandos_opt ::=
+    |   bloco_comandos
+    ;
+
+bloco_comandos ::=
+        dec_comandos
+    |   bloco_comandos dec_comandos  
+    ;
+
+dec_comandos ::=
+        comando
+    |   dec_var
+    |   dec_cons
+    ;
+
+/******************************************************************************
+ * DECLARAÇÃO DE VARIÁVEIS E CONSTANTES
+ *****************************************************************************/
+dec_var ::= VAR tipo declarador_vars SEMICOLON ;
+
+dec_cons ::= CONS tipo declarador_vars SEMICOLON ;
+
+declarador_vars ::=
+        declarador_var
+    |   declarador_vars COMMA declarador_var
+    ;
+
+declarador_var ::=
+        declarador_var_id
+    |   declarador_var_id EQ inicializador_var
+    ;
+
+declarador_var_id ::=
+        IDENTIFIER
+    |   declarador_var_id LBRACK exp_opt RBRACK
+    ;
+
+inicializador_var ::=
+        expressao
+    |   inicializador_array
+    ;
+
+inicializador_array ::= LBRACE lista_expressao RBRACE ;
+    
+/******************************************************************************
+ * DECLARAÇÃO DE FUNÇÕES
+ *****************************************************************************/
+dec_func ::= ass_func corpo_func ;
+
+ass_func ::= FUNCTION tipo IDENTIFIER LPAREN lista_param_formal_opt RPAREN ;
+
+lista_param_formal_opt ::=
+    |   lista_param_formal
+    ;
+
+lista_param_formal ::=
+        param_formal
+    |   lista_param_formal COMMA param_formal 
+    ;
+
+param_formal ::=
+        param_ref
+    |   param_copia
+    ;
+
+param_ref ::= tipo declarador_var_id ;
+
+param_copia ::= VAR tipo declarador_var_id ;
+
+corpo_func ::=
+        expressao SEMICOLON
+    |   bloco_exp
+    ;
+
+bloco_exp ::= LBRACE dec_bloco_exp_opt RBRACE ;
+
+dec_bloco_exp_opt ::=
+    |   dec_bloco_exp
+    ;
+
+dec_bloco_exp ::=
+        dec_exp
+    |   dec_bloco_exp dec_exp
+    ;
+
+dec_exp ::= expressao SEMICOLON ;
+
+/******************************************************************************
+ * DECLARAÇÃO DE PROCEDIMENTOS
+ *****************************************************************************/
+dec_proc ::= ass_proc comando ;
+
+ass_proc ::= PROCEDURE IDENTIFIER LPAREN lista_param_formal_proc_opt RPAREN ;
+
+lista_param_formal_proc_opt ::=
+    |   lista_param_formal_proc
+    ;
+
+lista_param_formal_proc ::=
+        param_ref
+    |   lista_param_formal_proc COMMA param_ref 
+    ;
