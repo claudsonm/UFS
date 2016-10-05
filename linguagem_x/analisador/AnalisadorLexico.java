@@ -4,7 +4,7 @@
  * Especificação do analisador léxico para a Linguaguem X
  */
 
-package analisador_lexico;
+package analisador;
 
 import java_cup.runtime.*;
 

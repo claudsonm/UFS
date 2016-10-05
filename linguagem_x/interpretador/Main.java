@@ -6,15 +6,15 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import analisador.*;
 import checagem.*;
 import sintaxe_abstrata.*;
-import analisador_lexico.*;
 
 public class Main {
 
     public static void main(String[] args) {
         //analiseLexica();
-        analiseSintatica();
+        analiseLexicaSintatica();
         //programa1();
         //programa2();
         //testes();        
@@ -349,10 +349,10 @@ public class Main {
         }
     }
     
-    public static void analiseSintatica() {
+    public static void analiseLexicaSintatica() {
         try {
             AnalisadorSintatico p = new AnalisadorSintatico(
-                    new AnalisadorLexico(new FileReader("linguagem_x//utilitarios//prog1x.txt")));
+                    new AnalisadorLexico(new FileReader("linguagem_x//utilitarios//prog2x.txt")));
             Object result = p.parse().value;
             System.out.println(result.toString());
         } catch (Exception e) {

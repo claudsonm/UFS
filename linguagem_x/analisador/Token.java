@@ -1,4 +1,4 @@
-package analisador_lexico;
+package analisador;
 
 import java_cup.runtime.Symbol;
 

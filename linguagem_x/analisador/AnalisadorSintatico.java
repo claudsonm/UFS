@@ -4,7 +4,7 @@
 // Sat Oct 01 17:59:27 BRT 2016
 //----------------------------------------------------
 
-package analisador_lexico;
+package analisador;
 
 import java_cup.runtime.*;
 
