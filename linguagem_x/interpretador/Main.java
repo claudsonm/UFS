@@ -17,7 +17,7 @@ public class Main {
         analiseLexicaSintatica();
         //programa1();
         //programa2();
-        //testes();        
+        //testes();       
     }
     
     public static void testes() {
@@ -352,7 +352,7 @@ public class Main {
     public static void analiseLexicaSintatica() {
         try {
             AnalisadorSintatico p = new AnalisadorSintatico(
-                    new AnalisadorLexico(new FileReader("linguagem_x//utilitarios//prog2x.txt")));
+                    new AnalisadorLexico(new FileReader("linguagem_x//utilitarios//prog1x.txt")));
             Object result = p.parse().value;
             System.out.println(result.toString());
         } catch (Exception e) {

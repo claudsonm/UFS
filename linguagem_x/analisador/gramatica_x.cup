@@ -2,7 +2,7 @@
  * Especificação do analisador sintático para a Linguaguem X
  * java -jar ../utilitarios/java-cup-11a.jar -interface -parser AnalisadorSintatico -symbols iSimbolo gramatica_x.cup
  */
-package analisador_lexico;
+package analisador;
 
 import java_cup.runtime.*;
 
@@ -41,10 +41,8 @@ terminal AND, OR, NOT;
 
 // Terminais Literais
 terminal java.lang.Number INTEGER_LITERAL;
-terminal java.lang.Number FLOATING_POINT_LITERAL;
+terminal java.lang.Number REAL_LITERAL;
 terminal java.lang.Boolean BOOLEAN_LITERAL;
-terminal java.lang.Character CHARACTER_LITERAL;
-terminal java.lang.String STRING_LITERAL;
 terminal java.lang.String IDENTIFIER;
 
 
@@ -110,10 +108,8 @@ numerico ::=
 
 literal ::=
         INTEGER_LITERAL
-    |   FLOATING_POINT_LITERAL
+    |   REAL_LITERAL
     |   BOOLEAN_LITERAL
-    |   CHARACTER_LITERAL
-    |   STRING_LITERAL
     ;
 
 expressao ::=

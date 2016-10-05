@@ -21,134 +21,129 @@ public class Token extends Symbol {
         this.coluna = coluna;
     }
 
-    /*public String toString() {
+    public String toString() {
         String msg;
+        
         switch (sym) {
      // Palavras-chave
-        case 8:
+        case 2:
             msg = "VAR | ";
             break;
-        case 2:
+        case 4:
             msg = "BOOLEAN | ";
             break;
-        case 101:
+        case 3:
             msg = "CONS | ";
             break;
         case 5:
             msg = "INT | ";
             break;
-        case 9:
+        case 6:
             msg = "REAL | ";
             break;
-        case 41:
+        case 9:
             msg = "IF | ";
             break;
-        case 42:
+        case 10:
             msg = "THEN | ";
             break;
-        case 43:
+        case 11:
             msg = "ELSE | ";
             break;
-        case 48:
+        case 12:
             msg = "WHILE | ";
             break;
-        case 66:
+        case 8:
             msg = "PROCEDURE | ";
             break;
-        case 67:
+        case 7:
             msg = "FUNCTION | ";
             break;
 
         // Literais booleanos
-        case 95:
+        case 36:
             msg = "BOOLEAN_LITERAL | ";
             break;
 
         // Separadores
-        case 19:
+        case 17:
             msg = "LPAREN | ";
             break;
-        case 20:
+        case 18:
             msg = "RPAREN | ";
             break;
-        case 16:
+        case 15:
             msg = "LBRACE | ";
             break;
-        case 17:
+        case 16:
             msg = "RBRACE | ";
             break;
-        case 10:
+        case 13:
             msg = "LBRACK | ";
             break;
-        case 11:
+        case 14:
             msg = "RBRACK | ";
             break;
-        case 13:
+        case 19:
             msg = "SEMICOLON | ";
             break;
-        case 15:
+        case 20:
             msg = "COMMA | ";
-            break;
-        case 12:
-            msg = "DOT | ";
             break;
 
         // Operadores
-        case 18:
+        case 21:
             msg = "EQ | ";
             break;
-        case 70:
+        case 30:
             msg = "GT | ";
             break;
-        case 69:
+        case 29:
             msg = "LT | ";
             break;
-        case 63:
+        case 33:
             msg = "NOT | ";
             break;
-        case 74:
+        case 22:
             msg = "EQEQ | ";
             break;
-        case 60:
+        case 23:
             msg = "PLUS | ";
             break;
-        case 61:
+        case 24:
             msg = "MINUS | ";
             break;
-        case 14:
+        case 28:
+            msg = "UMINUS | ";
+            break;
+        case 25:
             msg = "MULT | ";
             break;
-        case 64:
+        case 26:
             msg = "DIV | ";
             break;
-        case 76:
+        case 31:
             msg = "AND | ";
             break;
-        case 78:
+        case 32:
             msg = "OR | ";
             break;
-        case 65:
+        case 27:
             msg = "MOD | ";
             break;
 
         // Literais numéricos
-        case 93:
+        case 34:
             msg = "INTEGER_LITERAL | ";
             break;
-        case 94:
-            msg = "FLOATING_POINT_LITERAL | ";
+        case 35:
+            msg = "REAL_LITERAL | ";
             break;
 
-        case 98:
+        case 37:
             msg = "IDENTIFIER | ";
             break;
 
-        case 97:
-            msg = "STRING_LITERAL | ";
-            break;
-        case 96:
-            msg = "CHARACTER_LITERAL | ";
-            break;
         case 0:
             msg = "EOF | ";
             break;
@@ -160,11 +155,6 @@ public class Token extends Symbol {
             msg = "";
             break;
         }
-        return (value == null ? msg : value + " | ") + "index: " + sym + " [" + linha + " : " + coluna + "]";
-    }
-    */
-    
-    public String toString() {
-        return "line "+linha+", column "+coluna+", sym: "+sym+(value == null ? "" : (", value: '"+value+"'"));
+        return (value == null ? msg : value + " | ") + "Token: " + sym + " [" + linha + " : " + coluna + "]";
     }
 }
