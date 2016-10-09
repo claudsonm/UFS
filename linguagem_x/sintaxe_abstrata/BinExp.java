@@ -15,5 +15,10 @@ public class BinExp extends Exp {
     public Object accept(Visitor vis) {
         return vis.visitBinExp(this);
     }
+    
+    @Override
+    public String toString() {
+        return expEsq + operacao.token + expDir;
+    }
 
 }

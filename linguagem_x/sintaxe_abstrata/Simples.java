@@ -11,5 +11,9 @@ public class Simples extends Var {
     public Object accept(Visitor vis) {
         return vis.visitSimples(this);
     }
-
+    
+    @Override
+    public String toString() {
+        return id;
+    }
 }

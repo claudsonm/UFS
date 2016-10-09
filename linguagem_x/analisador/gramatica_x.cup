@@ -4,7 +4,9 @@
  */
 package analisador;
 
+import java.util.*;
 import java_cup.runtime.*;
+import sintaxe_abstrata.*;
 
 parser code  {:
     public void report_error(String message, Object info) {
@@ -40,21 +42,36 @@ terminal LT, GT;
 terminal AND, OR, NOT;
 
 // Terminais Literais
-terminal java.lang.Number INTEGER_LITERAL;
-terminal java.lang.Number REAL_LITERAL;
+terminal java.lang.Integer INTEGER_LITERAL;
+terminal java.lang.Double REAL_LITERAL;
 terminal java.lang.Boolean BOOLEAN_LITERAL;
 terminal java.lang.String IDENTIFIER;
 
 
 // Produções
-non terminal program;
-non terminal dec_list_opt, dec_list, dec, dec_var, dec_cons, dec_func, dec_proc;
-non terminal tipo, numerico, literal;
-non terminal expressao, primaria, chamada, lista_expressao, exp_opt;
+non terminal Programa program;
+non terminal List<Dec> dec_list;
+non terminal Dec dec;
+non terminal DVar dec_var;
+non terminal VarInic var_inic;
+non terminal VarNaoInic var_ninic;
+non terminal VarInicExt var_inic_ext;
+non terminal dec_cons, dec_func, dec_proc;
+non terminal Tipo tipo;
+non terminal TipoBase tipo_base;
+non terminal TipoArray tipo_array;
+non terminal TBase numerico;
+non terminal List<Exp> lista_dimensao;
+non terminal Exp dimensao;
+non terminal Exp literal, expressao, primaria;
+non terminal VarExp var_exp;
+non terminal ChamadaExp chamada;
+non terminal List<Exp> lista_expressao, exp_opt, inicializador_array;
 non terminal comando, comando_restrito, while, assign;
 non terminal bloco, bloco_comandos_opt, bloco_comandos, dec_comandos;
-non terminal declarador_vars, declarador_var, declarador_var_id;
-non terminal inicializador_var, inicializador_array;
+non terminal declarador_vars, declarador_var;
+non terminal java.lang.String declarador_var_id;
+non terminal inicializador_var;
 non terminal ass_func, corpo_func, lista_param_formal_opt, lista_param_formal;
 non terminal param_formal, param_ref, param_copia;
 non terminal bloco_exp, dec_bloco_exp_opt, dec_bloco_exp, dec_exp;
@@ -75,19 +92,15 @@ start with program;
 /******************************************************************************
  * ESTRUTURA DE UM PROGRAMA EM X
  *****************************************************************************/
-program ::= dec_list_opt ;
-
-dec_list_opt ::=
-    |   dec_list
-    ;
+program ::= dec_list:d {: RESULT = new Programa(d); :} ;
 
 dec_list ::=
-        dec
-    |   dec_list dec
+        dec:d {: RESULT = new ArrayList<Dec>(Arrays.asList(d)); :}
+    |   dec_list:dl dec:d {: dl.add(d); RESULT = dl; :}
     ;
 
 dec ::=
-        dec_var
+        dec_var:d {: RESULT = new DecVar(d); :}
     |   dec_cons
     |   dec_func
     |   dec_proc
@@ -97,54 +110,88 @@ dec ::=
  * PRODUÇÕES FUNDAMENTAIS
  *****************************************************************************/
 tipo ::=
-        numerico
-    |   BOOLEAN
+        tipo_base:t {: RESULT = t; :}
+    |   tipo_array:t {: RESULT = t; :}
     ;
 
+tipo_base ::=
+        numerico:n {: RESULT = new TipoBase(n); :}
+    |   BOOLEAN {: RESULT = new TipoBase(TBase.Bool); :}
+    ;
+
+tipo_array ::=
+        numerico:t lista_dimensao:d {: RESULT = new TipoArray(t, d); :}
+    |   BOOLEAN lista_dimensao:d {: RESULT = new TipoArray(TBase.Bool, d); :}
+    ;
+
+lista_dimensao ::=
+        dimensao:d {: RESULT = new ArrayList<Exp>(Arrays.asList(d)); :}
+    |   lista_dimensao:ld dimensao:d {: ld.add(d); RESULT = ld; :}
+    ;
+
+dimensao ::= LBRACK expressao:e RBRACK {: RESULT = e; :};
+
 numerico ::=
-        INT
-    |   REAL
+        INT {: RESULT = TBase.Int; :}
+    |   REAL {: RESULT = TBase.Real; :}
     ;
 
 literal ::=
-        INTEGER_LITERAL
-    |   REAL_LITERAL
-    |   BOOLEAN_LITERAL
+        INTEGER_LITERAL:l {: RESULT = new LiteralInt(l); :}
+    |   REAL_LITERAL:l {: RESULT = new LiteralReal(l); :}
+    |   BOOLEAN_LITERAL:l {: RESULT = new LiteralBool(l); :}
     ;
 
 expressao ::=
-        primaria
-    |   expressao PLUS expressao
-    |   expressao MINUS expressao
-    |   expressao MULT expressao
-    |   expressao DIV expressao
-    |   expressao MOD expressao
-    |   expressao GT expressao
-    |   expressao LT expressao
-    |   expressao EQEQ expressao
-    |   expressao AND expressao
-    |   expressao OR expressao
-    |   MINUS expressao %prec UMINUS
-    |   NOT expressao
+        primaria:p {: RESULT = p; :}
+    |   expressao:e1 PLUS expressao:e2
+        {: RESULT = new BinExp(BinOp.Som, e1, e2); :}
+    |   expressao:e1 MINUS expressao:e2
+        {: RESULT = new BinExp(BinOp.Sub, e1, e2); :}
+    |   expressao:e1 MULT expressao:e2
+        {: RESULT = new BinExp(BinOp.Mul, e1, e2); :}
+    |   expressao:e1 DIV expressao:e2
+        {: RESULT = new BinExp(BinOp.Div, e1, e2); :}
+    |   expressao:e1 MOD expressao:e2
+        {: RESULT = new BinExp(BinOp.Mod, e1, e2); :}
+    |   expressao:e1 GT expressao:e2
+        {: RESULT = new BinExp(BinOp.Maior, e1, e2); :}
+    |   expressao:e1 LT expressao:e2
+        {: RESULT = new BinExp(BinOp.Menor, e1, e2); :}
+    |   expressao:e1 EQEQ expressao:e2
+        {: RESULT = new BinExp(BinOp.Igual, e1, e2); :}
+    |   expressao:e1 AND expressao:e2
+        {: RESULT = new BinExp(BinOp.E, e1, e2); :}
+    |   expressao:e1 OR expressao:e2
+        {: RESULT = new BinExp(BinOp.Ou, e1, e2); :}
+    |   MINUS expressao:e1 {: RESULT = new Menos(e1); :} %prec UMINUS
+    |   NOT expressao:e1 {: RESULT = new Nao(e1); :}
     ;
 
 primaria ::=
-        LPAREN expressao RPAREN
-    |   literal
-    |   IDENTIFIER
-    |   IDENTIFIER LBRACK expressao RBRACK
-    |   chamada
+        LPAREN expressao:e RPAREN {: RESULT = e; :}
+    |   literal:l {: RESULT = l; :}
+    |   var_exp:v {: RESULT = v; :}
+    |   chamada:c {: RESULT = c; :}
     ;
 
-chamada ::= IDENTIFIER LPAREN exp_opt RPAREN ;
+chamada ::=
+        IDENTIFIER:i LPAREN exp_opt:e RPAREN
+        {: RESULT = new ChamadaExp(i, e); :}
+    ;
+
+var_exp ::=
+        IDENTIFIER:i {: RESULT = new VarExp(new Simples(i)); :}
+    |   IDENTIFIER lista_dimensao
+    ;
 
 exp_opt ::=
     |   lista_expressao
     ;
 
 lista_expressao ::=
-        expressao
-    |   lista_expressao COMMA expressao
+        expressao:e {: RESULT = new ArrayList<Exp>(Arrays.asList(e)); :}
+    |   lista_expressao:le COMMA expressao:e {: le.add(e); RESULT = le; :}
     ;
 
 comando ::=
@@ -189,7 +236,27 @@ dec_comandos ::=
 /******************************************************************************
  * DECLARAÇÃO DE VARIÁVEIS E CONSTANTES
  *****************************************************************************/
-dec_var ::= VAR tipo declarador_vars SEMICOLON ;
+dec_var ::=
+        //VAR tipo:t declarador_vars:d SEMICOLON
+        var_ninic:v {: RESULT = v; :}
+    |   var_inic:v {: RESULT = v; :}
+    |   var_inic_ext:v {: RESULT = v; :}
+    ;
+
+var_ninic ::=
+        VAR tipo:t declarador_var_id:id SEMICOLON
+        {: RESULT = new VarNaoInic(t, id); :}
+    ;
+
+var_inic ::=
+        VAR tipo:t declarador_var_id:id EQ expressao:e SEMICOLON
+        {: RESULT = new VarInic(t, id, e); :}
+    ;
+
+var_inic_ext ::=
+        VAR tipo:t declarador_var_id:id EQ inicializador_array:le SEMICOLON
+        {: RESULT = new VarInicExt(t, id, le); :}
+    ;
 
 dec_cons ::= CONS tipo declarador_vars SEMICOLON ;
 
@@ -204,8 +271,8 @@ declarador_var ::=
     ;
 
 declarador_var_id ::=
-        IDENTIFIER
-    |   declarador_var_id LBRACK exp_opt RBRACK
+        IDENTIFIER:i {: RESULT = i; :}
+    //|   declarador_var_id LBRACK exp_opt RBRACK
     ;
 
 inicializador_var ::=
@@ -213,7 +280,7 @@ inicializador_var ::=
     |   inicializador_array
     ;
 
-inicializador_array ::= LBRACE lista_expressao RBRACE ;
+inicializador_array ::= LBRACE lista_expressao:l RBRACE {: RESULT = l; :} ;
     
 /******************************************************************************
  * DECLARAÇÃO DE FUNÇÕES

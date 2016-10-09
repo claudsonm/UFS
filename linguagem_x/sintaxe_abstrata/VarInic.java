@@ -16,4 +16,9 @@ public class VarInic extends DVar {
         return vis.visitVarInic(this);
     }
     
+    @Override
+    public String toString() {
+        return "VarInic: (Tipo " + nomeTipo + ", " + id + ", Exp " + exp + ")";
+    }
+    
 }

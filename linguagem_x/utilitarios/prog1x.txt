@@ -3,6 +3,11 @@
 * Realiza alguns cálculos na circunferência
 * =======================================================*/
 
+var real k;
+var bool[x+2][3+a] resultados := {area, 2*k, area(2)};
+var int y := 2;
+
+/*
 var int x, y, k := true;
 var real raio := ((6+1) / -(7*5));
 cons real PI := 3.14;
@@ -36,3 +41,4 @@ procedure main () {
 }
 
 procedure troca(int x, int o) if (x > y) then x := y;
+*/

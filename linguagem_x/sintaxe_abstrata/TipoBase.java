@@ -11,5 +11,10 @@ public class TipoBase extends Tipo {
     public Object accept(Visitor vis) {
         return vis.visitTipoBase(this);
     }
+    
+    @Override
+    public String toString() {
+        return tipo.nome;
+    }
 
 }

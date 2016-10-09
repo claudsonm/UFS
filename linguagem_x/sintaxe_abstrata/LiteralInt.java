@@ -11,5 +11,10 @@ public class LiteralInt extends Exp {
     public Object accept(Visitor vis) {
         return vis.visitLiteralInt(this);
     }
+    
+    @Override
+    public String toString() {
+        return "" + valor;
+    }
 
 }

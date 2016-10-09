@@ -2,7 +2,7 @@ package sintaxe_abstrata;
 
 public enum BinOp {
     Som("+"), Sub("-"), Mul("*"), Div("/"), Mod("%"),
-    Igual("="), Menor("<"), E("and"), Ou("or");
+    Igual("="), Menor("<"), Maior(">"), E("and"), Ou("or");
     
     public final String token;
     

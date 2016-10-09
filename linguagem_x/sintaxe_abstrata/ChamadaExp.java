@@ -15,5 +15,10 @@ public class ChamadaExp extends Exp {
     public Object accept(Visitor vis) {
         return vis.visitChamadaExp(this);
     }
+    
+    @Override
+    public String toString() {
+        return id + "({" + listaExp + "})";
+    }
 
 }

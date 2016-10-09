@@ -11,5 +11,10 @@ public class VarExp extends Exp {
     public Object accept(Visitor vis) {
         return vis.visitVarExp(this);
     }
+    
+    @Override
+    public String toString() {
+        return var.toString();
+    }
 
 }

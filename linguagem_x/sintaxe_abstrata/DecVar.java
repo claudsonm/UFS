@@ -11,5 +11,10 @@ public class DecVar extends Dec {
     public Object accept(Visitor vis) {
         return vis.visitDecVar(this);
     }
+    
+    @Override
+    public String toString() {
+        return "DecVar " + var;
+    }
 
 }

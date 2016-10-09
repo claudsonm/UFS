@@ -16,4 +16,9 @@ public class TipoArray extends Tipo {
         return vis.visitTipoArray(this);
     }
     
+    @Override
+    public String toString() {
+        return base.nome + "{" + exp + "}";
+    }
+    
 }

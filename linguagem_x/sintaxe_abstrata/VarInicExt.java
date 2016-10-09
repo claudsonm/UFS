@@ -17,4 +17,9 @@ public class VarInicExt extends DVar {
     public Object accept(Visitor vis) {
         return vis.visitVarInicExt(this);
     }
+    
+    @Override
+    public String toString() {
+        return "VarInicExt: (Tipo " + nomeTipo + ", " + id + ", Exp " + exp + ")";
+    }
 }
