@@ -11,5 +11,10 @@ public class DecCons extends Dec {
     public Object accept(Visitor vis) {
         return vis.visitDecCons(this);
     }
+    
+    @Override
+    public String toString() {
+        return "DecCons " + cons;
+    }
 
 }

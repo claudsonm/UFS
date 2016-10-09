@@ -18,7 +18,7 @@ public class VarInic extends DVar {
     
     @Override
     public String toString() {
-        return "VarInic: (Tipo " + nomeTipo + ", " + id + ", Exp " + exp + ")";
+        return "VarInic(" + nomeTipo + ", " + id + ", " + exp + ")";
     }
     
 }

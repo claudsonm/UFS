@@ -13,5 +13,10 @@ public class ParBaseCopia extends Parametro {
     public Object accept(Visitor vis) {
         return vis.visitParBaseCopia(this);
     }
+    
+    @Override
+    public String toString() {
+        return "ParBaseCopia(" + tipo + ", " + id + ")";
+    }
 
 }

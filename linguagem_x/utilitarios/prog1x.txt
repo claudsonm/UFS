@@ -1,34 +1,40 @@
 /* =======================================================
 * Programa #1 em Linguagem X
 * Realiza alguns cálculos na circunferência
+* ========================================================
+* ?????????????????????? DÚVIDAS ?????????????????????????
+* 
+* VarInicComp(Tipo, ID, List<ID>, Exp)
+* ConsComp(Tipo, ID, List<ID>, Exp)
+*     var int x, y, z := 2, k := 3;
+*
+* BlocoExp(List<DCons>, Exp)
 * =======================================================*/
 
-var real k;
-var bool[x+2][3+a] resultados := {area, 2*k, area(2)};
-var int y := 2;
-
-/*
-var int x, y, k := true;
 var real raio := ((6+1) / -(7*5));
 cons real PI := 3.14;
-var real resultados[] := {area, diametro, area(2)};
  
 function real areaCirculo(var real r)
     2 * PI * (r * r);
 
-function real diametroCirculo(var real r) {
-    2 * r;
-    a + 2; // teste
+function real forcaPeso(var real massa) {
+    cons int gravidade := 10;
+    massa * gravidade;
 }
 
-var real area, comprimento, diametro;
+
+//var real area, comprimento, diametro;
+var real area;
+var real comprimento;
+var real diametro;
+
 
 procedure main () {
     area := areaCirculo(raio);
     diametro := diametroCirculo(raio);
     comprimento := PI * diametro;
     
-    var real resultados[] := {area, diametro, comprimento};
+    var real[3] resultados := {area, diametro, comprimento};
     var int i := 0;
     var real soma;
     var bool par;
@@ -40,5 +46,4 @@ procedure main () {
     else par := false;
 }
 
-procedure troca(int x, int o) if (x > y) then x := y;
-*/
+procedure troca(int x, int o) if (x > o) then x := o;

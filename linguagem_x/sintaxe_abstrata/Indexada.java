@@ -13,5 +13,10 @@ public class Indexada extends Var {
     public Object accept(Visitor vis) {
         return vis.visitIndexada(this);
     }
+    
+    @Override
+    public String toString() {
+        return "Indexada(" + var + ", " + exp + ")";
+    }
 
 }

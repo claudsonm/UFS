@@ -20,6 +20,6 @@ public class VarInicExt extends DVar {
     
     @Override
     public String toString() {
-        return "VarInicExt: (Tipo " + nomeTipo + ", " + id + ", Exp " + exp + ")";
+        return "VarInicExt(" + nomeTipo + ", " + id + ", " + exp + ")";
     }
 }

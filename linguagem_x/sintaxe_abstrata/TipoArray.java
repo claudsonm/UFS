@@ -18,7 +18,7 @@ public class TipoArray extends Tipo {
     
     @Override
     public String toString() {
-        return base.nome + "{" + exp + "}";
+        return "TipoArray(" + base + ", " + exp + ")";
     }
     
 }

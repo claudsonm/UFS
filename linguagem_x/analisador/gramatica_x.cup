@@ -53,29 +53,36 @@ non terminal Programa program;
 non terminal List<Dec> dec_list;
 non terminal Dec dec;
 non terminal DVar dec_var;
+non terminal DCons dec_cons;
 non terminal VarInic var_inic;
 non terminal VarNaoInic var_ninic;
 non terminal VarInicExt var_inic_ext;
-non terminal dec_cons, dec_func, dec_proc;
 non terminal Tipo tipo;
 non terminal TipoBase tipo_base;
 non terminal TipoArray tipo_array;
 non terminal TBase numerico;
-non terminal List<Exp> lista_dimensao;
-non terminal Exp dimensao;
-non terminal Exp literal, expressao, primaria;
+non terminal List<Exp> lista_dimensao, lista_expressao, exp_opt,
+                       inicializador_array;
+non terminal Exp dimensao, literal, expressao, primaria, corpo_func, dec_exp;
 non terminal VarExp var_exp;
+non terminal Var simples_indexada;
 non terminal ChamadaExp chamada;
-non terminal List<Exp> lista_expressao, exp_opt, inicializador_array;
-non terminal comando, comando_restrito, while, assign;
-non terminal bloco, bloco_comandos_opt, bloco_comandos, dec_comandos;
-non terminal declarador_vars, declarador_var;
+non terminal Funcao dec_func;
 non terminal java.lang.String declarador_var_id;
-non terminal inicializador_var;
-non terminal ass_func, corpo_func, lista_param_formal_opt, lista_param_formal;
-non terminal param_formal, param_ref, param_copia;
-non terminal bloco_exp, dec_bloco_exp_opt, dec_bloco_exp, dec_exp;
-non terminal ass_proc, lista_param_formal_proc_opt, lista_param_formal_proc;
+non terminal Object[] ass_func, ass_proc;
+non terminal List<Parametro> lista_param_formal_opt, lista_param_formal,
+                             lista_param_formal_proc_opt, lista_param_formal_proc;
+non terminal Parametro param_formal, param_ref, param_copia;
+non terminal BlocoExp bloco_exp, dec_bloco_exp_opt, dec_bloco_exp;
+non terminal List<DCons> dec_bloco_cons_opt, dec_bloco_cons;
+non terminal Procedimento dec_proc;
+non terminal Comando comando, comando_restrito;
+non terminal DVarConsCom dec_comandos;
+non terminal WHILE while;
+non terminal ASSIGN assign;
+non terminal CHAMADA chamada_comando;
+non terminal BLOCO bloco, bloco_comandos_opt;
+non terminal List<DVarConsCom> bloco_comandos;
 
 
 // Precedência dos operadores
@@ -101,9 +108,9 @@ dec_list ::=
 
 dec ::=
         dec_var:d {: RESULT = new DecVar(d); :}
-    |   dec_cons
-    |   dec_func
-    |   dec_proc
+    |   dec_cons:d {: RESULT = new DecCons(d); :}
+    |   dec_func:d {: RESULT = d; :}
+    |   dec_proc:d {: RESULT = d; :}
     ;
 
 /******************************************************************************
@@ -180,13 +187,16 @@ chamada ::=
         {: RESULT = new ChamadaExp(i, e); :}
     ;
 
-var_exp ::=
-        IDENTIFIER:i {: RESULT = new VarExp(new Simples(i)); :}
-    |   IDENTIFIER lista_dimensao
+var_exp ::= simples_indexada:v {: RESULT = new VarExp(v); :} ;
+
+simples_indexada ::=
+        IDENTIFIER:i {: RESULT = new Simples(i); :}
+    |   simples_indexada:v dimensao:d {: RESULT = new Indexada(v, d); :}
     ;
 
 exp_opt ::=
-    |   lista_expressao
+        {: RESULT = new ArrayList<Exp>(); :}
+    |   lista_expressao:l {: RESULT = l; :}
     ;
 
 lista_expressao ::=
@@ -195,49 +205,64 @@ lista_expressao ::=
     ;
 
 comando ::=
-        bloco
-    |   IF LPAREN expressao RPAREN THEN comando
-    |   IF LPAREN expressao RPAREN THEN comando_restrito ELSE comando
-    |   while
-    |   assign
-    |   chamada
+        bloco:b {: RESULT = b; :}
+    |   IF LPAREN expressao:e RPAREN THEN comando:c
+        {: RESULT = new IF(e, c, null); :}
+    |   IF LPAREN expressao:e RPAREN THEN comando_restrito:c1 ELSE comando:c2
+        {: RESULT = new IF(e, c1, c2); :}
+    |   while:w {: RESULT = w; :}
+    |   assign:a {: RESULT = a; :}
+    |   chamada_comando:c {: RESULT = c; :}
     ;
 
 // Proibe IF's sem ELSE dentro de um THEN em um IF-THEN-ELSE
 comando_restrito ::=
-        bloco
-    |   IF LPAREN expressao RPAREN THEN comando_restrito ELSE comando_restrito
-    |   WHILE LPAREN expressao RPAREN comando_restrito
-    |   assign
-    |   chamada
+        bloco:b {: RESULT = b; :}
+    |   IF LPAREN expressao:e RPAREN THEN comando_restrito:c1 ELSE comando_restrito:c2
+        {: RESULT = new IF(e, c1, c2); :}
+    |   WHILE LPAREN expressao:e RPAREN comando_restrito:c
+        {: RESULT = new WHILE(e, c); :}
+    |   assign:a {: RESULT = a; :}
+    |   chamada_comando:c {: RESULT = c; :}
     ;
 
-while ::= WHILE LPAREN expressao RPAREN comando ;
+while ::=
+        WHILE LPAREN expressao:e RPAREN comando:c
+        {: RESULT = new WHILE(e, c); :}
+    ;
 
-assign ::= IDENTIFIER EQ expressao SEMICOLON ;
+assign ::=
+        simples_indexada:i EQ expressao:e SEMICOLON
+        {: RESULT = new ASSIGN(i, e); :}
+    ;
 
-bloco ::= LBRACE bloco_comandos_opt RBRACE ;
+chamada_comando ::=
+        IDENTIFIER:i LPAREN exp_opt:e RPAREN
+        {: RESULT = new CHAMADA(i, e); :}
+    ;
+
+bloco ::= LBRACE bloco_comandos_opt:b RBRACE {: RESULT = b; :};
 
 bloco_comandos_opt ::=
-    |   bloco_comandos
+        {: RESULT = new BLOCO(null); :}
+    |   bloco_comandos:b {: RESULT = new BLOCO(b); :}
     ;
 
 bloco_comandos ::=
-        dec_comandos
-    |   bloco_comandos dec_comandos  
+        dec_comandos:c {: RESULT = new ArrayList<DVarConsCom>(Arrays.asList(c)); :}
+    |   bloco_comandos:lc dec_comandos:c {: lc.add(c); RESULT = lc; :}  
     ;
 
 dec_comandos ::=
-        comando
-    |   dec_var
-    |   dec_cons
+        comando:c {: RESULT = new Com(c); :}
+    |   dec_var:v {: RESULT = new DV(v); :}
+    |   dec_cons:c {: RESULT = new DC(c); :}
     ;
 
 /******************************************************************************
  * DECLARAÇÃO DE VARIÁVEIS E CONSTANTES
  *****************************************************************************/
 dec_var ::=
-        //VAR tipo:t declarador_vars:d SEMICOLON
         var_ninic:v {: RESULT = v; :}
     |   var_inic:v {: RESULT = v; :}
     |   var_inic_ext:v {: RESULT = v; :}
@@ -258,85 +283,109 @@ var_inic_ext ::=
         {: RESULT = new VarInicExt(t, id, le); :}
     ;
 
-dec_cons ::= CONS tipo declarador_vars SEMICOLON ;
-
-declarador_vars ::=
-        declarador_var
-    |   declarador_vars COMMA declarador_var
+dec_cons ::=
+        CONS tipo:t declarador_var_id:id EQ expressao:e SEMICOLON
+        {: RESULT = new Cons(t, id, e); :}
+    |   CONS tipo:t declarador_var_id:id EQ inicializador_array:le SEMICOLON
+        {: RESULT = new ConsExt(t, id, le); :}
     ;
 
-declarador_var ::=
-        declarador_var_id
-    |   declarador_var_id EQ inicializador_var
-    ;
-
-declarador_var_id ::=
-        IDENTIFIER:i {: RESULT = i; :}
-    //|   declarador_var_id LBRACK exp_opt RBRACK
-    ;
-
-inicializador_var ::=
-        expressao
-    |   inicializador_array
-    ;
+declarador_var_id ::= IDENTIFIER:i {: RESULT = i; :} ;
 
 inicializador_array ::= LBRACE lista_expressao:l RBRACE {: RESULT = l; :} ;
     
 /******************************************************************************
  * DECLARAÇÃO DE FUNÇÕES
  *****************************************************************************/
-dec_func ::= ass_func corpo_func ;
+dec_func ::=
+        ass_func:a corpo_func:c
+        {: RESULT = new Funcao((Tipo) a[0], (String) a[1], (List<Parametro>) a[2], c); :}
+    ;
 
-ass_func ::= FUNCTION tipo IDENTIFIER LPAREN lista_param_formal_opt RPAREN ;
+ass_func ::=
+        FUNCTION tipo:t IDENTIFIER:i LPAREN lista_param_formal_opt:l RPAREN
+        {: Object[] o = new Object[3]; o[0] = t; o[1] = i; o[2] = l; RESULT = o; :}
+    ;
 
 lista_param_formal_opt ::=
-    |   lista_param_formal
+        {: RESULT = new ArrayList<Parametro>(); :}
+    |   lista_param_formal:l {: RESULT = l; :}
     ;
 
 lista_param_formal ::=
-        param_formal
-    |   lista_param_formal COMMA param_formal 
+        param_formal:p
+        {: RESULT = new ArrayList<Parametro>(Arrays.asList(p)); :}
+    |   lista_param_formal:lp COMMA param_formal:p
+        {: lp.add(p); RESULT = lp; :} 
     ;
 
 param_formal ::=
-        param_ref
-    |   param_copia
+        param_ref:p {: RESULT = p; :}
+    |   param_copia:p {: RESULT = p; :}
     ;
 
-param_ref ::= tipo declarador_var_id ;
+param_ref ::=
+        tipo_base:t declarador_var_id:id
+        {: RESULT = new ParBaseRef(t.tipo, id); :}
+    |   tipo_array:t declarador_var_id:id
+        {: RESULT = new ParArrayRef(t.base, t.exp.size(), id); :}
+    ;
 
-param_copia ::= VAR tipo declarador_var_id ;
+param_copia ::=
+        VAR tipo_base:t declarador_var_id:id
+        {: RESULT = new ParBaseCopia(t.tipo, id); :}
+    |   VAR tipo_array:t declarador_var_id:id
+        {: RESULT = new ParArrayCopia(t.base, t.exp.size(), id); :}
+    ;
 
 corpo_func ::=
-        expressao SEMICOLON
-    |   bloco_exp
+        expressao:e SEMICOLON {: RESULT = e; :}
+    |   bloco_exp:b {: RESULT = b; :}
     ;
 
-bloco_exp ::= LBRACE dec_bloco_exp_opt RBRACE ;
+bloco_exp ::= LBRACE dec_bloco_exp_opt:d RBRACE {: RESULT = d; :} ;
 
 dec_bloco_exp_opt ::=
-    |   dec_bloco_exp
+        {: RESULT = new BlocoExp(null, null); :}
+    |   dec_bloco_exp:d {: RESULT = d; :}
     ;
 
 dec_bloco_exp ::=
-        dec_exp
-    |   dec_bloco_exp dec_exp
+        dec_bloco_cons_opt:ld dec_exp:e {: RESULT = new BlocoExp(ld, e); :}
     ;
 
-dec_exp ::= expressao SEMICOLON ;
+dec_bloco_cons_opt ::=
+        {: RESULT = new ArrayList<DCons>(); :}
+    |   dec_bloco_cons:ld {: RESULT = ld; :}
+    ;
+
+dec_bloco_cons ::=
+        dec_cons:d {: RESULT = new ArrayList<DCons>(Arrays.asList(d)); :}
+    |   dec_bloco_cons:ld dec_cons:d {: ld.add(d); RESULT = ld; :}
+    ;
+
+dec_exp ::= expressao:e SEMICOLON {: RESULT = e; :} ;
 
 /******************************************************************************
  * DECLARAÇÃO DE PROCEDIMENTOS
  *****************************************************************************/
-dec_proc ::= ass_proc comando ;
+dec_proc ::=
+    ass_proc:a comando:c
+    {: RESULT = new Procedimento((String) a[0], (List<Parametro>) a[1], c); :}
+;
 
-ass_proc ::= PROCEDURE IDENTIFIER LPAREN lista_param_formal_proc_opt RPAREN ;
+ass_proc ::=
+        PROCEDURE IDENTIFIER:i LPAREN lista_param_formal_proc_opt:l RPAREN
+        {: Object[] o = new Object[2]; o[0] = i; o[1] = l; RESULT = o; :}
+    ;
 
 lista_param_formal_proc_opt ::=
-    |   lista_param_formal_proc
+        {: RESULT = new ArrayList<Parametro>(); :}
+    |   lista_param_formal_proc:l {: RESULT = l; :}
     ;
 
 lista_param_formal_proc ::=
-        param_ref
-    |   lista_param_formal_proc COMMA param_ref 
+        param_ref:p {: RESULT = new ArrayList<Parametro>(Arrays.asList(p)); :}
+    |   lista_param_formal_proc:lp COMMA param_ref:p
+        {: lp.add(p); RESULT = lp; :} 
     ;

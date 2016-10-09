@@ -13,5 +13,10 @@ public class WHILE extends Comando {
     public Object accept(Visitor vis) {
         return vis.visitWhile(this);
     }
+    
+    @Override
+    public String toString() {
+        return "WHILE(" + exp + ", " + comando + ")";
+    }
 
 }

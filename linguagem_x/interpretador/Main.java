@@ -350,15 +350,21 @@ public class Main {
     }
     
     public static void analiseLexicaSintatica() {
-        /*try {
+        try {
             AnalisadorSintatico p = new AnalisadorSintatico(
                     new AnalisadorLexico(new FileReader("linguagem_x//utilitarios//prog1x.txt")));
             Object result = p.parse().value;
             System.out.println(result.toString());
+            
+            /*
+            Checker c = new Checker();
+            c.visitPrograma((Programa) result);
+            c.erros.mostrar();
+            */
         } catch (Exception e) {
             System.out.println(e.getMessage());
-        }*/
-        try {
+        }
+        /*try {
             parser p = new parser(
                     new AnalisadorLexico(new FileReader("linguagem_x//utilitarios//prog1x.txt")));
             Object result = p.parse().value;
@@ -367,12 +373,12 @@ public class Main {
             Programa pg = (Programa) result;
             System.out.println("Tamanho: " + pg.declaracoes.size());
             
-            /*Checker c = new Checker();
+            Checker c = new Checker();
             c.visitPrograma(pg);
-            c.erros.mostrar();*/
+            c.erros.mostrar();
         } catch (Exception e) {
             System.out.println(e.getMessage());
-        }
+        }*/
     }
 
 }

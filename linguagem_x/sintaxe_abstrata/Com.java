@@ -11,5 +11,10 @@ public class Com extends DVarConsCom {
     public Object accept(Visitor vis) {
         return vis.visitCom(this);
     }
+    
+    @Override
+    public String toString() {
+        return "Com(" + comando + ")";
+    }
 
 }

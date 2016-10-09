@@ -17,5 +17,10 @@ public class ConsExt extends DCons {
     public Object accept(Visitor vis) {
         return vis.visitConsExt(this);
     }
+    
+    @Override
+    public String toString() {
+        return "ConsExt(" + tipo + ", " + id + ", " + exp + ")";
+    }
 
 }

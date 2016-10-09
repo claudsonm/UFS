@@ -14,7 +14,7 @@ public class LiteralInt extends Exp {
     
     @Override
     public String toString() {
-        return "" + valor;
+        return "LiteralInt(" + valor + ")";
     }
 
 }

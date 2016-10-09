@@ -17,5 +17,10 @@ public class Procedimento extends Dec {
     public Object accept(Visitor vis) {
         return vis.visitProcedimento(this);
     }
+    
+    @Override
+    public String toString() {
+        return "Procedimento(" + id + ", " + listaParam + ", " + comando + ")";
+    }
 
 }

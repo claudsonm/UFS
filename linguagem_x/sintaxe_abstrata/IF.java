@@ -15,5 +15,10 @@ public class IF extends Comando {
     public Object accept(Visitor vis) {
         return vis.visitIf(this);
     }
+    
+    @Override
+    public String toString() {
+        return "IF(" + exp + ", " + comandoVerdade + ", " + comandoFalso + ")";
+    }
 
 }

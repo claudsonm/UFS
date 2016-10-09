@@ -14,7 +14,7 @@ public class VarExp extends Exp {
     
     @Override
     public String toString() {
-        return var.toString();
+        return "VarExp(" + var + ")";
     }
 
 }

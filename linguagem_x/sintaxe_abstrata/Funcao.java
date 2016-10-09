@@ -19,5 +19,10 @@ public class Funcao extends Dec {
     public Object accept(Visitor vis) {
         return vis.visitFuncao(this);
     }
+    
+    @Override
+    public String toString() {
+        return "Funcao(" + tipo + ", " + id + ", " + listaParam + ", " + exp + ")";
+    }
 
 }

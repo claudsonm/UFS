@@ -14,6 +14,6 @@ public class Simples extends Var {
     
     @Override
     public String toString() {
-        return id;
+        return "Simples(" + id + ")";
     }
 }

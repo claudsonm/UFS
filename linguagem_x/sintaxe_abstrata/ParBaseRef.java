@@ -13,5 +13,10 @@ public class ParBaseRef extends Parametro {
     public Object accept(Visitor vis) {
         return vis.visitParBaseRef(this);
     }
+    
+    @Override
+    public String toString() {
+        return "ParBaseRef(" + tipo + ", " + id + ")";
+    }
 
 }

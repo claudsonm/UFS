@@ -13,4 +13,9 @@ public class VarNaoInic extends DVar {
     public Object accept(Visitor vis) {
         return vis.visitVarNaoInic(this);
     }
+    
+    @Override
+    public String toString() {
+        return "VarNaoInic(" + nomeTipo + ", " + id +")";
+    }
 }

@@ -15,5 +15,10 @@ public class Cons extends DCons {
     public Object accept(Visitor vis) {
         return vis.visitCons(this);
     }
+    
+    @Override
+    public String toString() {
+        return "Cons(" + tipo + ", " + id + ", " + exp + ")";
+    }
 
 }

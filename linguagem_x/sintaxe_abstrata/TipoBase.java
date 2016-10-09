@@ -14,7 +14,7 @@ public class TipoBase extends Tipo {
     
     @Override
     public String toString() {
-        return tipo.nome;
+        return "TipoBase " + tipo.nome;
     }
 
 }

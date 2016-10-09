@@ -12,4 +12,9 @@ public class Menos extends Exp {
         return vis.visitMenos(this);
     }
     
+    @Override
+    public String toString() {
+        return "Menos(" + exp + ")";
+    }
+    
 }

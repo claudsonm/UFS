@@ -13,5 +13,10 @@ public class ASSIGN extends Comando {
     public Object accept(Visitor vis) {
         return vis.visitAssign(this);
     }
+    
+    @Override
+    public String toString() {
+        return "ASSIGN(" + var + ", " + exp + ")";
+    }
 
 }

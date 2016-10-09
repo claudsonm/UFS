@@ -18,7 +18,7 @@ public class ChamadaExp extends Exp {
     
     @Override
     public String toString() {
-        return id + "({" + listaExp + "})";
+        return "ChamadaExp(" + id + ", " + listaExp + ")";
     }
 
 }

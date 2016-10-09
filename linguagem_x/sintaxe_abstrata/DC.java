@@ -11,5 +11,10 @@ public class DC extends DVarConsCom {
     public Object accept(Visitor vis) {
         return vis.visitDC(this);
     }
+    
+    @Override
+    public String toString() {
+        return "DC(" + cons + ")";
+    }
 
 }

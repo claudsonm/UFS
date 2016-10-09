@@ -15,5 +15,10 @@ public class BlocoExp extends Exp {
     public Object accept(Visitor vis) {
         return vis.visitBlocoExp(this);
     }
+    
+    @Override
+    public String toString() {
+        return "BlocoExp(" + listaCons + ", " + exp + ")";
+    }
 
 }

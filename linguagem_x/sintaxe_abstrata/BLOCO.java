@@ -13,5 +13,10 @@ public class BLOCO extends Comando {
     public Object accept(Visitor vis) {
         return vis.visitBloco(this);
     }
+    
+    @Override
+    public String toString() {
+        return "BLOCO(" + lista + ")";
+    }
 
 }
