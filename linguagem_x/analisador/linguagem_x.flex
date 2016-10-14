@@ -84,6 +84,7 @@ Exponent = [eE] [+-]? [0-9]+
   "]"                            { return token(RBRACK); }
   ";"                            { return token(SEMICOLON); }
   ","                            { return token(COMMA); }
+  "|"                            { return token(PIPE); }
   
   /* operadores */
   ":="                           { return token(EQ); }
@@ -123,6 +124,7 @@ Exponent = [eE] [+-]? [0-9]+
 }
 
 /* error fallback */
-[^]                              { throw new RuntimeException("Illegal character \""+yytext()+
-                                                              "\" at line "+yyline+", column "+yycolumn); }
+[^]                              { throw new RuntimeException("Caracter ilegal \""+yytext()+
+                                                              "\" na linha "+ (yyline+1) +
+                                                              ", coluna " + (yycolumn+1) ); }
 <<EOF>>                          { return token(EOF); }

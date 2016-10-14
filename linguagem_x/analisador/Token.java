@@ -61,7 +61,7 @@ public class Token extends Symbol {
             break;
 
         // Literais booleanos
-        case 36:
+        case 37:
             msg = "BOOLEAN_LITERAL | ";
             break;
 
@@ -90,57 +90,60 @@ public class Token extends Symbol {
         case 20:
             msg = "COMMA | ";
             break;
+        case 21:
+            msg = "PIPE | ";
+            break;
 
         // Operadores
-        case 21:
+        case 22:
             msg = "EQ | ";
             break;
-        case 30:
+        case 31:
             msg = "GT | ";
             break;
-        case 29:
+        case 30:
             msg = "LT | ";
             break;
-        case 33:
+        case 34:
             msg = "NOT | ";
             break;
-        case 22:
+        case 23:
             msg = "EQEQ | ";
             break;
-        case 23:
+        case 24:
             msg = "PLUS | ";
             break;
-        case 24:
+        case 25:
             msg = "MINUS | ";
             break;
-        case 28:
+        case 29:
             msg = "UMINUS | ";
             break;
-        case 25:
+        case 26:
             msg = "MULT | ";
             break;
-        case 26:
+        case 27:
             msg = "DIV | ";
             break;
-        case 31:
+        case 32:
             msg = "AND | ";
             break;
-        case 32:
+        case 33:
             msg = "OR | ";
             break;
-        case 27:
+        case 28:
             msg = "MOD | ";
             break;
 
         // Literais numéricos
-        case 34:
+        case 35:
             msg = "INTEGER_LITERAL | ";
             break;
-        case 35:
+        case 36:
             msg = "REAL_LITERAL | ";
             break;
 
-        case 37:
+        case 38:
             msg = "IDENTIFIER | ";
             break;
 

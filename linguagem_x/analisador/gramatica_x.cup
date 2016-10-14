@@ -35,7 +35,7 @@ terminal IF, THEN, ELSE;
 terminal WHILE;
 
 terminal LBRACK, RBRACK, LBRACE, RBRACE, LPAREN, RPAREN;
-terminal SEMICOLON, COMMA;
+terminal SEMICOLON, COMMA, PIPE;
 terminal EQ, EQEQ;
 terminal PLUS, MINUS, MULT, DIV, MOD, UMINUS;
 terminal LT, GT;
@@ -57,6 +57,7 @@ non terminal DCons dec_cons;
 non terminal VarInic var_inic;
 non terminal VarNaoInic var_ninic;
 non terminal VarInicExt var_inic_ext;
+non terminal VarInicComp var_comp;
 non terminal Tipo tipo;
 non terminal TipoBase tipo_base;
 non terminal TipoArray tipo_array;
@@ -69,7 +70,7 @@ non terminal Var simples_indexada;
 non terminal ChamadaExp chamada;
 non terminal Funcao dec_func;
 non terminal java.lang.String declarador_var_id;
-non terminal Object[] ass_func, ass_proc;
+non terminal Object[] ass_func, ass_proc, inicializador_array_comp, id_compreensao;
 non terminal List<Parametro> lista_param_formal_opt, lista_param_formal,
                              lista_param_formal_proc_opt, lista_param_formal_proc;
 non terminal Parametro param_formal, param_ref, param_copia;
@@ -266,6 +267,7 @@ dec_var ::=
         var_ninic:v {: RESULT = v; :}
     |   var_inic:v {: RESULT = v; :}
     |   var_inic_ext:v {: RESULT = v; :}
+    |   var_comp:v {: RESULT = v; :}
     ;
 
 var_ninic ::=
@@ -283,6 +285,11 @@ var_inic_ext ::=
         {: RESULT = new VarInicExt(t, id, le); :}
     ;
 
+var_comp ::=
+        VAR tipo:t declarador_var_id:id EQ inicializador_array_comp:o SEMICOLON
+        {: RESULT = new VarInicComp(t, id, (List<String>) o[0], (Exp) o[1]); :}
+    ;
+
 dec_cons ::=
         CONS tipo:t declarador_var_id:id EQ expressao:e SEMICOLON
         {: RESULT = new Cons(t, id, e); :}
@@ -293,6 +300,23 @@ dec_cons ::=
 declarador_var_id ::= IDENTIFIER:i {: RESULT = i; :} ;
 
 inicializador_array ::= LBRACE lista_expressao:l RBRACE {: RESULT = l; :} ;
+
+inicializador_array_comp ::=
+        id_compreensao:lo {: RESULT = lo; :}
+    |   inicializador_array_comp id_compreensao
+    ;
+
+id_compreensao ::=
+        LBRACE declarador_var_id:id PIPE expressao:e RBRACE
+        {:
+            Object[] o = new Object[2];
+            o[0] = new ArrayList<String>(Arrays.asList(id));
+            o[1] = e;
+            RESULT = o;
+        :}
+    |   LBRACE declarador_var_id:id PIPE id_compreensao:lo RBRACE
+        {: ((List<String>) lo[0]).add(id); RESULT = lo; :}
+    ;
     
 /******************************************************************************
  * DECLARAÇÃO DE FUNÇÕES

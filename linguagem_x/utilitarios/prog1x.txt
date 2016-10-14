@@ -8,11 +8,14 @@
 * ConsComp(Tipo, ID, List<ID>, Exp)
 *     var int x, y, z := 2, k := 3;
 *
-* BlocoExp(List<DCons>, Exp)
 * =======================================================*/
 
 var real raio := ((6+1) / -(7*5));
 cons real PI := 3.14;
+var int[3] m1 := {i | i + 1};
+var int[2][3] m2 := {i | {j | i + j} };
+var real[2][3][4] m3 := {i | {j | {k | i + j + k} } };
+var real[2][3][4][1] m4 := {i | {j | {k | {l | i + j + k + l} } } };  
  
 function real areaCirculo(var real r)
     2 * PI * (r * r);

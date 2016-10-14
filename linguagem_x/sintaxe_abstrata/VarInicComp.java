@@ -19,4 +19,9 @@ public class VarInicComp extends DVar {
     public Object accept(Visitor vis) {
         return vis.visitVarInicComp(this);
     }
+    
+    @Override
+    public String toString() {
+        return "VarInicComp(" + nomeTipo + ", " + id + ", " + listaID + ", " + exp + ")";
+    }
 }
