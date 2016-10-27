@@ -20,7 +20,11 @@ public class TipoArraySemantico implements TipoSemantico {
     
     @Override
     public String toString() {
-        return tipo.tipo + "[" + dimensao + "]";
+        StringBuilder s = new StringBuilder(tipo.tipo);
+        for (int i = 0; i < dimensao; i++) {
+            s.append("[]");
+        }
+        return s.toString();
     }
 
 }

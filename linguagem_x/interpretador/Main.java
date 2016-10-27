@@ -352,17 +352,17 @@ public class Main {
     public static void analiseLexicaSintatica() {
         try {
             AnalisadorSintatico p = new AnalisadorSintatico(
-                    new AnalisadorLexico(new FileReader("linguagem_x//utilitarios//prog1x.txt")));
+                    new AnalisadorLexico(new FileReader("linguagem_x//utilitarios//prog3x.txt")));
             Object result = p.parse().value;
             System.out.println(result.toString());
             
-            /*
+            
             Checker c = new Checker();
             c.visitPrograma((Programa) result);
             c.erros.mostrar();
-            */
+            
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            e.printStackTrace();
         }
         /*try {
             parser p = new parser(

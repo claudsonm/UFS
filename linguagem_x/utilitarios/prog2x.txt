@@ -3,7 +3,7 @@
 * Realiza o cálculo da hipotenusa
 * ======================================================*/
 
-function real tamanhoHipotenusa(var real l1, var real l2)
+function real tamanhoHipotenusa(var real l1, var bool l2)
      (l1 * l1) + (l2 * l2);
 
 procedure main() {
@@ -11,6 +11,6 @@ procedure main() {
     var int lado2 := 5;
     var real hipotenusa;
     
-    hipotenusa := tamanhoHipotenusa(lado1, lado2); // erro, real + int
-    var real resultados[] := {hipotenusa};
+    hipotenusa := tamanhoHipotenusa(lado1, lado2);
+    var real[1] resultados := {hipotenusa};
 }

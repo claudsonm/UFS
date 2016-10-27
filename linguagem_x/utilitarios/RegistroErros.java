@@ -48,7 +48,13 @@ public class RegistroErros {
      * Exibe todas as mensagens de erro do programa.
      */
     public void mostrar() {
-        for (Erro err : e)
-            System.out.println("[" + err.cod + "] " + err.msg);
+        if (! e.isEmpty()) {
+            for (Erro err : e) {
+                System.out.println("[" + err.cod + "] " + err.msg);
+            }
+        }
+        else {
+            System.out.println("Nenhum erro para mostrar.");
+        }
     }
 }

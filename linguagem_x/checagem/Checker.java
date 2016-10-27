@@ -85,7 +85,14 @@ public class Checker extends Visitor {
     @Override
     public Object visitAssign(ASSIGN a) {
         VinculavelConsVar tVar = (VinculavelConsVar) a.var.accept(this);
-        TipoSemantico tExp = (TipoSemantico) a.exp.accept(this);
+        TipoSemantico tExp;
+        Object rExp = a.exp.accept(this);
+        if (rExp instanceof VinculavelConsVar) {
+            tExp = ((VinculavelConsVar) rExp).tipo;
+        }
+        else {
+            tExp = (TipoSemantico) rExp;
+        }
         
         if (! tVar.isVar) {
             erros.reportar(303, "Impossível realizar atribuição em constante");
@@ -301,6 +308,7 @@ public class Checker extends Visitor {
         if (f == null) {
             erros.reportar(404, "Função " + c.id + " não encontrada no "
                     + "ambiente!");
+            return TipoBaseSemantico.Int;
         }
         else {
             if (! f.isFunc) {
@@ -452,9 +460,13 @@ public class Checker extends Visitor {
             TipoArraySemantico t1 = (TipoArraySemantico) t;
             
             // Verifica se o tipo da expressão do índice é válida
-            VinculavelConsVar t2 = (VinculavelConsVar) i.exp.accept(this);
-            if (! t2.tipo.equals(TipoBaseSemantico.Int)) {
-                erros.reportar(101, "O tipo " + t2.tipo + " não é um índice "
+            Object rIndice = i.exp.accept(this);
+            TipoSemantico tipo = (rIndice instanceof VinculavelConsVar) ?
+                                 ((VinculavelConsVar) rIndice).tipo :
+                                 (TipoBaseSemantico) rIndice;
+            
+            if (! tipo.equals(TipoBaseSemantico.Int)) {
+                erros.reportar(101, "O tipo " + tipo + " não é um índice "
                         + "válido!");
             }
             

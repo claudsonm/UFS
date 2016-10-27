@@ -1,29 +1,21 @@
 /* =======================================================
-* Programa #1 em Linguagem X
-* Utilizado para testes
+* Programa #3 em Linguagem X
+* Realiza alguns cálculos na circunferência
 * =======================================================*/
 
-var real raio := ((6+1) / -(7*5));
 cons real PI := 3.14;
+var real raio := ((6+1) / -(7*5));
 var int[3] m1 := {i | i + 1};
-var int[2][3] m2 := {i | {j | i + j} };
-var real[2][3][4] m3 := {i | {j | {k | i + j + k} } };
-var real[2][3][4][1] m4 := {i | {j | {k | {l | i + j + k + l} } } };  
  
 function real areaCirculo(var real r)
     2 * PI * (r * r);
 
-function real forcaPeso(var real massa) {
-    cons int gravidade := 10;
-    massa * gravidade;
-}
+function real diametroCirculo(var real r)
+    2 * r;
 
-
-//var real area, comprimento, diametro;
 var real area;
 var real comprimento;
 var real diametro;
-
 
 procedure main () {
     area := areaCirculo(raio);
@@ -34,6 +26,7 @@ procedure main () {
     var int i := 0;
     var real soma;
     var bool par;
+    
     while(i < 3){
         soma := soma + resultados[i];
         i := i + 1;
@@ -41,5 +34,3 @@ procedure main () {
     if (soma % 2 = 0) then par := true;
     else par := false;
 }
-
-procedure troca(int x, int o) if (x > o) then x := o;
