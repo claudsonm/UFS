@@ -7,6 +7,8 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Color;
 import javax.swing.JTextField;
 import java.awt.Font;
@@ -14,7 +16,22 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JTextPane;
+import javax.swing.table.DefaultTableModel;
+
+import jdbc.DB;
+
 import javax.swing.JTable;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import javax.swing.ImageIcon;
+import javax.swing.JPasswordField;
+import java.awt.Toolkit;
+import java.awt.event.ItemListener;
+import java.awt.event.ItemEvent;
+import javax.swing.JScrollPane;
+import javax.swing.JSeparator;
+import javax.swing.SwingConstants;
+import java.awt.SystemColor;
 
 public class main extends JFrame {
 
@@ -22,7 +39,10 @@ public class main extends JFrame {
     private JTextField txtHost;
     private JTextField txtBatabase;
     private JTextField txtUsuario;
-    private JTextField txtSenha;
+    private JPasswordField txtSenha;
+    private JComboBox comboConsulta;
+    private JTextPane txtConsulta;
+    public DB db;
     private JTable tabela;
 
     /**
@@ -45,9 +65,11 @@ public class main extends JFrame {
      * Create the frame.
      */
     public main() {
+        setIconImage(Toolkit.getDefaultToolkit().getImage(main.class.getResource("/resources/icon_truck.png")));
         setTitle("Grupo 10 - Delivery");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setBounds(100, 100, 450, 325);
+        setBounds(100, 100, 535, 350);
+        setLocationRelativeTo(null);
         contentPane = new JPanel();
         contentPane.setBackground(Color.WHITE);
         contentPane.setBorder(null);
@@ -70,7 +92,7 @@ public class main extends JFrame {
         txtHost = new JTextField();
         txtHost.setFont(new Font("Roboto Mono", Font.PLAIN, 14));
         txtHost.setText("127.0.0.1");
-        txtHost.setBounds(10, 30, 210, 20);
+        txtHost.setBounds(10, 30, 190, 20);
         panelConexao.add(txtHost);
         txtHost.setColumns(10);
         
@@ -80,10 +102,10 @@ public class main extends JFrame {
         panelConexao.add(lblDatabase);
         
         txtBatabase = new JTextField();
-        txtBatabase.setText("bd_trabalho");
+        txtBatabase.setText("db_trabalho");
         txtBatabase.setFont(new Font("Roboto Mono", Font.PLAIN, 14));
         txtBatabase.setColumns(10);
-        txtBatabase.setBounds(10, 80, 210, 20);
+        txtBatabase.setBounds(10, 80, 190, 20);
         panelConexao.add(txtBatabase);
         
         JLabel lblUsuario = new JLabel("Usu\u00E1rio");
@@ -92,10 +114,10 @@ public class main extends JFrame {
         panelConexao.add(lblUsuario);
         
         txtUsuario = new JTextField();
-        txtUsuario.setText("aluno");
+        txtUsuario.setText("postgres");
         txtUsuario.setFont(new Font("Roboto Mono", Font.PLAIN, 14));
         txtUsuario.setColumns(10);
-        txtUsuario.setBounds(10, 130, 210, 20);
+        txtUsuario.setBounds(10, 130, 190, 20);
         panelConexao.add(txtUsuario);
         
         JLabel lblSenha = new JLabel("Senha");
@@ -103,17 +125,47 @@ public class main extends JFrame {
         lblSenha.setBounds(10, 161, 81, 14);
         panelConexao.add(lblSenha);
         
-        txtSenha = new JTextField();
-        txtSenha.setText("aluno");
-        txtSenha.setFont(new Font("Roboto Mono", Font.PLAIN, 14));
-        txtSenha.setColumns(10);
-        txtSenha.setBounds(10, 180, 210, 20);
+        JButton btnTestarConexao = new JButton("Conectar");
+        btnTestarConexao.setIcon(new ImageIcon(main.class.getResource("/resources/icon_plug.png")));
+        btnTestarConexao.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent arg0) {
+                DB dbTentativa = new DB();
+                boolean b = dbTentativa.setConnection(txtHost.getText(), txtBatabase.getText(), txtUsuario.getText(),
+                                                      txtSenha.getPassword());
+                if (b) {
+                    db = dbTentativa;
+                    JOptionPane.showMessageDialog(null, "Tudo pronto para realizar as consultas!", "Conexão estabelecida",
+                            JOptionPane.INFORMATION_MESSAGE);
+                }
+                else {
+                    JOptionPane.showMessageDialog(null, dbTentativa.erro, "Oops...", JOptionPane.ERROR_MESSAGE);
+                }
+                
+            }
+        });
+        btnTestarConexao.setFont(new Font("Roboto Mono Medium", Font.PLAIN, 12));
+        btnTestarConexao.setBounds(55, 210, 110, 23);
+        panelConexao.add(btnTestarConexao);
+        
+        txtSenha = new JPasswordField();
+        txtSenha.setBounds(10, 180, 190, 20);
         panelConexao.add(txtSenha);
         
-        JButton btnTestarConexo = new JButton("Testar Conex\u00E3o");
-        btnTestarConexo.setFont(new Font("Roboto Mono Medium", Font.PLAIN, 12));
-        btnTestarConexo.setBounds(40, 211, 150, 23);
-        panelConexao.add(btnTestarConexo);
+        JSeparator separator = new JSeparator();
+        separator.setOrientation(SwingConstants.VERTICAL);
+        separator.setForeground(Color.LIGHT_GRAY);
+        separator.setBackground(Color.WHITE);
+        separator.setBounds(215, 20, 1, 225);
+        panelConexao.add(separator);
+        
+        JTextPane txtpnAlo = new JTextPane();
+        txtpnAlo.setFont(new Font("Roboto Mono", Font.PLAIN, 12));
+        txtpnAlo.setBackground(SystemColor.menu);
+        txtpnAlo.setEditable(false);
+        txtpnAlo.setContentType("text/html");
+        txtpnAlo.setText("<center><b>Grupo 10 - Delivery &copy; 2016</b></center>\r\n<p>Simples aplica\u00E7\u00E3o para exibir as consultas em SQL do Grupo 10.</p>\r\n<p>Claudson Martins <a href=\"mailto:claudsonbms@dcomp.ufs.br\">claudsonbms@dcomp.ufs.br</a><br>\r\nEdgar Lima <a href=\"mailto:edgarvln@dcomp.ufs.br\">edgarvln@dcomp.ufs.br</a><br>\r\nGuilherme Boroni <a href=\"mailto:guilhermebp@dcomp.ufs.br\">guilhermebp@dcomp.ufs.br</a></p>");
+        txtpnAlo.setBounds(226, 30, 278, 203);
+        panelConexao.add(txtpnAlo);
         
         JPanel panelConsultas = new JPanel();
         tabbedPane.addTab("Consultas", null, panelConsultas, null);
@@ -124,11 +176,35 @@ public class main extends JFrame {
         lblSelecione.setBounds(10, 11, 157, 14);
         panelConsultas.add(lblSelecione);
         
-        JComboBox comboConsulta = new JComboBox();
+        comboConsulta = new JComboBox();
+        comboConsulta.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent e) {
+                if (e.getStateChange() == ItemEvent.SELECTED) {
+                    if (db == null) {
+                        JOptionPane.showMessageDialog(null, "Nenhuma conexão foi estabelecida.\nVá para a aba "
+                                + "\"Conexão\", preencha as informações e clique em \"Conectar\".", "Vixe...",
+                                JOptionPane.WARNING_MESSAGE);
+                    }
+                    else {
+                        String sql = db.consultaSQL(comboConsulta.getSelectedIndex());
+                        txtConsulta.setText(sql);
+                        if (!sql.equals("")) {
+                            DefaultTableModel modelo = db.executaConsulta(sql);
+                            if (modelo == null) {
+                                JOptionPane.showMessageDialog(null, db.erro, "Eita...", JOptionPane.ERROR_MESSAGE);
+                            }
+                            else {
+                                tabela.setModel(modelo);
+                            }
+                        }
+                    }
+                }
+            }
+        });
         comboConsulta.setToolTipText("");
         comboConsulta.setFont(new Font("Roboto Mono", Font.PLAIN, 14));
         comboConsulta.setModel(new DefaultComboBoxModel(new String[] {"Selecione uma consulta", "Bairro do CEP 08658-075", "Todos os bairros de Sergipe", "Lista de propriet\u00E1rios", "Produtos que cont\u00EAm 'a' e participam de alguma promo\u00E7\u00E3o", "Quantidade de produtos por promo\u00E7\u00E3o", "Soma do valor do pedido pelo id do pedido", "Pedidos com mais de 10 produtos", "Todos os funcionarios da empresa", "Produtos com mais de 10 pedidos"}));
-        comboConsulta.setBounds(10, 30, 400, 20);
+        comboConsulta.setBounds(10, 30, 494, 20);
         panelConsultas.add(comboConsulta);
         
         JLabel lblConsultaSql = new JLabel("Consulta SQL");
@@ -136,19 +212,23 @@ public class main extends JFrame {
         lblConsultaSql.setBounds(10, 61, 101, 14);
         panelConsultas.add(lblConsultaSql);
         
-        JTextPane txtpnCo = new JTextPane();
-        txtpnCo.setEditable(false);
-        txtpnCo.setBounds(10, 80, 400, 90);
-        panelConsultas.add(txtpnCo);
+        txtConsulta = new JTextPane();
+        txtConsulta.setFont(new Font("Roboto Mono", Font.PLAIN, 12));
+        txtConsulta.setEditable(false);
+        txtConsulta.setBounds(10, 80, 494, 70);
+        panelConsultas.add(txtConsulta);
         
         JLabel lblResultados = new JLabel("Resultados");
         lblResultados.setFont(new Font("Roboto Mono Medium", Font.PLAIN, 12));
-        lblResultados.setBounds(10, 180, 86, 14);
+        lblResultados.setBounds(10, 160, 86, 14);
         panelConsultas.add(lblResultados);
+        
+        JScrollPane scrollPane = new JScrollPane();
+        scrollPane.setBounds(10, 179, 494, 90);
+        panelConsultas.add(scrollPane);
         
         tabela = new JTable();
         tabela.setFont(new Font("Roboto Mono", Font.PLAIN, 12));
-        tabela.setBounds(10, 199, 400, 45);
-        panelConsultas.add(tabela);
+        scrollPane.setViewportView(tabela);
     }
 }
