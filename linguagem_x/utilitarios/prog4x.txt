@@ -1,0 +1,35 @@
+/* =======================================================
+* Programa #3 em Linguagem X
+* Realiza alguns cálculos na circunferência
+* =======================================================*/
+
+cons real PI := 3.14;
+var real raio := ((6+1) / -(7*5));
+ 
+function real areaCirculo(var real r, var int k)
+    2 * PI * (r * r);
+
+function real diametroCirculo(var real r)
+    2 * r;
+
+var real area;
+var real comprimento;
+var real diametro;
+
+procedure main () {
+    area := areaCirculo(raio, 2);
+    diametro := diametroCirculo(raio);
+    comprimento := PI * diametro;
+    
+    var real[3] resultados := {area, diametro, comprimento};
+    var int i := 0;
+    var real soma;
+    var bool par;
+    
+    while(i < 3){
+        soma := soma + resultados[i];
+        i := i + 1;
+    }
+    if (soma % 2 = 0) then par := true;
+    else par := false;
+}

@@ -4,48 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 import sintaxe_abstrata.*;
 import ambiente.*;
+import interpretador.*;
 import utilitarios.*;
 
 
 public class Checker extends Visitor {
+    
     public AmbienteConsVar aConsVar = new AmbienteConsVar();
     public AmbienteFuncProc aFuncProc = new AmbienteFuncProc();
     public RegistroErros erros = new RegistroErros();
-    
-    public Checker() {
-        /**
-         * O código abaixo é apenas para fins de exemplo
-         * Não tem significância nenhuma 
-         */
-        // Insere a "variável" "x" do tipo "real" na tabela de símbolos
-        /*VinculavelConsVar xVinc = (VinculavelConsVar) aConsVar.lookup("x", true, TipoBaseSemantico.Real);
-        VinculavelConsVar yVinc = new VinculavelConsVar(true, TipoBaseSemantico.Int);
-        System.out.println(aConsVar.tamanho());
-        aConsVar.tabela.put("x", yVinc);
-        System.out.println(aConsVar.get("x").tipo);
-        System.out.println(aConsVar.tamanho());
-        aConsVar.delete("x");
-        System.out.println(aConsVar.tamanho());*/
-        
-        /*
-        // Insere a "função" "calculaSoma" do tipo "real" na tabela de símbolos
-        List<PassagemTipoSemantico> p = new ArrayList<PassagemTipoSemantico>();
-        p.add(new PassagemTipoSemantico(TipoBaseSemantico.Real));
-        //VinculavelFuncProc x = (VinculavelFuncProc) aFuncProc.lookupFuncProc("calculaSoma", p);
-        
-        aConsVar.add("x", true, TipoBaseSemantico.Int);
-        aConsVar.add("y", false, TipoBaseSemantico.Real);
-        aConsVar.comecaEscopo();
-        aConsVar.add("x", true, TipoBaseSemantico.Int);
-        aConsVar.terminaEscopo();
-        aConsVar.add("y", false, TipoBaseSemantico.Real);
-        aConsVar.comecaEscopo();
-        aConsVar.add("y", false, TipoBaseSemantico.Real);
-        
-        erros.reportar(01, "Que eu quiser");
-        erros.mostrar();
-        */
-    }
     
     /**
      * Dada uma instância de TBase (sintático) retorna uma equivalente do tipo
@@ -80,6 +47,19 @@ public class Checker extends Visitor {
      */
     private TipoArraySemantico paraSemantico(TBase b, int d) {
         return new TipoArraySemantico(paraSemantico(b), d);
+    }
+    
+    /**
+     * Gera o endereço que deve ser ornamentado
+     * 
+     * @param nivel O nível em que está o identificador
+     * @return
+     */
+    private Endereco gerarEndereco(int nivel) {
+        String tipo = (nivel == 0) ? "global" : "pilha";
+        Endereco e = new Endereco(tipo, Alocador.proxEndereco());
+        Alocador.alocar();
+        return e;
     }
 
     @Override
@@ -371,6 +351,7 @@ public class Checker extends Visitor {
     public Object visitCons(Cons c) {
         TipoSemantico t = (TipoSemantico) c.tipo.accept(this);
         aConsVar.add(c.id, false, t);
+        c.endereco = gerarEndereco(aConsVar.nivel);
         return null;
     }
 
@@ -418,8 +399,10 @@ public class Checker extends Visitor {
             TipoSemantico retorno = (TipoSemantico) f.tipo.accept(this);
             List<PassagemTipoSemantico> l = new ArrayList<PassagemTipoSemantico>();
             aConsVar.comecaEscopo();
+            Alocador.resetar();
             for (Parametro p : f.listaParam) {
                 l.add((PassagemTipoSemantico) p.accept(this));
+                Alocador.alocar();
             }
             TipoSemantico r2 = (TipoSemantico) f.exp.accept(this);
             if (! retorno.equals(r2)) {
@@ -552,6 +535,7 @@ public class Checker extends Visitor {
         if (! aFuncProc.contem(p.id)) {
             List<PassagemTipoSemantico> l = new ArrayList<PassagemTipoSemantico>();
             aConsVar.comecaEscopo();
+            Alocador.resetar();
             for (Parametro param : p.listaParam) {
                 l.add((PassagemTipoSemantico) param.accept(this));
             }
@@ -571,7 +555,7 @@ public class Checker extends Visitor {
         for (Dec d : p.declaracoes) {
             d.accept(this);
         }
-        return null;
+        return p;
     }
 
     @Override
@@ -583,6 +567,7 @@ public class Checker extends Visitor {
                     + " não encontrado no ambiente!");
             v = new VinculavelConsVar(true, TipoBaseSemantico.Int);
         }
+        s.endereco = gerarEndereco(aConsVar.nivel);
         return v;
     }
 
@@ -612,6 +597,7 @@ public class Checker extends Visitor {
             erros.reportar(200, "O identificador " + v.id
                     + " não foi adicionado no ambiente.");
         }
+        v.endereco = gerarEndereco(aConsVar.nivel);
         return null;
     }
 

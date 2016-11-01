@@ -8,13 +8,15 @@ import java.util.List;
 
 import analisador.*;
 import checagem.*;
+import interpretador.*;
 import sintaxe_abstrata.*;
 
 public class Main {
 
     public static void main(String[] args) {
         //analiseLexica();
-        analiseLexicaSintatica();
+        //analiseLexicaSintatica();
+        interpretacao();
         //programa1();
         //programa2();
         //testes();       
@@ -364,21 +366,48 @@ public class Main {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        /*try {
-            parser p = new parser(
-                    new AnalisadorLexico(new FileReader("linguagem_x//utilitarios//prog1x.txt")));
+    }
+    
+    public static void interpretacao() {
+        try {
+            AnalisadorSintatico p = new AnalisadorSintatico(
+                    new AnalisadorLexico(new FileReader("linguagem_x//utilitarios//prog4x.txt")));
             Object result = p.parse().value;
-            System.out.println(result.toString());
-
-            Programa pg = (Programa) result;
-            System.out.println("Tamanho: " + pg.declaracoes.size());
+            //System.out.println(result.toString());
+            
             
             Checker c = new Checker();
-            c.visitPrograma(pg);
+            Object checkResult = c.visitPrograma((Programa) result);
             c.erros.mostrar();
+            if (c.erros.quantidade() == 0) {
+                Interpretador i = new Interpretador();
+                System.out.println("========== APÓS CHECKER ========\n" + checkResult);
+                i.visitPrograma((Programa) checkResult);
+                System.out.println("================================");
+                i.erros.mostrar();
+                
+                System.out.println("============= GLOBAIS ============= ");
+                for (int j = 0, tGlobal = i.mem.globais.length; j < tGlobal; j++) {
+                    if (i.mem.globais[j] == null) {
+                        break;
+                    }
+                    System.out.println("\t[" + j + "] \t|\t" + i.mem.globais[j]);
+                }
+                System.out.println("=================================== ");
+                
+                System.out.println("============= PILHA ============== ");
+                for (int j = 0, tPilha = i.mem.stackFrame.length; j < tPilha; j++) {
+                    if (i.mem.stackFrame[j] == null) {
+                        break;
+                    }
+                    System.out.println("\t[" + j + "] \t|\t" + i.mem.stackFrame[j]);
+                }
+                System.out.println("=================================== ");
+            }
+            
         } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }*/
+            e.printStackTrace();
+        }
     }
 
 }
