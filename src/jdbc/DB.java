@@ -61,13 +61,15 @@ public class DB {
         String r;
         switch (opcao) {
         case 1:
+            r = "SELECT nome_fantasia FROM empresas WHERE id IN " +
+                "(SELECT empresas_id FROM empresas_segmentos es " +
+                "JOIN segmentos s ON es.segmentos_id = s.id WHERE nome LIKE 'pet shop')";
+            break;
+            
+        case 2:
             r = "SELECT nome FROM bairros b " +
                 "JOIN cep c ON c.bairros_id = b.id " +
                 "WHERE cep = '08658-075'";
-            break;
-        
-        case 2:
-            r = "SELECT nome FROM bairros WHERE estado = 'SE'";
             break;
         
         case 3:
@@ -91,7 +93,7 @@ public class DB {
             break;
         
         case 6:
-            r = "SELECT SUM(p.valor*ip.quantidade) as conta FROM itens_pedido ip " +
+            r = "SELECT SUM(p.valor*ip.quantidade) as total FROM itens_pedido ip " +
                 "JOIN produtos p ON p.id = ip.produtos_id " +
                 "WHERE ip.pedidos_id = 300";
             break;
@@ -106,7 +108,7 @@ public class DB {
             r = "SELECT u.nome FROM funcionarios f " +
                 "JOIN usuarios u ON u.id = f.usuarios_id " +
                 "WHERE empresas_id = 2 " +
-                "ORDER BY u.nome DESC";
+                "ORDER BY u.nome ASC";
             break;
         
         case 9:
@@ -114,6 +116,12 @@ public class DB {
                 "JOIN produtos p on ip.produtos_id = p.id " +
                 "GROUP BY ip.produtos_id,  p.nome " +
                 "HAVING count(ip.produtos_id)>10";
+            break;
+        
+        case 10:
+            r = "SELECT * FROM pedidos " +
+                "WHERE enderecos_id NOT IN " +
+                "(SELECT id FROM enderecos WHERE cep LIKE '64043-445')";
             break;
             
         default:

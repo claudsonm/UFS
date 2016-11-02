@@ -203,7 +203,7 @@ public class main extends JFrame {
         });
         comboConsulta.setToolTipText("");
         comboConsulta.setFont(new Font("Roboto Mono", Font.PLAIN, 14));
-        comboConsulta.setModel(new DefaultComboBoxModel(new String[] {"Selecione uma consulta", "Bairro do CEP 08658-075", "Todos os bairros de Sergipe", "Lista de propriet\u00E1rios", "Produtos que cont\u00EAm 'a' e participam de alguma promo\u00E7\u00E3o", "Quantidade de produtos por promo\u00E7\u00E3o", "Soma do valor do pedido pelo id do pedido", "Pedidos com mais de 10 produtos", "Todos os funcionarios da empresa", "Produtos com mais de 10 pedidos"}));
+        comboConsulta.setModel(new DefaultComboBoxModel(new String[] {"Selecione uma consulta", "Nome fantasia das empresas do segmento de Pet Shop", "Nome do bairro do CEP 08658-075", "Nome de todos os propriet\u00E1rios de empresas", "Produtos que cont\u00EAm 'a' e participam de alguma promo\u00E7\u00E3o", "Quantidade de produtos participantes de cada promo\u00E7\u00E3o", "Valor total do pedido de ID 300", "Pedidos finalizados que possuem mais de 10 produtos", "Nome de todos os funcion\u00E1rios da empresa de ID 2", "Nome dos produtos que est\u00E3o em mais de 10 pedidos", "Pedidos que n\u00E3o s\u00E3o para um endere\u00E7o no CEP 64043-445"}));
         comboConsulta.setBounds(10, 30, 494, 20);
         panelConsultas.add(comboConsulta);
         
