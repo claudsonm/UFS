@@ -1,6 +1,7 @@
 package checagem;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import sintaxe_abstrata.*;
 import ambiente.*;
@@ -13,6 +14,8 @@ public class Checker extends Visitor {
     public AmbienteConsVar aConsVar = new AmbienteConsVar();
     public AmbienteFuncProc aFuncProc = new AmbienteFuncProc();
     public RegistroErros erros = new RegistroErros();
+    private HashMap<String, Endereco> endFrame = new HashMap<>();
+    private HashMap<String, Endereco> endGlobal = new HashMap<>();
     
     /**
      * Dada uma instância de TBase (sintático) retorna uma equivalente do tipo
@@ -57,9 +60,30 @@ public class Checker extends Visitor {
      */
     private Endereco gerarEndereco(int nivel) {
         String tipo = (nivel == 0) ? "global" : "pilha";
-        Endereco e = new Endereco(tipo, Alocador.proxEndereco());
-        Alocador.alocar();
+        Endereco e = new Endereco(tipo, Alocador.proxEndereco(tipo));
+        Alocador.alocar(tipo);
         return e;
+    }
+    
+    private void salvarReferencia(String id, Endereco e) {
+        if (e.tipo.equals("pilha")) {
+            endFrame.put(id, e);
+        }
+        else {
+            endGlobal.put(id, e);
+        }
+    }
+    
+    private Endereco obterEndereco(String id) {
+        if (endFrame.containsKey(id)) {
+            return endFrame.get(id);
+        }
+        else if (endGlobal.containsKey(id)) {
+            return endGlobal.get(id);
+        }
+        else {
+            return null;
+        }
     }
 
     @Override
@@ -351,7 +375,8 @@ public class Checker extends Visitor {
     public Object visitCons(Cons c) {
         TipoSemantico t = (TipoSemantico) c.tipo.accept(this);
         aConsVar.add(c.id, false, t);
-        c.endereco = gerarEndereco(aConsVar.nivel);
+        c.endereco = gerarEndereco(AmbienteConsVar.nivel);
+        salvarReferencia(c.id, c.endereco);
         return null;
     }
 
@@ -400,9 +425,10 @@ public class Checker extends Visitor {
             List<PassagemTipoSemantico> l = new ArrayList<PassagemTipoSemantico>();
             aConsVar.comecaEscopo();
             Alocador.resetar();
+            endFrame.clear();
             for (Parametro p : f.listaParam) {
                 l.add((PassagemTipoSemantico) p.accept(this));
-                Alocador.alocar();
+                Alocador.alocar("pilha");
             }
             TipoSemantico r2 = (TipoSemantico) f.exp.accept(this);
             if (! retorno.equals(r2)) {
@@ -521,6 +547,8 @@ public class Checker extends Visitor {
     @Override
     public Object visitParBaseCopia(ParBaseCopia p) {
         aConsVar.add(p.id, true, paraSemantico(p.tipo));
+        Endereco e = new Endereco("pilha", Alocador.proxEndereco("pilha"));
+        salvarReferencia(p.id, e);
         return new PassagemTipoSemantico(paraSemantico(p.tipo));
     }
 
@@ -536,6 +564,7 @@ public class Checker extends Visitor {
             List<PassagemTipoSemantico> l = new ArrayList<PassagemTipoSemantico>();
             aConsVar.comecaEscopo();
             Alocador.resetar();
+            endFrame.clear();
             for (Parametro param : p.listaParam) {
                 l.add((PassagemTipoSemantico) param.accept(this));
             }
@@ -567,7 +596,7 @@ public class Checker extends Visitor {
                     + " não encontrado no ambiente!");
             v = new VinculavelConsVar(true, TipoBaseSemantico.Int);
         }
-        s.endereco = gerarEndereco(aConsVar.nivel);
+        s.endereco = obterEndereco(s.id);
         return v;
     }
 
@@ -597,7 +626,8 @@ public class Checker extends Visitor {
             erros.reportar(200, "O identificador " + v.id
                     + " não foi adicionado no ambiente.");
         }
-        v.endereco = gerarEndereco(aConsVar.nivel);
+        v.endereco = gerarEndereco(AmbienteConsVar.nivel);
+        salvarReferencia(v.id, v.endereco);
         return null;
     }
 
@@ -628,6 +658,7 @@ public class Checker extends Visitor {
             erros.reportar(200, "O identificador " + v.id
                     + " não foi adicionado no ambiente.");
         }
+        salvarReferencia(v.id, gerarEndereco(AmbienteConsVar.nivel));
         return null;
     }
 

@@ -1,9 +1,7 @@
 package interpretador;
 
 import java.util.ArrayList;
-import java.util.List;
 
-import checagem.PassagemTipoSemantico;
 import sintaxe_abstrata.*;
 import utilitarios.*;
 
@@ -14,10 +12,11 @@ public class Interpretador extends Visitor {
     private void putMemoria(Endereco e, Value v) {
         if (e.tipo.equals("pilha")) {
             mem.putPilha(e.posicao, v);
-            Alocador.alocar();
+            Alocador.alocar("pilha");
         }
         else if (e.tipo.equals("global")) {
             mem.putGlobal(e.posicao, v);
+            Alocador.alocar("global");
         }
         else {
             erros.reportar(333, "Endereço de memória inválido!");
@@ -29,6 +28,7 @@ public class Interpretador extends Visitor {
         Value v = (Value) a.exp.accept(this);
         Endereco e = (Endereco) a.var.accept(this);
         putMemoria(e, v);
+        System.out.println("RESULTADO: " + v);
         return null;
     }
 
@@ -152,8 +152,16 @@ public class Interpretador extends Visitor {
 
     @Override
     public Object visitChamadaExp(ChamadaExp c) {
-        // TODO Auto-generated method stub
-        return null;
+        Object[] funcProc = mem.getDeclaracao(c.id);
+        mem.novoFrame();
+        int i = 0;
+        for (Exp e : c.listaExp) {
+            Value v = (Value) e.accept(this);
+            putMemoria(new Endereco("pilha", i++), v);
+        }
+        Value valor = (Value) ((Exp)funcProc[0]).accept(this);
+        mem.removerFrame();
+        return valor;
     }
 
     @Override
@@ -205,11 +213,10 @@ public class Interpretador extends Visitor {
 
     @Override
     public Object visitFuncao(Funcao f) {
-        Alocador.resetar();
-        mem.incrementarFramePointer();
-        for (Parametro p : f.listaParam) {
-            p.accept(this);
-        }
+        Object[] conteudo = new Object[2];
+        conteudo[0] = f.exp;
+        conteudo[1] = f.listaParam;
+        mem.putDeclaracao(f.id, conteudo);
         return null;
     }
 
@@ -285,28 +292,25 @@ public class Interpretador extends Visitor {
 
     @Override
     public Object visitParBaseCopia(ParBaseCopia p) {
-        System.out.println("ALOCADOR: " + Alocador.proxEndereco());
-        if (p.tipo == TBase.Int) {
-            putMemoria(new Endereco("pilha", Alocador.proxEndereco()), new IntValue(0));
-        }
-        else if (p.tipo == TBase.Real) {
-            putMemoria(new Endereco("pilha", Alocador.proxEndereco()), new RealValue(0.0));
-        }
-        else {
-            putMemoria(new Endereco("pilha", Alocador.proxEndereco()), new BoolValue(true));
-        }
         return null;
     }
 
     @Override
     public Object visitParBaseRef(ParBaseRef p) {
-        // TODO Auto-generated method stub
         return null;
     }
 
     @Override
     public Object visitProcedimento(Procedimento p) {
-        // TODO Auto-generated method stub
+        if (! p.id.equals("main")) {
+            Object[] conteudo = new Object[2];
+            conteudo[0] = p.comando;
+            conteudo[1] = p.listaParam;
+            mem.putDeclaracao(p.id, conteudo);
+        }
+        else {
+            p.comando.accept(this);
+        }
         return null;
     }
 
@@ -320,8 +324,7 @@ public class Interpretador extends Visitor {
 
     @Override
     public Object visitSimples(Simples s) {
-        // TODO Auto-generated method stub
-        return null;
+        return s.endereco;
     }
 
     @Override
@@ -338,8 +341,13 @@ public class Interpretador extends Visitor {
 
     @Override
     public Object visitVarExp(VarExp v) {
-        // TODO Auto-generated method stub
-        return null;
+        Endereco end = (Endereco) v.var.accept(this);
+        if (end.tipo.equals("global")) {
+            return mem.getGlobal(end.posicao);
+        }
+        else {
+            return mem.getPilha(end.posicao);
+        }
     }
 
     @Override

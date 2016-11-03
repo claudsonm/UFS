@@ -8,7 +8,6 @@ import java.util.List;
 
 import analisador.*;
 import checagem.*;
-import interpretador.*;
 import sintaxe_abstrata.*;
 
 public class Main {
@@ -403,6 +402,8 @@ public class Main {
                     System.out.println("\t[" + j + "] \t|\t" + i.mem.stackFrame[j]);
                 }
                 System.out.println("=================================== ");
+                
+                System.out.println(i.mem.funcoesProc);
             }
             
         } catch (Exception e) {

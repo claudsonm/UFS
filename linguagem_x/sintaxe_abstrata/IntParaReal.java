@@ -12,4 +12,9 @@ public class IntParaReal extends Exp {
         return vis.visitIntParaReal(this);
     }
     
+    @Override
+    public String toString() {
+        return "IntToReal(" + exp + ")";
+    }
+    
 }

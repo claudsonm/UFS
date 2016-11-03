@@ -4,9 +4,9 @@
 * =======================================================*/
 
 cons real PI := 3.14;
-var real raio := ((6+1) / -(7*5));
+var real raio := 2.0;
  
-function real areaCirculo(var real r, var int k)
+function real areaCirculo(var real r)
     2 * PI * (r * r);
 
 function real diametroCirculo(var real r)
@@ -17,17 +17,16 @@ var real comprimento;
 var real diametro;
 
 procedure main () {
-    area := areaCirculo(raio, 2);
+    area := areaCirculo(raio); // 25,12
     diametro := diametroCirculo(raio);
     comprimento := PI * diametro;
     
-    var real[3] resultados := {area, diametro, comprimento};
     var int i := 0;
     var real soma;
     var bool par;
     
     while(i < 3){
-        soma := soma + resultados[i];
+        soma := soma + comprimento;
         i := i + 1;
     }
     if (soma % 2 = 0) then par := true;
