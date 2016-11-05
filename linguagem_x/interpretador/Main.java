@@ -1,8 +1,6 @@
 package interpretador;
 
-import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,40 +8,15 @@ import analisador.*;
 import checagem.*;
 import sintaxe_abstrata.*;
 
+/**
+ * Classe principal do projeto, inicia a execução.
+ * 
+ * @author Claudson Martins
+ */
 public class Main {
 
     public static void main(String[] args) {
-        //analiseLexica();
-        //analiseLexicaSintatica();
         interpretacao();
-        //programa1();
-        //programa2();
-        //testes();       
-    }
-    
-    public static void testes() {
-        // TipoBaseSemantico x = TipoBaseSemantico.Real;
-        // TipoBaseSemantico y = TipoBaseSemantico.Int;
-        
-        TipoBase esq = new TipoBase(TBase.Real);
-        TipoBase dir = new TipoBase(TBase.Real);
-        if (esq.tipo.equals(dir.tipo) && esq.tipo.nome != "bool") {
-            System.out.println(esq.tipo);
-        }
-        else {
-            try {
-                throw new Exception("BinExp: Tipos invalidos!");
-            } catch (Exception e1) {
-                e1.printStackTrace();
-            }
-        }
-        
-        // TipoArraySemantico vet1 = new TipoArraySemantico(TipoBaseSemantico.Real, 3);
-        // TipoArraySemantico vet2 = new TipoArraySemantico(TipoBaseSemantico.Real, 3);
-        //System.out.println(x.equals(y));
-        //System.out.println(vet1.equals(vet2));
-        
-        // Checker c = new Checker();
     }
     
     public static void programa1() {
@@ -327,44 +300,6 @@ public class Main {
         Checker c = new Checker();
         c.visitPrograma(p);
         c.erros.mostrar();
-    }
-    
-    public static void analiseLexica() {
-        try {
-            AnalisadorLexico l = new AnalisadorLexico(
-                    new FileReader("linguagem_x//utilitarios//prog1x.txt"));
-            while (true) {
-                try {
-                    Token t = l.next_token();
-                    if (t == null || t.sym == 0) {
-                        System.out.println("EOF");
-                        break;
-                    }
-                    System.out.println(t.toString());
-                } catch (IOException e) {
-                    System.out.println(e.getMessage());
-                }
-            }
-        } catch (FileNotFoundException e1) {
-            System.out.println(e1.getMessage());
-        }
-    }
-    
-    public static void analiseLexicaSintatica() {
-        try {
-            AnalisadorSintatico p = new AnalisadorSintatico(
-                    new AnalisadorLexico(new FileReader("linguagem_x//utilitarios//prog3x.txt")));
-            Object result = p.parse().value;
-            System.out.println(result.toString());
-            
-            
-            Checker c = new Checker();
-            c.visitPrograma((Programa) result);
-            c.erros.mostrar();
-            
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
     
     public static void interpretacao() {

@@ -1,5 +1,7 @@
 package interpretador;
 
+import java.util.ArrayList;
+
 import sintaxe_abstrata.*;
 import utilitarios.*;
 
@@ -42,7 +44,7 @@ public class Interpretador extends Visitor {
             break;
         
         case "Real":
-            valor = new RealValue(0);
+            valor = new RealValue(0.0);
             break;
         
         default:
@@ -107,7 +109,9 @@ public class Interpretador extends Visitor {
         }
         else if (vEsq instanceof RealValue) {
             RealValue ve = (RealValue) vEsq;
-            RealValue vd = (RealValue) vDir;
+            RealValue vd = vDir instanceof IntValue ?
+                           new RealValue(((IntValue) vDir).valor) :
+                           (RealValue) vDir;
             switch (e.operacao.token) {
             case "+":
                 rValor = new RealValue(ve.valor + vd.valor);
@@ -183,11 +187,15 @@ public class Interpretador extends Visitor {
     @Override
     public Object visitChamadaExp(ChamadaExp c) {
         Object[] funcProc = mem.getDeclaracao(c.id);
-        mem.novoFrame();
+        ArrayList<Value> v = new ArrayList<>();
         int i = 0;
         for (Exp e : c.listaExp) {
-            Value v = (Value) e.accept(this);
-            putMemoria(new Endereco("pilha", i++), v);
+            v.add((Value) e.accept(this));
+            i++;
+        }
+        mem.novoFrame();
+        for (int j = 0; j < i; j++) {
+            putMemoria(new Endereco("pilha", j), v.get(j));
         }
         Value valor = (Value) ((Exp)funcProc[0]).accept(this);
         mem.removerFrame();

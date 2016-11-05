@@ -29,7 +29,7 @@ public class Memoria {
     }
     
     public void removerFrame() {
-        for (int i = framePointer; i < tamanhoFrames[indice]; i++) {
+        for (int i = framePointer, f = framePointer + tamanhoFrames[indice]; i < f; i++) {
             stackFrame[i] = null;
         }
         framePointer -= tamanhoFrames[indice-1];

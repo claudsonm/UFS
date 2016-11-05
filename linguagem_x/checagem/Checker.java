@@ -639,6 +639,7 @@ public class Checker extends Visitor {
         }
         v.endereco = gerarEndereco(AmbienteConsVar.nivel);
         salvarReferencia(v.id, v.endereco);
+        v.exp.accept(this);
         return null;
     }
 

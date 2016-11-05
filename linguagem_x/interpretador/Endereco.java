@@ -16,5 +16,10 @@ public class Endereco {
         this.posicao = p;
         this.tipo = t;
     }
+    
+    @Override
+    public String toString() {
+        return local + "[" + posicao + "]";
+    }
 
 }
