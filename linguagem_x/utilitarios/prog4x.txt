@@ -18,8 +18,8 @@ var real diametro;
 
 procedure main () {
     area := areaCirculo(raio); // 25,12
-    diametro := diametroCirculo(raio);
-    comprimento := PI * diametro;
+    diametro := diametroCirculo(raio); // 4
+    comprimento := PI * diametro; // 12,56
     
     var int i := 0;
     var real soma;

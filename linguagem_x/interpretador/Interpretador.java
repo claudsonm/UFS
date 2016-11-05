@@ -1,26 +1,56 @@
 package interpretador;
 
-import java.util.ArrayList;
-
 import sintaxe_abstrata.*;
 import utilitarios.*;
 
 public class Interpretador extends Visitor {
+    
     public Memoria mem = new Memoria();
     public RegistroErros erros = new RegistroErros();
     
+    /**
+     * Carrega o valor no endereço de memória
+     * 
+     * @param e Endereço de memória
+     * @param v Valor
+     */
     private void putMemoria(Endereco e, Value v) {
-        if (e.tipo.equals("pilha")) {
+        if (e.local.equals("pilha")) {
             mem.putPilha(e.posicao, v);
             Alocador.alocar("pilha");
         }
-        else if (e.tipo.equals("global")) {
+        else if (e.local.equals("global")) {
             mem.putGlobal(e.posicao, v);
             Alocador.alocar("global");
         }
         else {
             erros.reportar(333, "Endereço de memória inválido!");
         }
+    }
+    
+    /**
+     * Carrega um valor padrão em um endereço de memória
+     * 
+     * @param end   Endereço de memória
+     * @return      O valor padrão carregado
+     */
+    private Value inicializeEndereco(Endereco end) {
+        Value valor;
+        switch (end.tipo) {
+        case "Bool":
+            valor = new BoolValue(false);
+            break;
+        
+        case "Real":
+            valor = new RealValue(0);
+            break;
+        
+        default:
+            valor = new IntValue(0);
+            break;
+        }
+        putMemoria(end, valor);
+        return valor;
     }
 
     @Override
@@ -329,24 +359,31 @@ public class Interpretador extends Visitor {
 
     @Override
     public Object visitTipoArray(TipoArray t) {
-        // TODO Auto-generated method stub
         return null;
     }
 
     @Override
     public Object visitTipoBase(TipoBase t) {
-        // TODO Auto-generated method stub
         return null;
     }
 
     @Override
     public Object visitVarExp(VarExp v) {
         Endereco end = (Endereco) v.var.accept(this);
-        if (end.tipo.equals("global")) {
-            return mem.getGlobal(end.posicao);
+        Value r;
+        if (end.local.equals("global")) {
+            r = mem.getGlobal(end.posicao);
+            if (r == null) {
+                r = inicializeEndereco(end);
+            }
+            return r;
         }
         else {
-            return mem.getPilha(end.posicao);
+            r = mem.getPilha(end.posicao);
+            if (r == null) {
+                r = inicializeEndereco(end);
+            }
+            return r;
         }
     }
 
@@ -359,25 +396,24 @@ public class Interpretador extends Visitor {
 
     @Override
     public Object visitVarInicComp(VarInicComp v) {
-        // TODO Auto-generated method stub
         return null;
     }
 
     @Override
     public Object visitVarInicExt(VarInicExt v) {
-        // TODO Auto-generated method stub
         return null;
     }
 
     @Override
     public Object visitVarNaoInic(VarNaoInic v) {
-        // TODO Auto-generated method stub
         return null;
     }
 
     @Override
     public Object visitWhile(WHILE w) {
-        // TODO Auto-generated method stub
+        while ( ((BoolValue) w.exp.accept(this)).valor ) {
+            w.comando.accept(this);
+        }
         return null;
     }
 

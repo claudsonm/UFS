@@ -53,20 +53,31 @@ public class Checker extends Visitor {
     }
     
     /**
-     * Gera o endereço que deve ser ornamentado
+     * Gera o endereço que deve ser ornamentado sem se importar com o tipo
      * 
      * @param nivel O nível em que está o identificador
      * @return
      */
     private Endereco gerarEndereco(int nivel) {
-        String tipo = (nivel == 0) ? "global" : "pilha";
-        Endereco e = new Endereco(tipo, Alocador.proxEndereco(tipo));
-        Alocador.alocar(tipo);
+        return gerarEndereco(nivel, null);
+    }
+    
+    /**
+     * Gera o endereço que deve ser ornamentado
+     * 
+     * @param nivel O nível em que está o identificador
+     * @param tipo  Se é um endereço para Int, Real ou Bool
+     * @return
+     */
+    private Endereco gerarEndereco(int nivel, String tipo) {
+        String local = (nivel == 0) ? "global" : "pilha";
+        Endereco e = new Endereco(local, Alocador.proxEndereco(local), tipo);
+        Alocador.alocar(local);
         return e;
     }
     
     private void salvarReferencia(String id, Endereco e) {
-        if (e.tipo.equals("pilha")) {
+        if (e.local.equals("pilha")) {
             endFrame.put(id, e);
         }
         else {
@@ -658,7 +669,7 @@ public class Checker extends Visitor {
             erros.reportar(200, "O identificador " + v.id
                     + " não foi adicionado no ambiente.");
         }
-        salvarReferencia(v.id, gerarEndereco(AmbienteConsVar.nivel));
+        salvarReferencia(v.id, gerarEndereco(AmbienteConsVar.nivel, t.toString()));
         return null;
     }
 
