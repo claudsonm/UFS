@@ -1,55 +1,52 @@
-package interpretador;
+﻿package interpretador;
 
 import java.util.ArrayList;
-
 import sintaxe_abstrata.*;
 import utilitarios.*;
 
 public class Interpretador extends Visitor {
-    
+
     public Memoria mem = new Memoria();
     public RegistroErros erros = new RegistroErros();
-    
+
     /**
-     * Carrega o valor no endere�o de mem�ria
-     * 
-     * @param e Endere�o de mem�ria
+     * Carrega o valor no endereço de memória
+     *
+     * @param e endereço de memória
      * @param v Valor
      */
     private void putMemoria(Endereco e, Value v) {
         if (e.local.equals("pilha")) {
             mem.putPilha(e.posicao, v);
             Alocador.alocar("pilha");
-        }
-        else if (e.local.equals("global")) {
+        } else if (e.local.equals("global")) {
             mem.putGlobal(e.posicao, v);
             Alocador.alocar("global");
-        }
-        else {
-            erros.reportar(333, "Endere�o de mem�ria inv�lido!");
+        } else {
+            erros.reportar(333, "endereço de memória inválido!");
         }
     }
-    
+
     /**
-     * Carrega um valor padr�o em um endere�o de mem�ria
-     * 
-     * @param end   Endere�o de mem�ria
-     * @return      O valor padr�o carregado
+     * Carrega um valor padrão em um endereço de memória
+     *
+     * @param end endereço de memória
+     * @return O valor padrão carregado
      */
     private Value inicializeEndereco(Endereco end) {
         Value valor;
         switch (end.tipo) {
-        case "Bool":
-            valor = new BoolValue(false);
-            break;
-        
-        case "Real":
-            valor = new RealValue(0.0);
-            break;
-        
-        default:
-            valor = new IntValue(0);
-            break;
+            case "Bool":
+                valor = new BoolValue(false);
+                break;
+
+            case "Real":
+                valor = new RealValue(0.0);
+                break;
+
+            default:
+                valor = new IntValue(0);
+                break;
         }
         putMemoria(end, valor);
         return valor;
@@ -69,94 +66,93 @@ public class Interpretador extends Visitor {
         Value vEsq = (Value) e.expEsq.accept(this);
         Value vDir = (Value) e.expDir.accept(this);
         Value rValor = null;
-        
+
         if (vEsq instanceof IntValue) {
             IntValue ve = (IntValue) vEsq;
             IntValue vd = (IntValue) vDir;
             switch (e.operacao.token) {
-            case "+":
-                rValor = new IntValue(ve.valor + vd.valor);
-                break;
-            
-            case "-":
-                rValor = new IntValue(ve.valor - vd.valor);
-                break;
-            
-            case "*":
-                rValor = new IntValue(ve.valor * vd.valor);
-                break;
-            
-            case "/":
-                rValor = new RealValue((double) ve.valor / (double) vd.valor);
-                break;
-            
-            case "%":
-                rValor = new IntValue(ve.valor % vd.valor);
-                break;
-            
-            case "=":
-                rValor = new BoolValue(ve.valor == vd.valor);
-                break;
-            
-            case "<":
-                rValor = new BoolValue(ve.valor < vd.valor);
-                break;
-            
-            case ">":
-                rValor = new BoolValue(ve.valor > vd.valor);
-                break;
+                case "+":
+                    rValor = new IntValue(ve.valor + vd.valor);
+                    break;
+
+                case "-":
+                    rValor = new IntValue(ve.valor - vd.valor);
+                    break;
+
+                case "*":
+                    rValor = new IntValue(ve.valor * vd.valor);
+                    break;
+
+                case "/":
+                    rValor = new RealValue((double) ve.valor / (double) vd.valor);
+                    break;
+
+                case "%":
+                    rValor = new IntValue(ve.valor % vd.valor);
+                    break;
+
+                case "=":
+                    rValor = new BoolValue(ve.valor == vd.valor);
+                    break;
+
+                case "<":
+                    rValor = new BoolValue(ve.valor < vd.valor);
+                    break;
+
+                case ">":
+                    rValor = new BoolValue(ve.valor > vd.valor);
+                    break;
             }
-        }
-        else if (vEsq instanceof RealValue) {
+        } else if (vEsq instanceof RealValue) {
             RealValue ve = (RealValue) vEsq;
-            RealValue vd = vDir instanceof IntValue ?
-                           new RealValue(((IntValue) vDir).valor) :
-                           (RealValue) vDir;
+            RealValue vd =
+                    vDir instanceof IntValue
+                            ? new RealValue(((IntValue) vDir).valor)
+                            : (RealValue) vDir;
             switch (e.operacao.token) {
-            case "+":
-                rValor = new RealValue(ve.valor + vd.valor);
-                break;
-            
-            case "-":
-                rValor = new RealValue(ve.valor - vd.valor);
-                break;
-            
-            case "*":
-                rValor = new RealValue(ve.valor * vd.valor);
-                break;
-            
-            case "/":
-                rValor = new RealValue(ve.valor / vd.valor);
-                break;
-            
-            case "%":
-                rValor = new RealValue(ve.valor % vd.valor);
-                break;
-            
-            case "=":
-                rValor = new BoolValue(ve.valor == vd.valor);
-                break;
-            
-            case "<":
-                rValor = new BoolValue(ve.valor < vd.valor);
-                break;
-            
-            case ">":
-                rValor = new BoolValue(ve.valor > vd.valor);
-                break;
+                case "+":
+                    rValor = new RealValue(ve.valor + vd.valor);
+                    break;
+
+                case "-":
+                    rValor = new RealValue(ve.valor - vd.valor);
+                    break;
+
+                case "*":
+                    rValor = new RealValue(ve.valor * vd.valor);
+                    break;
+
+                case "/":
+                    rValor = new RealValue(ve.valor / vd.valor);
+                    break;
+
+                case "%":
+                    rValor = new RealValue(ve.valor % vd.valor);
+                    break;
+
+                case "=":
+                    rValor = new BoolValue(ve.valor == vd.valor);
+                    break;
+
+                case "<":
+                    rValor = new BoolValue(ve.valor < vd.valor);
+                    break;
+
+                case ">":
+                    rValor = new BoolValue(ve.valor > vd.valor);
+                    break;
             }
-        }
-        else {
+        } else {
             BoolValue ve = (BoolValue) vEsq;
             BoolValue vd = (BoolValue) vDir;
             switch (e.operacao.token) {
-            case "AND":
-                rValor = new BoolValue(ve.valor && vd.valor);
-                break;
-            
-            case "OR":
-                rValor = new BoolValue(ve.valor || vd.valor);
-                break;
+                case "AND":
+                    rValor = new BoolValue(ve.valor && vd.valor);
+                    break;
+
+                case "OR":
+                    rValor = new BoolValue(ve.valor || vd.valor);
+                    break;
             }
         }
         return rValor;
@@ -197,7 +193,7 @@ public class Interpretador extends Visitor {
         for (int j = 0; j < i; j++) {
             putMemoria(new Endereco("pilha", j), v.get(j));
         }
-        Value valor = (Value) ((Exp)funcProc[0]).accept(this);
+        Value valor = (Value) ((Exp) funcProc[0]).accept(this);
         mem.removerFrame();
         return valor;
     }
@@ -263,8 +259,7 @@ public class Interpretador extends Visitor {
         BoolValue b = (BoolValue) i.exp.accept(this);
         if (b.valor) {
             i.comandoVerdade.accept(this);
-        }
-        else {
+        } else {
             i.comandoFalso.accept(this);
         }
         return null;
@@ -301,12 +296,11 @@ public class Interpretador extends Visitor {
         Value v = (Value) m.exp.accept(this);
         if (v instanceof IntValue) {
             IntValue vInt = (IntValue) v;
-            vInt.valor = - vInt.valor;
+            vInt.valor = -vInt.valor;
             return vInt;
-        }
-        else {
+        } else {
             RealValue vReal = (RealValue) v;
-            vReal.valor = - vReal.valor;
+            vReal.valor = -vReal.valor;
             return vReal;
         }
     }
@@ -314,7 +308,7 @@ public class Interpretador extends Visitor {
     @Override
     public Object visitNao(Nao n) {
         BoolValue b = (BoolValue) n.exp.accept(this);
-        b.valor = ! b.valor;
+        b.valor = !b.valor;
         return b;
     }
 
@@ -340,13 +334,12 @@ public class Interpretador extends Visitor {
 
     @Override
     public Object visitProcedimento(Procedimento p) {
-        if (! p.id.equals("main")) {
+        if (!p.id.equals("main")) {
             Object[] conteudo = new Object[2];
             conteudo[0] = p.comando;
             conteudo[1] = p.listaParam;
             mem.putDeclaracao(p.id, conteudo);
-        }
-        else {
+        } else {
             p.comando.accept(this);
         }
         return null;
@@ -385,8 +378,7 @@ public class Interpretador extends Visitor {
                 r = inicializeEndereco(end);
             }
             return r;
-        }
-        else {
+        } else {
             r = mem.getPilha(end.posicao);
             if (r == null) {
                 r = inicializeEndereco(end);
@@ -419,10 +411,9 @@ public class Interpretador extends Visitor {
 
     @Override
     public Object visitWhile(WHILE w) {
-        while ( ((BoolValue) w.exp.accept(this)).valor ) {
+        while (((BoolValue) w.exp.accept(this)).valor) {
             w.comando.accept(this);
         }
         return null;
     }
-
 }

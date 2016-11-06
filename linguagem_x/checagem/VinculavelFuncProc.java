@@ -1,25 +1,25 @@
-package checagem;
+ï»¿package checagem;
 
 import java.util.List;
 
 public class VinculavelFuncProc extends Vinculavel {
     public boolean isFunc;
-    
+
     /*
-     * Atributos das funções: f(int, real): real
+     * Atributos das funÃ§Ãµes: f(int, real): real
      * Nota: alterado para que func e proc recebam o tipo PassagemTipoSemantico
      */
     public List<PassagemTipoSemantico> paramFunc;
     public TipoSemantico tipoRetorno;
-    
+
     /*
      * Atributos dos procedimentos: p((ref, int), (valor, real))
      */
     public List<PassagemTipoSemantico> paramProc;
-    
+
     /**
-     * Construtor para funções
-     * 
+     * Construtor para funÃ§Ãµes
+     *
      * @param p
      * @param r
      */
@@ -28,10 +28,10 @@ public class VinculavelFuncProc extends Vinculavel {
         this.paramFunc = p;
         this.tipoRetorno = r;
     }
-    
+
     /**
      * Construtor para procedimentos
-     * 
+     *
      * @param p
      */
     public VinculavelFuncProc(List<PassagemTipoSemantico> p) {

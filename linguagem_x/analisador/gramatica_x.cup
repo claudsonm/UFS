@@ -1,5 +1,5 @@
-/**
- * EspecificaÁ„o do analisador sint·tico para a Linguaguem X
+Ôªø/**
+ * Especifica√ß√£o do analisador sint√°tico para a Linguaguem X
  * java -jar ../utilitarios/java-cup-11a.jar -interface -parser AnalisadorSintatico -symbols iSimbolo gramatica_x.cup
  */
 package analisador;
@@ -48,7 +48,7 @@ terminal java.lang.Boolean BOOLEAN_LITERAL;
 terminal java.lang.String IDENTIFIER;
 
 
-// ProduÁıes
+// Produ√ß√µes
 non terminal Programa program;
 non terminal List<Dec> dec_list;
 non terminal Dec dec;
@@ -86,11 +86,11 @@ non terminal BLOCO bloco, bloco_comandos_opt;
 non terminal List<DVarConsCom> bloco_comandos;
 
 
-// PrecedÍncia dos operadores
+// Preced√™ncia dos operadores
 precedence right EQ;
 precedence left EQEQ, GT, LT; // Operadores relacionais
-precedence left PLUS, MINUS, OR; // Operadores de adiÁ„o
-precedence left MULT, DIV, MOD, AND; // Operadores de multiplicaÁ„o
+precedence left PLUS, MINUS, OR; // Operadores de adi√ß√£o
+precedence left MULT, DIV, MOD, AND; // Operadores de multiplica√ß√£o
 precedence nonassoc UMINUS;
 
 
@@ -115,7 +115,7 @@ dec ::=
     ;
 
 /******************************************************************************
- * PRODU«’ES FUNDAMENTAIS
+ * PRODU√á√ïES FUNDAMENTAIS
  *****************************************************************************/
 tipo ::=
         tipo_base:t {: RESULT = t; :}
@@ -261,7 +261,7 @@ dec_comandos ::=
     ;
 
 /******************************************************************************
- * DECLARA«√O DE VARI¡VEIS E CONSTANTES
+ * DECLARA√á√ÉO DE VARI√ÅVEIS E CONSTANTES
  *****************************************************************************/
 dec_var ::=
         var_ninic:v {: RESULT = v; :}
@@ -319,7 +319,7 @@ id_compreensao ::=
     ;
     
 /******************************************************************************
- * DECLARA«√O DE FUN«’ES
+ * DECLARA√á√ÉO DE FUN√á√ïES
  *****************************************************************************/
 dec_func ::=
         ass_func:a corpo_func:c
@@ -391,7 +391,7 @@ dec_bloco_cons ::=
 dec_exp ::= expressao:e SEMICOLON {: RESULT = e; :} ;
 
 /******************************************************************************
- * DECLARA«√O DE PROCEDIMENTOS
+ * DECLARA√á√ÉO DE PROCEDIMENTOS
  *****************************************************************************/
 dec_proc ::=
     ass_proc:a comando:c

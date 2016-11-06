@@ -5,7 +5,7 @@ import java.util.List;
 public class CHAMADA extends Comando {
     public String id;
     public List<Exp> listaExp;
-    
+
     public CHAMADA(String id, List<Exp> lista) {
         this.id = id;
         this.listaExp = lista;
@@ -15,5 +15,4 @@ public class CHAMADA extends Comando {
     public Object accept(Visitor vis) {
         return vis.visitChamada(this);
     }
-
 }

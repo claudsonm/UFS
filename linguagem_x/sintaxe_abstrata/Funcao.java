@@ -7,7 +7,7 @@ public class Funcao extends Dec {
     public String id;
     public List<Parametro> listaParam;
     public Exp exp;
-    
+
     public Funcao(Tipo tipo, String id, List<Parametro> lista, Exp exp) {
         this.tipo = tipo;
         this.id = id;
@@ -19,10 +19,9 @@ public class Funcao extends Dec {
     public Object accept(Visitor vis) {
         return vis.visitFuncao(this);
     }
-    
+
     @Override
     public String toString() {
         return "Funcao(" + tipo + ", " + id + ", " + listaParam + ", " + exp + ")";
     }
-
 }

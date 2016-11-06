@@ -5,7 +5,7 @@ import java.util.List;
 public class BlocoExp extends Exp {
     public List<DCons> listaCons;
     public Exp exp;
-    
+
     public BlocoExp(List<DCons> lista, Exp exp) {
         this.listaCons = lista;
         this.exp = exp;
@@ -15,10 +15,9 @@ public class BlocoExp extends Exp {
     public Object accept(Visitor vis) {
         return vis.visitBlocoExp(this);
     }
-    
+
     @Override
     public String toString() {
         return "BlocoExp(" + listaCons + ", " + exp + ")";
     }
-
 }

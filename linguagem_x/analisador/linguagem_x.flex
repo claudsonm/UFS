@@ -1,5 +1,5 @@
-/**
- * EspecificaÁ„o do analisador lÈxico para a Linguaguem X
+Ôªø/**
+ * Especifica√ß√£o do analisador l√©xico para a Linguaguem X
  */
 
 package analisador;
@@ -31,7 +31,7 @@ InputCharacter = [^\r\n]
 
 WhiteSpace = {LineTerminator} | [ \t\f]
 
-/* coment·rios */
+/* coment√°rios */
 Comment = {TraditionalComment} | {EndOfLineComment} | {DocumentationComment}
 
 TraditionalComment = "/*" [^*] ~"*/" | "/*" "*"+ "/"
@@ -100,9 +100,9 @@ Exponent = [eE] [+-]? [0-9]+
   "or"                           { return token(OR); }
   "%"                            { return token(MOD); }
   
-  /* literais numÈricos */
+  /* literais num√©ricos */
 
-  /* Casado juntamente com o menos porque o numero È muito grande para ser 
+  /* Casado juntamente com o menos porque o numero √© muito grande para ser 
      representado por um inteiro positivo. */
   "-2147483648"                  { return token(INTEGER_LITERAL, new Integer(Integer.MIN_VALUE)); }
   
@@ -113,7 +113,7 @@ Exponent = [eE] [+-]? [0-9]+
   {DoubleLiteral}                { return token(REAL_LITERAL, new Double(yytext())); }
   {DoubleLiteral}[dD]            { return token(REAL_LITERAL, new Double(yytext().substring(0,yylength()-1))); }
   
-  /* coment·rios */
+  /* coment√°rios */
   {Comment}                      { /* ignore */ }
 
   /* whitespace */

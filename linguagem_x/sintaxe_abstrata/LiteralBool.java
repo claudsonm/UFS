@@ -2,7 +2,7 @@ package sintaxe_abstrata;
 
 public class LiteralBool extends Exp {
     public boolean valor;
-    
+
     public LiteralBool(boolean valor) {
         this.valor = valor;
     }
@@ -11,10 +11,9 @@ public class LiteralBool extends Exp {
     public Object accept(Visitor vis) {
         return vis.visitLiteralBool(this);
     }
-    
+
     @Override
     public String toString() {
         return "" + valor;
     }
-
 }

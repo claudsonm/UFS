@@ -1,10 +1,12 @@
-package checagem;
+﻿package checagem;
 
 public enum TipoBaseSemantico implements TipoSemantico {
-    Int("int"), Bool("bool"), Real("real");
-    
+    Int("int"),
+    Bool("bool"),
+    Real("real");
+
     public final String tipo;
-    
+
     private TipoBaseSemantico(String tipo) {
         this.tipo = tipo;
     }
@@ -13,5 +15,4 @@ public enum TipoBaseSemantico implements TipoSemantico {
     public boolean equals(TipoSemantico t) {
         return (t == this);
     }
-
 }

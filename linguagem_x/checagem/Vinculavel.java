@@ -1,5 +1,3 @@
-package checagem;
+﻿package checagem;
 
-public abstract class Vinculavel {
-
-}
+public abstract class Vinculavel {}

@@ -1,36 +1,12 @@
-/*
- * MIT License
- *
- * Copyright (c) 2016 Claudson Martins
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
- */
+ï»¿package ambiente;
 
-package ambiente;
-
+import checagem.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Stack;
-import checagem.*;
 
 /**
- * Gerencia a tabela de símbolos de variáveis e constantes do Checker. Atua como uma fábrica dos
+ * Gerencia a tabela de sÃ­mbolos de variÃ¡veis e constantes do Checker. Atua como uma fÃ¡brica dos
  * flyweights para gerar objetos da classe concreta VinculavelConsVar.
  *
  * @author Claudson Martins
@@ -41,55 +17,24 @@ public class AmbienteConsVar {
 
     /**
      * Tabela hash que mapeia o nome de um identificador para uma lista de VinculavelConsVar, que
-     * contém as informações dos tipos dos identificadores de mesmo nome.
+     * contÃ©m as informaÃ§Ãµes dos tipos dos identificadores de mesmo nome.
      */
     public static final HashMap<String, ArrayList<VinculavelConsVar>> tabela =
             new HashMap<String, ArrayList<VinculavelConsVar>>();
-    
-    /** Nível atual de escopo da tabela de símbolos. */
+
+    /** NÃ­vel atual de escopo da tabela de sÃ­mbolos. */
     public static int nivel = 0;
-    
-    /** Pilha que contém a lista com o nome de todos os identificadores de cada escopo. */
+
+    /** Pilha que contÃ©m a lista com o nome de todos os identificadores de cada escopo. */
     public static Stack<ArrayList<String>> simbolosEscopo = new Stack<ArrayList<String>>();
-    
+
     /**
-     * Adiciona um identificador na lista do hash da tabela de símbolos.
-     * 
+     * Adiciona o nome do identificador na pilha e as informaÃ§Ãµes sobre ele na tabela de sÃ­mbolos.
+     *
      * @param id nome do identificador
-     * @param x informações sobre o identificador
-     */
-    private void adicionaTabela(String id, VinculavelConsVar x) {
-        ArrayList<VinculavelConsVar> listaItens = tabela.get(id);
-        // Se a lista da tabela ainda não existe, cria
-        if (listaItens == null) {
-            listaItens = new ArrayList<VinculavelConsVar>();
-            listaItens.add(x);
-            tabela.put(id, listaItens);
-        } else {
-            listaItens.add(x);
-        }
-        System.out.println("Criando ConsVar no ambiente no [Escopo " + nivel + "]: " +
-                (x.isVar ? "var" : "cons") + " " + x.tipo + " " + id);
-    }
-    
-    /**
-     * Remove um identificador da tabela de símbolos.
-     * 
-     * @param id nome do identificador
-     * @return informações sobre o identificador removido
-     */
-    private VinculavelConsVar deletaTabela(String id) {
-        ArrayList<VinculavelConsVar> l = tabela.get(id);
-        return l.remove(l.size() - 1);
-    }
-    
-    /**
-     * Adiciona o nome do identificador na pilha e as informações sobre ele na tabela de símbolos.
-     * 
-     * @param id nome do identificador
-     * @param b true representa uma variável, false representa uma constante
-     * @param t informações sobre o tipo
-     * @return true se adicionou com sucesso, false caso tenha sido possível
+     * @param b true representa uma variÃ¡vel, false representa uma constante
+     * @param t informaÃ§Ãµes sobre o tipo
+     * @return true se adicionou com sucesso, false caso tenha sido possÃ­vel
      */
     public boolean add(String id, boolean b, TipoSemantico t) {
         boolean r = false;
@@ -114,10 +59,55 @@ public class AmbienteConsVar {
         }
         return r;
     }
-    
+
     /**
-     * Remove o nome do identificador da pilha e as informações de tipo da tabela de símbolos.
-     * 
+     * Adiciona um identificador na lista do hash da tabela de sÃ­mbolos.
+     *
+     * @param id nome do identificador
+     * @param x informaÃ§Ãµes sobre o identificador
+     */
+    private void adicionaTabela(String id, VinculavelConsVar x) {
+        ArrayList<VinculavelConsVar> listaItens = tabela.get(id);
+        // Se a lista da tabela ainda nÃ£o existe, cria
+        if (listaItens == null) {
+            listaItens = new ArrayList<VinculavelConsVar>();
+            listaItens.add(x);
+            tabela.put(id, listaItens);
+        } else {
+            listaItens.add(x);
+        }
+        System.out.println(
+                "Criando ConsVar no ambiente no [Escopo "
+                        + nivel
+                        + "]: "
+                        + (x.isVar ? "var" : "cons")
+                        + " "
+                        + x.tipo
+                        + " "
+                        + id);
+    }
+
+    /** Incrementa um nÃ­vel de escopo */
+    public void comecaEscopo() {
+        ArrayList<String> listaPilha = new ArrayList<String>();
+        nivel++;
+        simbolosEscopo.push(listaPilha);
+    }
+
+    /**
+     * Verifica se o identificador existe no escopo atual.
+     *
+     * @param id nome do identificador
+     * @return true caso jÃ¡ exista, false caso nÃ£o exista
+     */
+    public boolean contem(String id) {
+        ArrayList<String> listaPilha = simbolosEscopo.peek();
+        return listaPilha.contains(id);
+    }
+
+    /**
+     * Remove o nome do identificador da pilha e as informaÃ§Ãµes de tipo da tabela de sÃ­mbolos.
+     *
      * @param id nome do identificador
      */
     public void deleta(String id) {
@@ -125,41 +115,35 @@ public class AmbienteConsVar {
         listaPilha.remove(id);
         this.deletaTabela(id);
     }
-    
+
     /**
-     * Retorna a instância mais recente de um identificador na lista da tabela de símbolos.
-     * 
+     * Remove um identificador da tabela de sÃ­mbolos.
+     *
      * @param id nome do identificador
-     * @return informações sobre o identificador
+     * @return informaÃ§Ãµes sobre o identificador removido
+     */
+    private VinculavelConsVar deletaTabela(String id) {
+        ArrayList<VinculavelConsVar> l = tabela.get(id);
+        return l.remove(l.size() - 1);
+    }
+
+    /** Decrementa um nÃ­vel de escopo */
+    public void terminaEscopo() {
+        ArrayList<String> listaPilha = simbolosEscopo.pop();
+        for (String st : listaPilha) {
+            this.deletaTabela(st);
+        }
+        nivel--;
+    }
+
+    /**
+     * Retorna a instÃ¢ncia mais recente de um identificador na lista da tabela de sÃ­mbolos.
+     *
+     * @param id nome do identificador
+     * @return informaÃ§Ãµes sobre o identificador
      */
     public VinculavelConsVar get(String id) {
         ArrayList<VinculavelConsVar> l = tabela.get(id);
         return (l == null) ? null : l.get(l.size() - 1);
-    }
-    
-    /**
-     * Verifica se o identificador existe no escopo atual.
-     * 
-     * @param id nome do identificador
-     * @return true caso já exista, false caso não exista
-     */
-    public boolean contem(String id) {
-        ArrayList<String> listaPilha = simbolosEscopo.peek();
-        return listaPilha.contains(id);
-    }
-    
-    /** Incrementa um nível de escopo */
-    public void comecaEscopo() {
-        ArrayList<String> listaPilha = new ArrayList<String>();
-        nivel++;
-        simbolosEscopo.push(listaPilha);
-    }
-    
-    /** Decrementa um nível de escopo */
-    public void terminaEscopo() {
-        ArrayList<String> listaPilha = simbolosEscopo.pop();
-        for (String st : listaPilha)
-            this.deletaTabela(st);
-        nivel--;
     }
 }

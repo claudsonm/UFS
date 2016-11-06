@@ -2,7 +2,7 @@ package sintaxe_abstrata;
 
 public class TipoBase extends Tipo {
     public TBase tipo;
-    
+
     public TipoBase(TBase valor) {
         this.tipo = valor;
     }
@@ -11,10 +11,9 @@ public class TipoBase extends Tipo {
     public Object accept(Visitor vis) {
         return vis.visitTipoBase(this);
     }
-    
+
     @Override
     public String toString() {
         return "TipoBase " + tipo.nome;
     }
-
 }

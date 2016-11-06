@@ -1,5 +1,3 @@
-package interpretador;
+﻿package interpretador;
 
-public abstract class Value {
-
-}
+public abstract class Value {}

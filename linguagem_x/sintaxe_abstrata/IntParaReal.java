@@ -2,7 +2,7 @@ package sintaxe_abstrata;
 
 public class IntParaReal extends Exp {
     public Exp exp;
-    
+
     public IntParaReal(Exp exp) {
         this.exp = exp;
     }
@@ -11,10 +11,9 @@ public class IntParaReal extends Exp {
     public Object accept(Visitor vis) {
         return vis.visitIntParaReal(this);
     }
-    
+
     @Override
     public String toString() {
         return "IntToReal(" + exp + ")";
     }
-    
 }

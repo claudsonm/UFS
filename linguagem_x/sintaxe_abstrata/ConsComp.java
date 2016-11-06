@@ -7,7 +7,7 @@ public class ConsComp extends DCons {
     public String id;
     public List<String> lista;
     public Exp exp;
-    
+
     public ConsComp(Tipo tipo, String id, List<String> lista, Exp exp) {
         this.tipo = tipo;
         this.id = id;
@@ -19,5 +19,4 @@ public class ConsComp extends DCons {
     public Object accept(Visitor vis) {
         return vis.visitConsComp(this);
     }
-
 }

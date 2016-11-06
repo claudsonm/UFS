@@ -1,35 +1,11 @@
-/*
- * MIT License
- *
- * Copyright (c) 2016 Claudson Martins
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
- */
+ï»¿package ambiente;
 
-package ambiente;
-
+import checagem.*;
 import java.util.HashMap;
 import java.util.List;
-import checagem.*;
 
 /**
- * Gerencia a tabela de símbolos de funções e procedimentos do Checker. Atua como uma fábrica dos
+ * Gerencia a tabela de sÃ­mbolos de funÃ§Ãµes e procedimentos do Checker. Atua como uma fÃ¡brica dos
  * flyweights para gerar objetos da classe concreta VinculavelFuncProc.
  *
  * @author Claudson Martins
@@ -39,62 +15,64 @@ import checagem.*;
 public class AmbienteFuncProc {
 
     /**
-     * Tabela hash que mapeia o nome de um identificador para uma Vinculavel, que contém as
-     * informações sobre os tipos das funções ou procedimentos.
+     * Tabela hash que mapeia o nome de um identificador para uma Vinculavel, que contÃ©m as
+     * informaÃ§Ãµes sobre os tipos das funÃ§Ãµes ou procedimentos.
      */
     public static final HashMap<String, Vinculavel> tabela = new HashMap<>();
-    
+
     /**
-     * Recupera ou cria na tabela de símbolos as informações sobre uma <b>função</b>.
-     * 
+     * Recupera ou cria na tabela de sÃ­mbolos as informaÃ§Ãµes sobre uma <b>funÃ§Ã£o</b>.
+     *
      * @param id nome do identificador
-     * @param p lista de tipos dos parâmetros formais
-     * @param r informações sobre o tipo de retorno
-     * @return informações sobre a função
+     * @param p lista de tipos dos parÃ¢metros formais
+     * @param r informaÃ§Ãµes sobre o tipo de retorno
+     * @return informaÃ§Ãµes sobre a funÃ§Ã£o
      */
-    public VinculavelFuncProc lookupFuncProc(String id, List<PassagemTipoSemantico> p,
-            TipoSemantico r) {
+    public VinculavelFuncProc lookupFuncProc(
+            String id, List<PassagemTipoSemantico> p, TipoSemantico r) {
         VinculavelFuncProc x = (VinculavelFuncProc) tabela.get(id);
         if (x == null) {
             x = new VinculavelFuncProc(p, r);
             tabela.put(id, x);
-            System.out.println("Criando FuncProc no ambiente: func " + id + "(" + x.paramFunc + ")");
+            System.out.println(
+                    "Criando FuncProc no ambiente: func " + id + "(" + x.paramFunc + ")");
         }
         return x;
     }
-    
+
     /**
-     * Recupera ou cria na tabela de símbolos as informações sobre um <b>procedimento</b>.
-     * 
+     * Recupera ou cria na tabela de sÃ­mbolos as informaÃ§Ãµes sobre um <b>procedimento</b>.
+     *
      * @param id nome do identificador
-     * @param p lista de tipos dos parâmetros formais
-     * @return informações sobre a procedimento
+     * @param p lista de tipos dos parÃ¢metros formais
+     * @return informaÃ§Ãµes sobre a procedimento
      */
     public VinculavelFuncProc lookupFuncProc(String id, List<PassagemTipoSemantico> p) {
         VinculavelFuncProc x = (VinculavelFuncProc) tabela.get(id);
         if (x == null) {
             x = new VinculavelFuncProc(p);
             tabela.put(id, x);
-            System.out.println("Criando FuncProc no ambiente: proc " + id + "(" + x.paramProc + ")");
+            System.out.println(
+                    "Criando FuncProc no ambiente: proc " + id + "(" + x.paramProc + ")");
         }
         return x;
     }
-    
+
     /**
-     * Recupera da tabela de símbolos a função ou procedimento.
-     * 
-     * @param id nome da função ou procedimento
-     * @return informações sobre a função ou procedimento
+     * Recupera da tabela de sÃ­mbolos a funÃ§Ã£o ou procedimento.
+     *
+     * @param id nome da funÃ§Ã£o ou procedimento
+     * @return informaÃ§Ãµes sobre a funÃ§Ã£o ou procedimento
      */
     public VinculavelFuncProc get(String id) {
         return (VinculavelFuncProc) tabela.get(id);
     }
-    
+
     /**
-     * Verifica se o identificador já existe na tabela de símbolos.
-     * 
+     * Verifica se o identificador jÃ¡ existe na tabela de sÃ­mbolos.
+     *
      * @param id nome do identificador
-     * @return true caso já exista, false caso não exista
+     * @return true caso jÃ¡ exista, false caso nÃ£o exista
      */
     public boolean contem(String id) {
         return tabela.containsKey(id);
