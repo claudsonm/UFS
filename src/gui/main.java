@@ -91,7 +91,7 @@ public class main extends JFrame {
         
         txtHost = new JTextField();
         txtHost.setFont(new Font("Roboto Mono", Font.PLAIN, 14));
-        txtHost.setText("127.0.0.1");
+        txtHost.setText("10.27.152.55");
         txtHost.setBounds(10, 30, 190, 20);
         panelConexao.add(txtHost);
         txtHost.setColumns(10);
@@ -102,7 +102,7 @@ public class main extends JFrame {
         panelConexao.add(lblDatabase);
         
         txtBatabase = new JTextField();
-        txtBatabase.setText("db_trabalho");
+        txtBatabase.setText("bd_trabalho");
         txtBatabase.setFont(new Font("Roboto Mono", Font.PLAIN, 14));
         txtBatabase.setColumns(10);
         txtBatabase.setBounds(10, 80, 190, 20);
@@ -114,7 +114,7 @@ public class main extends JFrame {
         panelConexao.add(lblUsuario);
         
         txtUsuario = new JTextField();
-        txtUsuario.setText("postgres");
+        txtUsuario.setText("aluno");
         txtUsuario.setFont(new Font("Roboto Mono", Font.PLAIN, 14));
         txtUsuario.setColumns(10);
         txtUsuario.setBounds(10, 130, 190, 20);
@@ -134,7 +134,7 @@ public class main extends JFrame {
                                                       txtSenha.getPassword());
                 if (b) {
                     db = dbTentativa;
-                    JOptionPane.showMessageDialog(null, "Tudo pronto para realizar as consultas!", "Conex„o estabelecida",
+                    JOptionPane.showMessageDialog(null, "Tudo pronto para realizar as consultas!", "Conex√£o estabelecida",
                             JOptionPane.INFORMATION_MESSAGE);
                 }
                 else {
@@ -181,8 +181,8 @@ public class main extends JFrame {
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED) {
                     if (db == null) {
-                        JOptionPane.showMessageDialog(null, "Nenhuma conex„o foi estabelecida.\nV· para a aba "
-                                + "\"Conex„o\", preencha as informaÁıes e clique em \"Conectar\".", "Vixe...",
+                        JOptionPane.showMessageDialog(null, "Nenhuma conex√£o foi estabelecida.\nV√° para a aba "
+                                + "\"Conex√£o\", preencha as informa√ß√µes e clique em \"Conectar\".", "Vixe...",
                                 JOptionPane.WARNING_MESSAGE);
                     }
                     else {
