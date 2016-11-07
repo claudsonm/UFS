@@ -1,5 +1,6 @@
 package jdbc;
 
+import java.math.BigDecimal;
 import java.sql.*;
 import java.util.Vector;
 
@@ -43,7 +44,12 @@ public class DB {
             while (resultado.next()) {
                 Vector<Object> vector = new Vector<Object>();
                 for (int columnIndex = 1; columnIndex <= columnCount; columnIndex++) {
-                    vector.add(resultado.getObject(columnIndex));
+                    if(resultado.getObject(columnIndex) instanceof Timestamp){
+                        vector.add(String.format("%1$td/%1$tm/%1$tY",resultado.getTimestamp(columnIndex)));
+                    } else if(resultado.getObject(columnIndex) instanceof BigDecimal){
+                        vector.add("R$ " + resultado.getBigDecimal(columnIndex));
+                    } else
+                        vector.add(resultado.getObject(columnIndex));
                 }
                 data.add(vector);
             }
