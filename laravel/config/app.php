@@ -181,7 +181,7 @@ return [
          * Meus Service Providers
          */
         Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
-        'Collective\Html\HtmlServiceProvider',
+        Collective\Html\HtmlServiceProvider::class,
     ],
 
     /*
@@ -233,8 +233,8 @@ return [
         /**
          * Meus Aliases
          */
-        'Form' => 'Collective\Html\FormFacade',
-        'Html' => 'Collective\Html\HtmlFacade',
+        'Form' => Collective\Html\FormFacade::class,
+        'HTML' => Collective\Html\HtmlFacade::class,
     ],
 
 ];

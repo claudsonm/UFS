@@ -19,3 +19,9 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index');
 Route::resource('clientes', 'CustomerController');
+Route::resource('promocoes', 'PromotionController');
+Route::resource('fornecedores', 'ProviderController');
+Route::resource('produtos', 'ProductController');
+Route::resource('compras', 'PurchaseController');
+Route::resource('vendas', 'SaleController');
+Route::resource('usuarios', 'UsuarioController');
