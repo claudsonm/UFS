@@ -37,7 +37,9 @@
                                 @foreach($clientes as $item)
                                     <tr>
                                         <td>{{ $item->id }}</td>
-                                        <td>{{ $item->nome }}</td><td>{{ $item->data_nascimento }}</td><td>{{ $item->cpf }}</td>
+                                        <td>{{ $item->nome }}</td>
+                                        <td>{{ $item->data_nascimento->format('d/m/Y') }}</td>
+                                        <td>{{ $item->cpf }}</td>
                                         <td>
                                             <a href="{{ url('/clientes/' . $item->id) }}" title="View cliente"><button class="btn btn-info btn-xs"><i class="fa fa-eye" aria-hidden="true"></i> View</button></a>
                                             <a href="{{ url('/clientes/' . $item->id . '/edit') }}" title="Edit cliente"><button class="btn btn-primary btn-xs"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button></a>

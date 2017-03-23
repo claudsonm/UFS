@@ -37,7 +37,8 @@
                                 @foreach($compras as $item)
                                     <tr>
                                         <td>{{ $item->id }}</td>
-                                        <td>{{ $item->data }}</td><td>{{ $item->valor }}</td>
+                                        <td>{{ $item->data->format('d/m/Y H:i:s') }}</td>
+                                        <td>{{ 'R$ '. $item->valor }}</td>
                                         <td>
                                             <a href="{{ url('/compras/' . $item->id) }}" title="View compra"><button class="btn btn-info btn-xs"><i class="fa fa-eye" aria-hidden="true"></i> View</button></a>
                                             <a href="{{ url('/compras/' . $item->id . '/edit') }}" title="Edit compra"><button class="btn btn-primary btn-xs"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button></a>

@@ -17,7 +17,7 @@
         {!! $errors->first('validade', '<p class="help-block">:message</p>') !!}
     </div>
 </div><div class="form-group {{ $errors->has('preco') ? 'has-error' : ''}}">
-    {!! Form::label('preco', 'Preco', ['class' => 'col-md-4 control-label']) !!}
+    {!! Form::label('preco', 'Preço de Venda', ['class' => 'col-md-4 control-label']) !!}
     <div class="col-md-6">
         {!! Form::text('preco', null, ['class' => 'form-control']) !!}
         {!! $errors->first('preco', '<p class="help-block">:message</p>') !!}

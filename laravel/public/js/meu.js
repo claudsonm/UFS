@@ -1,5 +1,5 @@
-$('#lista-telefones').multifield({
+$('#multifield').multifield({
     section: '.group',
-    btnAdd:'#btnAdd-tel',
+    btnAdd:'#btnAdd',
     btnRemove:'.btnRemove',
 });

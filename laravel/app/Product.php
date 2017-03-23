@@ -30,7 +30,7 @@ class Product extends Model
 
     public function purchases()
     {
-        return $this->belongsToMany('App\Purchase');
+        return $this->belongsToMany('App\Purchase')->withPivot('preco', 'quantidade');
     }
 
     /**

@@ -17,6 +17,7 @@ class CreateProductSaleTable extends Migration
             $table->unsignedInteger('product_id')->index();
             $table->unsignedInteger('sale_id')->index();
             $table->integer('quantidade');
+            $table->decimal('preco', 10, 2);
 
             $table->foreign('product_id')->references('id')->on('products')
                         ->onDelete('no action')

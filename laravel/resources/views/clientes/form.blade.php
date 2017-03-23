@@ -1,13 +1,13 @@
 <div class="form-group {{ $errors->has('nome') ? 'has-error' : ''}}">
     {!! Form::label('nome', 'Nome', ['class' => 'col-md-4 control-label']) !!}
     <div class="col-md-6">
-        {!! Form::text('nome', null, ['class' => 'form-control']) !!}
+        {!! Form::text('nome', null, ['class' => 'form-control', 'required']) !!}
         {!! $errors->first('nome', '<p class="help-block">:message</p>') !!}
     </div>
 </div><div class="form-group {{ $errors->has('data_nascimento') ? 'has-error' : ''}}">
     {!! Form::label('data_nascimento', 'Data Nascimento', ['class' => 'col-md-4 control-label']) !!}
     <div class="col-md-6">
-        {!! Form::date('data_nascimento', null, ['class' => 'form-control']) !!}
+        {!! Form::date('data_nascimento', (isset($cliente) && !is_null($cliente->data_nascimento)) ? $cliente->data_nascimento->format('Y-m-d') : null, ['class' => 'form-control']) !!}
         {!! $errors->first('data_nascimento', '<p class="help-block">:message</p>') !!}
     </div>
 </div><div class="form-group {{ $errors->has('cpf') ? 'has-error' : ''}}">
@@ -25,7 +25,7 @@
 </div><div class="form-group {{ $errors->has('logradouro') ? 'has-error' : ''}}">
     {!! Form::label('logradouro', 'Logradouro', ['class' => 'col-md-4 control-label']) !!}
     <div class="col-md-6">
-        {!! Form::text('logradouro', null, ['class' => 'form-control']) !!}
+        {!! Form::text('logradouro', null, ['class' => 'form-control', 'required']) !!}
         {!! $errors->first('logradouro', '<p class="help-block">:message</p>') !!}
     </div>
 </div><div class="form-group {{ $errors->has('numero') ? 'has-error' : ''}}">
@@ -43,13 +43,13 @@
 </div><div class="form-group {{ $errors->has('bairro') ? 'has-error' : ''}}">
     {!! Form::label('bairro', 'Bairro', ['class' => 'col-md-4 control-label']) !!}
     <div class="col-md-6">
-        {!! Form::text('bairro', null, ['class' => 'form-control']) !!}
+        {!! Form::text('bairro', null, ['class' => 'form-control', 'required']) !!}
         {!! $errors->first('bairro', '<p class="help-block">:message</p>') !!}
     </div>
 </div><div class="form-group {{ $errors->has('cidade') ? 'has-error' : ''}}">
     {!! Form::label('cidade', 'Cidade', ['class' => 'col-md-4 control-label']) !!}
     <div class="col-md-6">
-        {!! Form::text('cidade', null, ['class' => 'form-control']) !!}
+        {!! Form::text('cidade', null, ['class' => 'form-control', 'required']) !!}
         {!! $errors->first('cidade', '<p class="help-block">:message</p>') !!}
     </div>
 </div><div class="form-group {{ $errors->has('estado') ? 'has-error' : ''}}">

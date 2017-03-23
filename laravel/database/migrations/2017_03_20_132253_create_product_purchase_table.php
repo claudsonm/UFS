@@ -17,6 +17,7 @@ class CreateProductPurchaseTable extends Migration
             $table->unsignedInteger('product_id')->index();
             $table->unsignedInteger('purchase_id')->index();
             $table->integer('quantidade');
+            $table->decimal('preco', 10, 2);
 
             $table->foreign('product_id')->references('id')->on('products')
                         ->onDelete('no action')

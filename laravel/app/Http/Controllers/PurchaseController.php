@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests;
 use App\Http\Controllers\Controller;
-
+use App\Http\Requests;
+use App\Product;
 use App\Purchase;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Session;
 
 class PurchaseController extends Controller
@@ -47,7 +48,8 @@ class PurchaseController extends Controller
      */
     public function create()
     {
-        return view('compras.create');
+        $listaProdutos = Product::pluck('nome', 'id')->all();
+        return view('compras.create', compact('listaProdutos'));
     }
 
     /**
@@ -59,10 +61,34 @@ class PurchaseController extends Controller
      */
     public function store(Request $request)
     {
-        
         $requestData = $request->all();
-        
-        Purchase::create($requestData);
+        $requestData['user_id'] = Auth::id();
+        $requestData['quantidade'] = str_replace(',', '.', $requestData['quantidade']);
+        $requestData['preco'] = str_replace(',', '.', $requestData['preco']);
+        $requestData['valor'] = 0;
+
+        $numeroProdutos = count($requestData['produto']);
+        $dadosJuncao = array();
+        $precos = array();
+        for ($i=0; $i < $numeroProdutos; $i++) { 
+            // Gera os dados para inserção na tabela de junção
+            $dadosJuncao[] = [
+                'quantidade' => $requestData['quantidade'][$i],
+                'preco' => $requestData['preco'][$i]
+            ];
+            // Calcula o valor total da compra
+            $qnt = (float) $requestData['quantidade'][$i];
+            $requestData['valor'] += ((float) $requestData['preco'][$i]) * $qnt;
+            // Incremente a quantidade em estoque do produto
+            $p = Product::find($requestData['produto'][$i]);
+            $qntAtual = (float) (str_replace(',', '.', $p->quantidade));
+            $p->quantidade = $qntAtual + $qnt;
+            $p->save();
+        }
+        $produtosCompra = array_combine($requestData['produto'], $dadosJuncao);
+
+        $compra = Purchase::create($requestData);
+        $compra->products()->sync($produtosCompra);
 
         Session::flash('flash_message', 'Purchase added!');
 
@@ -92,9 +118,10 @@ class PurchaseController extends Controller
      */
     public function edit($id)
     {
-        $compra = Purchase::findOrFail($id);
+        $compra = Purchase::with('products')->findOrFail($id);
+        $listaProdutos = Product::pluck('nome', 'id')->all();
 
-        return view('compras.edit', compact('compra'));
+        return view('compras.edit', compact('compra', 'listaProdutos'));
     }
 
     /**
@@ -107,7 +134,6 @@ class PurchaseController extends Controller
      */
     public function update($id, Request $request)
     {
-        
         $requestData = $request->all();
         
         $compra = Purchase::findOrFail($id);

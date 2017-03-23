@@ -51,10 +51,10 @@
     </div>
 </div>
 
-<div id="lista-telefones">
+<div id="multifield">
     <div class="form-group">
         <div class="col-md-6 col-md-offset-4">
-            <button type="button" id="btnAdd-tel" class="btn btn-success">Adicionar Telefone</button>
+            <button type="button" id="btnAdd" class="btn btn-success">Adicionar Telefone</button>
         </div>
     </div>
     
