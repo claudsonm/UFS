@@ -30,14 +30,22 @@
                             <table class="table table-borderless">
                                 <thead>
                                     <tr>
-                                        <th>ID</th><th>Nome</th><th>Inicio</th><th>Fim</th><th>Actions</th>
+                                        <th>ID</th>
+                                        <th>Nome</th>
+                                        <th>Inicio</th>
+                                        <th>Fim</th>
+                                        <th>Desconto</th>
+                                        <th>Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                 @foreach($promocoes as $item)
                                     <tr>
                                         <td>{{ $item->id }}</td>
-                                        <td>{{ $item->nome }}</td><td>{{ $item->inicio }}</td><td>{{ $item->fim }}</td>
+                                        <td>{{ $item->nome }}</td>
+                                        <td>{{ $item->inicio->format('d/m/Y H:i') }}</td>
+                                        <td>{{ $item->fim->format('d/m/Y H:i') }}</td>
+                                        <td>{{ ($item->tipo == 'fixo') ? 'R$ '. $item->desconto : $item->desconto . '%' }}</td>
                                         <td>
                                             <a href="{{ url('/promocoes/' . $item->id) }}" title="View promoco"><button class="btn btn-info btn-xs"><i class="fa fa-eye" aria-hidden="true"></i> View</button></a>
                                             <a href="{{ url('/promocoes/' . $item->id . '/edit') }}" title="Edit promoco"><button class="btn btn-primary btn-xs"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button></a>
