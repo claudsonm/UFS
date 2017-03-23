@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests;
 use App\Http\Controllers\Controller;
-
+use App\Http\Requests;
 use App\Product;
+use App\Provider;
 use Illuminate\Http\Request;
 use Session;
 
@@ -32,11 +32,11 @@ class ProductController extends Controller
         $perPage = 25;
 
         if (!empty($keyword)) {
-            $produtos = Product::paginate($perPage);
+            $produtos = Product::with('provider')->paginate($perPage);
         } else {
-            $produtos = Product::paginate($perPage);
+            $produtos = Product::with('provider')->paginate($perPage);
         }
-
+        
         return view('produtos.index', compact('produtos'));
     }
 
@@ -47,7 +47,9 @@ class ProductController extends Controller
      */
     public function create()
     {
-        return view('produtos.create');
+        $fornecedores = Provider::pluck('razao_social', 'id')->all();
+        $fornecedores = array_prepend($fornecedores, 'Nenhum');
+        return view('produtos.create', compact('fornecedores'));
     }
 
     /**
@@ -61,8 +63,11 @@ class ProductController extends Controller
     {
         
         $requestData = $request->all();
-        
-        Product::create($requestData);
+        $produto = Product::create($requestData);
+        if (! $requestData['provider_id'] == 0){
+            $fornecedor = Provider::find($requestData['provider_id']);
+            $produto->provider()->associate($fornecedor)->save();
+        }
 
         Session::flash('flash_message', 'Product added!');
 
@@ -93,8 +98,10 @@ class ProductController extends Controller
     public function edit($id)
     {
         $produto = Product::findOrFail($id);
+        $fornecedores = Provider::pluck('razao_social', 'id')->all();
+        $fornecedores = array_prepend($fornecedores, 'Nenhum');
 
-        return view('produtos.edit', compact('produto'));
+        return view('produtos.edit', compact('produto', 'fornecedores'));
     }
 
     /**
@@ -107,10 +114,16 @@ class ProductController extends Controller
      */
     public function update($id, Request $request)
     {
-        
         $requestData = $request->all();
         
         $produto = Product::findOrFail($id);
+        if (! $requestData['provider_id'] == 0) {
+            $fornecedor = Provider::find($requestData['provider_id']);
+            $produto->provider()->associate($fornecedor)->save();
+        }
+        else {
+            $produto->provider()->dissociate()->save();
+        }
         $produto->update($requestData);
 
         Session::flash('flash_message', 'Product updated!');

@@ -1,7 +1,7 @@
 <div class="form-group {{ $errors->has('nome') ? 'has-error' : ''}}">
     {!! Form::label('nome', 'Nome', ['class' => 'col-md-4 control-label']) !!}
     <div class="col-md-6">
-        {!! Form::text('nome', null, ['class' => 'form-control']) !!}
+        {!! Form::text('nome', null, ['class' => 'form-control', 'required']) !!}
         {!! $errors->first('nome', '<p class="help-block">:message</p>') !!}
     </div>
 </div><div class="form-group {{ $errors->has('descricao') ? 'has-error' : ''}}">
@@ -13,7 +13,7 @@
 </div><div class="form-group {{ $errors->has('validade') ? 'has-error' : ''}}">
     {!! Form::label('validade', 'Validade', ['class' => 'col-md-4 control-label']) !!}
     <div class="col-md-6">
-        {!! Form::date('validade', null, ['class' => 'form-control']) !!}
+        {!! Form::date('validade', (isset($produto) && !is_null($produto->validade)) ? $produto->validade->format('Y-m-d') : null, ['class' => 'form-control']) !!}
         {!! $errors->first('validade', '<p class="help-block">:message</p>') !!}
     </div>
 </div><div class="form-group {{ $errors->has('preco') ? 'has-error' : ''}}">
@@ -25,20 +25,20 @@
 </div><div class="form-group {{ $errors->has('quantidade') ? 'has-error' : ''}}">
     {!! Form::label('quantidade', 'Quantidade', ['class' => 'col-md-4 control-label']) !!}
     <div class="col-md-6">
-        {!! Form::number('quantidade', null, ['class' => 'form-control']) !!}
+        {!! Form::text('quantidade', null, ['class' => 'form-control', 'required']) !!}
         {!! $errors->first('quantidade', '<p class="help-block">:message</p>') !!}
     </div>
 </div><div class="form-group {{ $errors->has('quantidade_minima') ? 'has-error' : ''}}">
     {!! Form::label('quantidade_minima', 'Quantidade Minima', ['class' => 'col-md-4 control-label']) !!}
     <div class="col-md-6">
-        {!! Form::number('quantidade_minima', null, ['class' => 'form-control']) !!}
+        {!! Form::text('quantidade_minima', null, ['class' => 'form-control']) !!}
         {!! $errors->first('quantidade_minima', '<p class="help-block">:message</p>') !!}
     </div>
-</div><div class="form-group {{ $errors->has('providers_id') ? 'has-error' : ''}}">
-    {!! Form::label('providers_id', 'Providers Id', ['class' => 'col-md-4 control-label']) !!}
+</div><div class="form-group {{ $errors->has('provider_id') ? 'has-error' : ''}}">
+    {!! Form::label('provider_id', 'Fornecedores', ['class' => 'col-md-4 control-label']) !!}
     <div class="col-md-6">
-        {!! Form::select('providers_id', ['1', '2', '3'], null, ['class' => 'form-control']) !!}
-        {!! $errors->first('providers_id', '<p class="help-block">:message</p>') !!}
+        {!! Form::select('provider_id', $fornecedores, null, ['class' => 'form-control']) !!}
+        {!! $errors->first('provider_id', '<p class="help-block">:message</p>') !!}
     </div>
 </div>
 

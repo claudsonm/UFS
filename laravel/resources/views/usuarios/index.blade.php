@@ -30,14 +30,14 @@
                             <table class="table table-borderless">
                                 <thead>
                                     <tr>
-                                        <th>ID</th><th>Name</th><th>Email</th><th>Password</th><th>Actions</th>
+                                        <th>ID</th><th>Name</th><th>Email</th><th>Gerente</th><th>Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                 @foreach($usuarios as $item)
                                     <tr>
                                         <td>{{ $item->id }}</td>
-                                        <td>{{ $item->name }}</td><td>{{ $item->email }}</td><td>{{ $item->password }}</td>
+                                        <td>{{ $item->name }}</td><td>{{ $item->email }}</td><td>{{ ($item->gerente == 1) ? 'Sim' : 'Não' }}</td>
                                         <td>
                                             <a href="{{ url('/usuarios/' . $item->id) }}" title="View usuario"><button class="btn btn-info btn-xs"><i class="fa fa-eye" aria-hidden="true"></i> View</button></a>
                                             <a href="{{ url('/usuarios/' . $item->id . '/edit') }}" title="Edit usuario"><button class="btn btn-primary btn-xs"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button></a>

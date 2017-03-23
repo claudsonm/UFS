@@ -83,5 +83,7 @@
 
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}"></script>
+    <script src="{{ asset('js/jquery.multifield.min.js') }}"></script>
+    <script src="{{ asset('js/meu.js') }}"></script>
 </body>
 </html>

@@ -21,11 +21,11 @@ class CreateProductsTable extends Migration
             $table->decimal('preco', 10, 2)->nullable();
             $table->float('quantidade');
             $table->float('quantidade_minima')->nullable();
-            $table->unsignedInteger('providers_id')->nullable()->index();
+            $table->unsignedInteger('provider_id')->nullable()->index();
             $table->softDeletes();
             $table->nullableTimestamps();
 
-            $table->foreign('providers_id')->references('id')->on('providers')
+            $table->foreign('provider_id')->references('id')->on('providers')
                         ->onDelete('no action')
                         ->onUpdate('no action');
         });

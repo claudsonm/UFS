@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests;
 use App\Http\Controllers\Controller;
-
+use App\Http\Requests;
+use App\Phone;
 use App\User;
 use Illuminate\Http\Request;
 use Session;
@@ -32,7 +32,10 @@ class UsuarioController extends Controller
         $perPage = 25;
 
         if (!empty($keyword)) {
-            $usuarios = User::paginate($perPage);
+            $usuarios = User::where('name', 'LIKE', "%$keyword%")
+                ->orWhere('email', 'LIKE', "%$keyword%")
+                
+                ->paginate($perPage);
         } else {
             $usuarios = User::paginate($perPage);
         }
@@ -61,8 +64,17 @@ class UsuarioController extends Controller
     {
         
         $requestData = $request->all();
+        $requestData['password'] = bcrypt($requestData['password']);
         
-        User::create($requestData);
+        $usuario = User::create($requestData);
+        foreach ($requestData['telefone'] as $numero) {
+            if (! (is_null($numero) || empty($numero))) {
+                $tel = new Phone;
+                $tel->telefone = $numero;
+                $tel->user()->associate($usuario);
+                $tel->save();
+            }
+        }
 
         Session::flash('flash_message', 'User added!');
 
@@ -92,7 +104,7 @@ class UsuarioController extends Controller
      */
     public function edit($id)
     {
-        $usuario = User::findOrFail($id);
+        $usuario = User::with('phones')->findOrFail($id);
 
         return view('usuarios.edit', compact('usuario'));
     }
@@ -107,11 +119,25 @@ class UsuarioController extends Controller
      */
     public function update($id, Request $request)
     {
-        
         $requestData = $request->all();
+        if (empty($requestData['password']) || is_null($requestData['password'])) {
+            $requestData = array_except($requestData, ['password']);
+        }
+        else {
+            $requestData['password'] = bcrypt($requestData['password']);
+        }
         
         $usuario = User::findOrFail($id);
         $usuario->update($requestData);
+        $usuario->phones()->delete();
+        foreach ($requestData['telefone'] as $numero) {
+            if (! (is_null($numero) || empty($numero))) {
+                $tel = new Phone;
+                $tel->telefone = $numero;
+                $tel->user()->associate($usuario);
+                $tel->save();
+            }
+        }
 
         Session::flash('flash_message', 'User updated!');
 

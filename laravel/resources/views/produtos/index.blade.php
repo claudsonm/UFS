@@ -30,14 +30,22 @@
                             <table class="table table-borderless">
                                 <thead>
                                     <tr>
-                                        <th>ID</th><th>Nome</th><th>Descricao</th><th>Validade</th><th>Actions</th>
+                                        <th>ID</th>
+                                        <th>Nome</th>
+                                        <th>Quantidade</th>
+                                        <th>Fornecedor</th>
+                                        <th>Validade</th>
+                                        <th>Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                 @foreach($produtos as $item)
                                     <tr>
                                         <td>{{ $item->id }}</td>
-                                        <td>{{ $item->nome }}</td><td>{{ $item->descricao }}</td><td>{{ $item->validade }}</td>
+                                        <td>{{ $item->nome }}</td>
+                                        <td>{{ $item->quantidade }}</td>
+                                        <td>{{ $item->provider['razao_social'] }}</td>
+                                        <td>{{ (isset($item->validade)) ? $item->validade->format('d/m/Y') : '' }}</td>
                                         <td>
                                             <a href="{{ url('/produtos/' . $item->id) }}" title="View produto"><button class="btn btn-info btn-xs"><i class="fa fa-eye" aria-hidden="true"></i> View</button></a>
                                             <a href="{{ url('/produtos/' . $item->id . '/edit') }}" title="Edit produto"><button class="btn btn-primary btn-xs"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button></a>
