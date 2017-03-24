@@ -49,15 +49,15 @@ anterior e defina a codificação de caracteres como `utf8mb4_unicode_ci`
     web para apontar automaticamente para esta pasta, não necessitando do 
     /public ao final da URL.
 
-### Acessando
+### Logando Gostoso
 
 Conta de administrador:
-
 ```
 admin@email.com
 toor
 ```
 
+Conta de funcionário:
 ```
 func@email.com
 toor
