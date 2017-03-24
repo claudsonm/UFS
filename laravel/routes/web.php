@@ -25,3 +25,4 @@ Route::resource('produtos', 'ProductController');
 Route::resource('compras', 'PurchaseController');
 Route::resource('vendas', 'SaleController');
 Route::resource('usuarios', 'UsuarioController');
+Route::get('produtos/{id}/preco', 'ProductController@mostrarPreco')->name('produtos.preco');

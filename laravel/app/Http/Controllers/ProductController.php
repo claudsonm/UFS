@@ -48,7 +48,8 @@ class ProductController extends Controller
     public function create()
     {
         $fornecedores = Provider::pluck('razao_social', 'id')->all();
-        $fornecedores = array_prepend($fornecedores, 'Nenhum');
+        $fornecedores[0] = 'Nenhum';
+        
         return view('produtos.create', compact('fornecedores'));
     }
 
@@ -145,5 +146,11 @@ class ProductController extends Controller
         Session::flash('flash_message', 'Product deleted!');
 
         return redirect('produtos');
+    }
+
+    public function mostrarPreco($id)
+    {
+        $p = Product::findOrFail($id);
+        return $p->preco;
     }
 }

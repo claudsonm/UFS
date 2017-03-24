@@ -2,11 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests;
+use App\Customer;
 use App\Http\Controllers\Controller;
-
+use App\Http\Requests;
+use App\Product;
+use App\Promotion;
 use App\Sale;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Session;
 
 class SaleController extends Controller
@@ -47,7 +51,16 @@ class SaleController extends Controller
      */
     public function create()
     {
-        return view('vendas.create');
+        $listaClientes = Customer::pluck('nome', 'id');
+        $listaProdutos = Product::pluck('nome', 'id')->all();
+        $listaProdutos[0] = '';
+        $t = Carbon::now();
+        $listaPromocoes = Promotion::where('inicio', '<=', $t)
+            ->where('fim', '>=', $t)
+            ->get()
+            ->pluck('nome_promocao', 'id');
+
+        return view('vendas.create', compact('listaClientes', 'listaPromocoes', 'listaProdutos'));
     }
 
     /**
@@ -59,10 +72,34 @@ class SaleController extends Controller
      */
     public function store(Request $request)
     {
-        
         $requestData = $request->all();
+        $requestData['user_id'] = Auth::id();
+        $requestData['quantidade'] = str_replace(',', '.', $requestData['quantidade']);
+        $requestData['preco'] = str_replace(',', '.', $requestData['preco']);
+        $requestData['valor'] = 0;
+
+        $numeroProdutos = count($requestData['produto']);
+        $dadosJuncao = array();
+        $precos = array();
+        for ($i=0; $i < $numeroProdutos; $i++) { 
+            // Gera os dados para inserção na tabela de junção
+            $dadosJuncao[] = [
+                'quantidade' => $requestData['quantidade'][$i],
+                'preco' => $requestData['preco'][$i]
+            ];
+            // Calcula o valor total da compra
+            $qnt = (float) $requestData['quantidade'][$i];
+            $requestData['valor'] += ((float) $requestData['preco'][$i]) * $qnt;
+            // Reduz a quantidade em estoque do produto
+            $p = Product::find($requestData['produto'][$i]);
+            $qntAtual = (float) (str_replace(',', '.', $p->quantidade));
+            $p->quantidade = $qntAtual - $qnt;
+            $p->save();
+        }
+        $produtosVenda = array_combine($requestData['produto'], $dadosJuncao);
         
-        Sale::create($requestData);
+        $venda = Sale::create($requestData);
+        $venda->products()->sync($produtosVenda);
 
         Session::flash('flash_message', 'Sale added!');
 
@@ -94,7 +131,12 @@ class SaleController extends Controller
     {
         $venda = Sale::findOrFail($id);
 
-        return view('vendas.edit', compact('venda'));
+        $listaClientes = Customer::pluck('nome', 'id');
+        $listaProdutos = Product::pluck('nome', 'id')->all();
+        $listaProdutos[0] = '';
+        $listaPromocoes = $venda->promotion()->get()->pluck('nome_promocao', 'id')->all();
+
+        return view('vendas.edit', compact('venda', 'listaClientes', 'listaProdutos', 'listaPromocoes'));
     }
 
     /**

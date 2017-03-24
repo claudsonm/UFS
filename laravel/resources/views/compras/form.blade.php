@@ -19,7 +19,7 @@
         </div>
     </div>
     
-    {{-- SE É UM CADASTRO OU UMA EDIÇÃO DE UM USUÁRIO SEM TELEFONE --}}
+    {{-- SE É UM CADASTRO OU UMA EDIÇÃO DE UMA COMPRA SEM PRODUTOS? --}}
     @if (! (isset($compra) && $compra->products->count()))
         <div class="group form-group">
             <div class="col-md-5 col-md-offset-1">
@@ -40,7 +40,7 @@
             </div>
         </div>
     @else
-        {{-- MOSTRA TODOS OS NÚMEROS QUE O USUÁRIO POSSUI --}}
+        {{-- MOSTRA TODOS OS PRODUTOS DA COMPRA --}}
         @foreach ($compra->products as $item)
             <div class="group form-group">
                 <div class="col-md-5 col-md-offset-1">

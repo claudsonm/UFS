@@ -42,4 +42,12 @@ class Promotion extends Model
     {
         $this->attributes['fim'] = Carbon::parse($valor);
     }
+
+    public function getNomePromocaoAttribute()
+    {
+        $valor =    $this->attributes['tipo'] == 'fixo' ?
+                    'R$ '. str_replace('.', ',', $this->attributes['desconto']) :
+                    str_replace('.', ',', $this->attributes['desconto']) . '%';
+        return $this->attributes['nome'] .' ('. $valor .')';
+    }
 }

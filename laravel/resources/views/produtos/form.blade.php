@@ -37,7 +37,7 @@
 </div><div class="form-group {{ $errors->has('provider_id') ? 'has-error' : ''}}">
     {!! Form::label('provider_id', 'Fornecedores', ['class' => 'col-md-4 control-label']) !!}
     <div class="col-md-6">
-        {!! Form::select('provider_id', $fornecedores, null, ['class' => 'form-control']) !!}
+        {!! Form::select('provider_id', $fornecedores, isset($produto) ? $produto->provider_id : 0, ['class' => 'form-control']) !!}
         {!! $errors->first('provider_id', '<p class="help-block">:message</p>') !!}
     </div>
 </div>

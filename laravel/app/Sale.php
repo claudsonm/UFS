@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -14,12 +15,12 @@ class Sale extends Model
     protected $dates = ['data'];
 
     protected $fillable = array(
-        'data', 'valor', 'tipo_pagamento'
+        'data', 'valor', 'tipo_pagamento', 'user_id', 'customer_id', 'promotion_id'
     );
 
     public function promotion()
     {
-        return $this->hasOne('App\Promotion');
+        return $this->belongsTo('App\Promotion');
     }
 
     public function customer()
@@ -34,6 +35,11 @@ class Sale extends Model
 
     public function products()
     {
-        return $this->belongsToMany('App\Product');
+        return $this->belongsToMany('App\Product')->withPivot('quantidade', 'preco');
+    }
+
+    public function setDataAttribute($valor)
+    {
+        $this->attributes['data'] = Carbon::parse($valor);
     }
 }
