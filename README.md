@@ -48,3 +48,17 @@ anterior e defina a codificação de caracteres como `utf8mb4_unicode_ci`
     adicionar /public ao final da URL, mas você pode configurar seu servidor 
     web para apontar automaticamente para esta pasta, não necessitando do 
     /public ao final da URL.
+
+### Acessando
+
+Conta de administrador:
+
+```
+admin@email.com
+toor
+```
+
+```
+func@email.com
+toor
+```
