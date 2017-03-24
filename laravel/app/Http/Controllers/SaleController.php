@@ -97,6 +97,19 @@ class SaleController extends Controller
             $p->save();
         }
         $produtosVenda = array_combine($requestData['produto'], $dadosJuncao);
+        // Aplica o desconto
+        if (isset($requestData['promotion_id'])) {
+            $promo = Promotion::find($requestData['promotion_id']);
+            if ($promo->tipo == 'fixo') {
+                $requestData['valor'] -= str_replace(',', '.', $promo->desconto);
+            }
+            else {
+                $requestData['valor'] -= (str_replace(',', '.', $promo->desconto)/100) * $requestData['valor'];
+            }
+            if ($requestData['valor'] < 0) {
+                $requestData['valor'] = 0;
+            }
+        }
         
         $venda = Sale::create($requestData);
         $venda->products()->sync($produtosVenda);

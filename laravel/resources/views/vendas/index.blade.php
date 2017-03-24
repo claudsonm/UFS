@@ -30,14 +30,16 @@
                             <table class="table table-borderless">
                                 <thead>
                                     <tr>
-                                        <th>ID</th><th>Customer Id</th><th>Data</th><th>Valor</th><th>Actions</th>
+                                        <th>ID</th><th>Cliente</th><th>Data</th><th>Valor</th><th>Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                 @foreach($vendas as $item)
                                     <tr>
                                         <td>{{ $item->id }}</td>
-                                        <td>{{ $item->customer_id }}</td><td>{{ $item->data }}</td><td>{{ $item->valor }}</td>
+                                        <td>{{ $item->customer->nome }}</td>
+                                        <td>{{ $item->data->format('d/m/Y H:i') }}</td>
+                                        <td>{{ 'R$ '. str_replace('.', ',', $item->valor) }}</td>
                                         <td>
                                             <a href="{{ url('/vendas/' . $item->id) }}" title="View venda"><button class="btn btn-info btn-xs"><i class="fa fa-eye" aria-hidden="true"></i> View</button></a>
                                             <a href="{{ url('/vendas/' . $item->id . '/edit') }}" title="Edit venda"><button class="btn btn-primary btn-xs"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button></a>

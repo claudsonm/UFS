@@ -25,7 +25,7 @@ class Sale extends Model
 
     public function customer()
     {
-        return $this->hasOne('App\Customer');
+        return $this->belongsTo('App\Customer');
     }
 
     public function user()
