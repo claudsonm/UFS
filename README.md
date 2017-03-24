@@ -37,10 +37,14 @@ seguintes itens:
     - DB_PASSWORD
 3. Crie um banco de dados no seu SGBD com o mesmo nome informado no passo 
 anterior e defina a codificação de caracteres como `utf8mb4_unicode_ci`
-3. Execute o comando `composer install` ou `php composer.phar install`
-4. Execute o comando `php artisan key:generate`
-5. Execute o comando `php artisan migrate --seed`
-6. Execute o seu servidor web;
-7. *Opcional:* Se preferir, sirva diretamente do laravel executando o comando 
+4. Execute o comando `composer install` ou `php composer.phar install`
+5. Execute o comando `php artisan key:generate`
+6. Execute o comando `php artisan migrate --seed`
+7. Execute o seu servidor web.
+8. *Opcional:* Se preferir, sirva diretamente do laravel executando o comando 
 `php artisan serve`.
-8. Acesse a URL da sua aplicação.
+9. Acesse a URL da sua aplicação.
+    - *PS*: A pasta raíz do projeto é a `laravel/public`, sendo necessário 
+    adicionar /public ao final da URL, mas você pode configurar seu servidor 
+    web para apontar automaticamente para esta pasta, não necessitando do 
+    /public ao final da URL.
