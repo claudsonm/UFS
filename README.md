@@ -10,3 +10,4 @@ Selecione o branch referente a disciplina que deseja visualizar utilizando o men
   * [Triangle](https://github.com/claudsonm/UFS/tree/LPSI/java)
 * [Sistemas de Informação](https://github.com/claudsonm/UFS/tree/SI)
 * [Sistemas Operacionais](https://github.com/claudsonm/UFS/tree/SO)
+* [Sistemas Distribuídos](https://github.com/claudsonm/UFS/tree/SD)
