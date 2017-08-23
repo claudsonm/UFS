@@ -32,6 +32,7 @@ bob >>
 bob diz: Eae chegada?
 bob >> @chris
 chris >> 
+bob (ufs) diz: Olá, pessoal!
 ```
 
 ```
@@ -41,5 +42,13 @@ User: bob
 alice diz: Olá Bob
 >> @alice
 alice >> Eae chegada?
-alice >> 
+
+// Comandos de grupo
+alice >> !addGroup ufs
+alice >> !addUser alice ufs
+alice >> !addUser chris ufs
+alice >> !delUser chris ufs
+alice >> !delGroup ufs
+alice >> #ufs
+ufs* >> Olá, pessoal!
 ```
