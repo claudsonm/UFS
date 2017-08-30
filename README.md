@@ -21,6 +21,15 @@ String msg = sc.nextLine();
 
 ## Projeto da Disciplina
 
+### Comandos Disponíveis
+
+`@<usuario>` - Direciona as mensagens para o usuário informado.
+`#<grupo>` - Direciona as mensagem para o grupo informado.
+`!addGroup <grupo>` - Cria um novo grupo com o nome informado (automaticamente quem criou o grupo será adicionado a ele).
+`!addUser <usuario> <grupo>` - Adiciona um usuário ao grupo.
+`!delUser <usuario> <grupo>` - Remove um usuário do grupo.
+`!delGroup <grupo>` - Remove o grupo informado.
+
 ### Exemplo de Uso
 
 ```
