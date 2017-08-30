@@ -43,3 +43,22 @@ alice >> !delGroup ufs
 alice >> #ufs
 ufs* >> Olá, pessoal!
 ```
+
+### Definição do Formato das Mensagens
+
+.proto
+```proto
+syntax = "proto3";
+
+message Message {
+	message Content {
+		required bytes content = 1;
+		required string type = 2;
+		optional string name = 3;
+	}
+	required string sender = 1;
+	required string date = 2;
+	required string time = 3;
+	required Content dados = 4;
+}
+```
