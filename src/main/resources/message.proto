@@ -1,0 +1,25 @@
+// Run using: protoc --java_out=../ message.proto
+syntax = "proto3";
+option java_package = "protobuf";
+option java_outer_classname = "MessageProtos";
+
+message Message {
+    string sender = 1;
+    string date = 2;
+    string time = 3;
+
+    enum ContentType {
+        TEXT = 0;
+        IMAGE = 1;
+        AUDIO = 2;
+        FILE = 3;
+        OTHER = 4;
+    }
+
+    message Content {
+        bytes data = 1;
+        ContentType type = 2;
+    }
+
+    repeated Content content = 4;
+}
