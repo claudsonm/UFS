@@ -1,4 +1,4 @@
-package chat_cli;
+package chatcli;
 
 import com.rabbitmq.client.*;
 
