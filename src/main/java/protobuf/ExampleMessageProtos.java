@@ -24,7 +24,7 @@ public class ExampleMessageProtos {
         
         byte[] t = m.toByteArray();
         
-        System.out.println(m.toByteArray() + " | " + m.getSerializedSize());
+        System.out.println(t);
         
 //        RECEBE A MENSAGEM
         Message r = Message.parseFrom(t);
