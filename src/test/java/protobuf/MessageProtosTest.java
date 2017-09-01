@@ -18,18 +18,28 @@ import protobuf.MessageProtos.Message;
 
 public class MessageProtosTest {
     Message.Builder msg;
-    String readFilePath;
-    String writeFilePath;
+    String readDirectMessageFilePath;
+    String writeDirectMessageFilePath;
+    String readGroupMessageFilePath;
+    String writeGroupMessageFilePath;
 
     @Before
     public void setUp() throws Exception {
         msg = Message.newBuilder();
-        readFilePath = "src/test/resources/dummy_data";
-        writeFilePath = "src/test/resources/data_log";
-    } 
+        readDirectMessageFilePath = "src/test/resources/direct_message";
+        writeDirectMessageFilePath = "src/test/resources/direct_log";
+        readGroupMessageFilePath = "src/test/resources/group_message";
+        writeGroupMessageFilePath = "src/test/resources/group_log";
+    }
+    
+    private void generateResource(byte[] t, String path) throws FileNotFoundException, IOException {
+        ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(path));
+        out.writeObject(t);
+        out.close();
+    }
     
     @Test
-    public void testCreateMessage() throws Exception {
+    public void testCreateDirectMessage() throws Exception {
         msg.setSender("Usuário de teste");
         msg.setDate("31/08/2017");
         msg.setTime("14:28");
@@ -43,19 +53,13 @@ public class MessageProtosTest {
         Message m = msg.build();
         
         byte[] transportData = m.toByteArray();
-        generateResource(transportData);
+        generateResource(transportData, writeDirectMessageFilePath);
         assertEquals(56, transportData.length);
     }
     
-    private void generateResource(byte[] t) throws FileNotFoundException, IOException {
-        ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(writeFilePath));
-        out.writeObject(t);
-        out.close();
-    }
-    
     @Test
-    public void testReadMessage() throws Exception {
-        ObjectInputStream in = new ObjectInputStream(new FileInputStream(readFilePath));
+    public void testReadDirectMessage() throws Exception {
+        ObjectInputStream in = new ObjectInputStream(new FileInputStream(readDirectMessageFilePath));
         byte[] dataReceived = (byte[]) in.readObject();
         in.close();
         Message r = Message.parseFrom(dataReceived);
@@ -69,6 +73,51 @@ public class MessageProtosTest {
                 case TEXT:
                     String saida = dadosRecebidos.getData().toStringUtf8();
                     assertEquals("Minha mensagem", saida);
+                    break;
+
+                default:
+                    break;
+            }
+        }
+    }
+    
+    @Test
+    public void testCreateGroupMessage() throws Exception {
+        msg.setSender("Usuário do grupo");
+        msg.setDate("31/08/2017");
+        msg.setTime("23:33");
+        msg.setGroup("Turma do Pagode");
+
+        ByteString input = ByteString.copyFromUtf8("Mensagem pra geral");
+        Message.Content.Builder dados =
+                Message.Content.newBuilder().setData(input);
+        dados.setType(Message.ContentType.TEXT);
+        
+        msg.addContent(dados);
+        Message m = msg.build();
+        
+        byte[] transportData = m.toByteArray();
+        generateResource(transportData, writeGroupMessageFilePath);
+        assertEquals(77, transportData.length);
+    }
+    
+    @Test
+    public void testReadGroupMessage() throws Exception {
+        ObjectInputStream in = new ObjectInputStream(new FileInputStream(readGroupMessageFilePath));
+        byte[] dataReceived = (byte[]) in.readObject();
+        in.close();
+        Message r = Message.parseFrom(dataReceived);
+        
+        assertEquals("Usuário do grupo", r.getSender());
+        assertEquals("31/08/2017", r.getDate());
+        assertEquals("23:33", r.getTime());
+        assertEquals("Turma do Pagode", r.getGroup());
+        
+        for (Message.Content dadosRecebidos : r.getContentList()) {
+            switch (dadosRecebidos.getType()) {
+                case TEXT:
+                    String saida = dadosRecebidos.getData().toStringUtf8();
+                    assertEquals("Mensagem pra geral", saida);
                     break;
 
                 default:

@@ -1,4 +1,5 @@
-// Run using: protoc --java_out=../ message.proto
+// To compile, run from the root project:
+// protoc --java_out=src/main/java/ src/main/resources/message.proto
 syntax = "proto3";
 option java_package = "protobuf";
 option java_outer_classname = "MessageProtos";
@@ -7,6 +8,7 @@ message Message {
     string sender = 1;
     string date = 2;
     string time = 3;
+    string group = 4;
 
     enum ContentType {
         TEXT = 0;
@@ -21,5 +23,5 @@ message Message {
         ContentType type = 2;
     }
 
-    repeated Content content = 4;
+    repeated Content content = 5;
 }
