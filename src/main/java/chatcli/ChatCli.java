@@ -1,11 +1,15 @@
 package chatcli;
 
+import com.google.protobuf.ByteString;
 import com.rabbitmq.client.*;
+
+import protobuf.MessageProtos.Message;
+import protobuf.MessageProtos.Message.ContentType;
 
 import java.io.IOException;
 import java.util.Scanner;
 import java.util.concurrent.TimeoutException;
-import java.util.regex.Pattern;
+//import java.util.regex.Pattern;
 
 /**
  * Chat CLI que utiliza o protocolo AMQP com o serviço Cloud AMQP
@@ -13,7 +17,7 @@ import java.util.regex.Pattern;
  * @author Claudson Martins
  * @author Edgar Lima
  * @author Guilherme Boroni
- * @version 1.1.0
+ * @version 1.2.0
  * @since 16/08/2017
  */
 public class ChatCli {
@@ -24,8 +28,7 @@ public class ChatCli {
     public static final String SEPARATOR = "|";
 
     /**
-     * Comando para criar um novo grupo de conversa. Exemplo:
-     * {@code !addGroup ufs}
+     * Comando para criar um novo grupo de conversa. Exemplo: {@code !addGroup ufs}
      */
     public static final String CREATE_GROUP = "addgroup";
 
@@ -35,14 +38,12 @@ public class ChatCli {
     public static final String DEL_GROUP = "delgroup";
 
     /**
-     * Comando para adicionar um usuário no grupo de conversa. Exemplo:
-     * {@code !addUser alice ufs}
+     * Comando para adicionar um usuário no grupo de conversa. Exemplo: {@code !addUser alice ufs}
      */
     public static final String ADD_USER = "adduser";
 
     /**
-     * Comando para excluir um usuário do grupo de conversa. Exemplo:
-     * {@code !delUser alice ufs}
+     * Comando para excluir um usuário do grupo de conversa. Exemplo: {@code !delUser alice ufs}
      */
     public static final String DEL_USER = "deluser";
 
@@ -94,14 +95,20 @@ public class ChatCli {
         // Define o comportamento do consumidor da fila de mensagens
         Consumer consumer = new DefaultConsumer(channel) {
             @Override
-            public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties,
-                    byte[] body) throws IOException {
+            public void handleDelivery(String consumerTag, Envelope envelope,
+                    AMQP.BasicProperties properties, byte[] body) throws IOException {
                 msg = "";
-                String message = new String(body, "UTF-8");
+                /*String message = new String(body, "UTF-8");
                 String[] messageData = message.split(Pattern.quote(SEPARATOR));
                 String fromGroup = messageData[0];
                 String fromUser = messageData[1];
-                String msg = messageData[2];
+                String msg = messageData[2];*/
+                
+                Message message = Message.parseFrom(body);
+                String fromGroup = message.getGroup();
+                String fromUser = message.getSender();
+                String msg = message.getContent(0).getData().toStringUtf8();
+                
                 if (fromGroup.equals("")) {
                     // Exibe a mensagem direta
                     System.out.println("");
@@ -109,7 +116,7 @@ public class ChatCli {
                 } else {
                     // É uma mensagem de um grupo
                     if (!fromUser.equals(user)) {
-                        // Exibe a mensagem se o emissor não for o próprio usuário (previne o efeito "eco")
+                        // Exibe a mensagem se o emissor não for o próprio usuário (previne o "eco")
                         System.out.println("");
                         System.out.println(fromUser + " (" + fromGroup + ") diz: " + msg);
                     }
@@ -180,7 +187,7 @@ public class ChatCli {
                             error = "Error CREATE_GROUP";
                         }
                         break;
-    
+
                     case DEL_GROUP:
                         if (inputData.length > 1) {
                             removeGroup(inputData[1]);
@@ -188,7 +195,7 @@ public class ChatCli {
                             error = "Error DEL_GROUP";
                         }
                         break;
-    
+
                     case ADD_USER:
                         if (inputData.length > 2) {
                             addUser(inputData[1], inputData[2]);
@@ -196,7 +203,7 @@ public class ChatCli {
                             error = "Error ADD_USER";
                         }
                         break;
-    
+
                     case DEL_USER:
                         if (inputData.length > 2) {
                             removeUser(inputData[1], inputData[2]);
@@ -204,7 +211,7 @@ public class ChatCli {
                             error = "Error DEL_USER";
                         }
                         break;
-    
+
                     default:
                         error = "Comando inexistente!";
                         break;
@@ -239,12 +246,48 @@ public class ChatCli {
         // Protocolo da mensagem: grupo | usuário | conteúdo
         if (isGroup) {
             channel.exchangeDeclare(sendTo, "fanout");
-            channel.basicPublish(sendTo, "", null, (sendTo + SEPARATOR + user + SEPARATOR + msg).getBytes("UTF-8"));
+//            channel.basicPublish(sendTo, "", null, (sendTo + SEPARATOR + user + SEPARATOR + msg).getBytes("UTF-8"));
+            channel.basicPublish(sendTo, "", null, makeMessage(user, msg, sendTo));
         } else {
             channel.queueDeclare(sendTo, false, false, false, null);
-            channel.basicPublish("", sendTo, null, ("" + SEPARATOR + user + SEPARATOR + msg).getBytes("UTF-8"));
+//            channel.basicPublish("", sendTo, null, ("" + SEPARATOR + user + SEPARATOR + msg).getBytes("UTF-8"));
+            channel.basicPublish("", sendTo, null, makeMessage(user, msg));
         }
         channel.close();
+    }
+
+    /**
+     * Retorna os bytes da mensagem direta no formato protocol buffer.
+     * 
+     * @param sender Usuário que enviou a mensagem
+     * @param text Conteúdo textual da mensagem
+     * @return Mensagem serializada
+     */
+    private static byte[] makeMessage(String sender, String text) {
+        return makeMessage(sender, text, "");
+    }
+
+    /**
+     * Retorna os bytes da mensagem no formato protocol buffer.
+     * 
+     * @param sender Usuário que enviou a mensagem
+     * @param text Conteúdo textual da mensagem
+     * @param group Nome do grupo destinatário
+     * @return Mensagem serializada
+     */
+    private static byte[] makeMessage(String sender, String text, String group) {
+        Message.Content.Builder data = Message.Content.newBuilder()
+                .setData(ByteString.copyFromUtf8(text))
+                .setType(ContentType.TEXT);
+        Message.Builder m = Message.newBuilder()
+                .setSender(sender)
+                .setDate("31/08/2017")
+                .setTime("23:54")
+                .addContent(data);
+        if (!group.isEmpty()) {
+            m.setGroup(group);
+        }
+        return m.build().toByteArray();
     }
 
     /**
@@ -264,8 +307,7 @@ public class ChatCli {
     /**
      * Deleta um exchange.
      * 
-     * @param groupName
-     *            Nome do grupo
+     * @param groupName Nome do grupo
      * @throws IOException
      * @throws TimeoutException
      */
@@ -278,10 +320,8 @@ public class ChatCli {
     /**
      * Vincula a fila de um usuário ao exchange do grupo.
      * 
-     * @param user
-     *            Nome do usuário
-     * @param group
-     *            Nome do grupo
+     * @param user Nome do usuário
+     * @param group Nome do grupo
      * @throws IOException
      * @throws TimeoutException
      */
