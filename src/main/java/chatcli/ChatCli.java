@@ -4,12 +4,14 @@ import com.google.protobuf.ByteString;
 import com.rabbitmq.client.*;
 
 import protobuf.MessageProtos.Message;
-import protobuf.MessageProtos.Message.ContentType;
 
 import java.io.IOException;
+import java.io.PrintStream;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Scanner;
 import java.util.concurrent.TimeoutException;
-//import java.util.regex.Pattern;
 
 /**
  * Chat CLI que utiliza o protocolo AMQP com o serviço Cloud AMQP
@@ -17,15 +19,10 @@ import java.util.concurrent.TimeoutException;
  * @author Claudson Martins
  * @author Edgar Lima
  * @author Guilherme Boroni
- * @version 1.2.0
+ * @version 1.3.0
  * @since 16/08/2017
  */
 public class ChatCli {
-
-    /**
-     * Separador das informações contidas no corpo das mensagens.
-     */
-    public static final String SEPARATOR = "|";
 
     /**
      * Comando para criar um novo grupo de conversa. Exemplo: {@code !addGroup ufs}
@@ -46,6 +43,11 @@ public class ChatCli {
      * Comando para excluir um usuário do grupo de conversa. Exemplo: {@code !delUser alice ufs}
      */
     public static final String DEL_USER = "deluser";
+    
+    /**
+     * Comando para finalizar a execução do chat. Exemplo: {@code !quit}
+     */
+    public static final String END_CHAT = "quit";
 
     /**
      * Nome do usuário que está utilizando o chat.
@@ -66,6 +68,16 @@ public class ChatCli {
      * Conexão com o servidor que processa a fila de mensagens.
      */
     public static Connection connection;
+    
+    /**
+     * Canal de comunicação que utiliza a conexão com o servidor AMQP.
+     */
+    public static Channel channel;
+    
+    /**
+     * Saída padrão com codificação UTF-8.
+     */
+    public static PrintStream out;
 
     public static Scanner scanner;
 
@@ -78,9 +90,10 @@ public class ChatCli {
      * @throws Exception
      */
     public static void main(String[] argv) throws Exception {
+        out = new PrintStream(System.out, true, "UTF-8");
         scanner = new Scanner(System.in);
         // Lê a entrada do console e atribui o nome do usuário do chat
-        System.out.print("User: ");
+        out.print("User: ");
         user = scanner.nextLine();
         // Estabelece a conexão com o CloudAMQP
         ConnectionFactory factory = new ConnectionFactory();
@@ -89,7 +102,7 @@ public class ChatCli {
         factory.setPassword("qfWbjO_c1Lu05JgpxraRsn4ouelMmfuW");
         factory.setVirtualHost("tradflan");
         connection = factory.newConnection();
-        Channel channel = connection.createChannel();
+        channel = connection.createChannel();
         // Cria ou obtém a fila referente ao usuário do chat
         channel.queueDeclare(user, false, false, false, null);
         // Define o comportamento do consumidor da fila de mensagens
@@ -98,27 +111,24 @@ public class ChatCli {
             public void handleDelivery(String consumerTag, Envelope envelope,
                     AMQP.BasicProperties properties, byte[] body) throws IOException {
                 msg = "";
-                /*String message = new String(body, "UTF-8");
-                String[] messageData = message.split(Pattern.quote(SEPARATOR));
-                String fromGroup = messageData[0];
-                String fromUser = messageData[1];
-                String msg = messageData[2];*/
-                
                 Message message = Message.parseFrom(body);
                 String fromGroup = message.getGroup();
                 String fromUser = message.getSender();
                 String msg = message.getContent(0).getData().toStringUtf8();
-                
+                String date = message.getDate();
+                String time = message.getTime();
+
                 if (fromGroup.equals("")) {
                     // Exibe a mensagem direta
-                    System.out.println("");
-                    System.out.println(fromUser + " diz: " + msg);
+                    out.println("");
+                    out.println("(" + date + " às " + time + ") " + fromUser + " diz: " + msg);
                 } else {
                     // É uma mensagem de um grupo
                     if (!fromUser.equals(user)) {
                         // Exibe a mensagem se o emissor não for o próprio usuário (previne o "eco")
-                        System.out.println("");
-                        System.out.println(fromUser + " (" + fromGroup + ") diz: " + msg);
+                        out.println("");
+                        out.println("(" + date + " às " + time + ") " + fromUser
+                                + " [" + fromGroup + "] diz: " + msg);
                     }
                 }
                 try {
@@ -147,7 +157,7 @@ public class ChatCli {
         if (isGroup) {
             groupIndicator = "*";
         }
-        System.out.print(sendTo + groupIndicator + " >> ");
+        out.print(sendTo + groupIndicator + " >> ");
         try {
             msg = scanner.nextLine().trim();
         } catch (Exception e) {
@@ -211,6 +221,12 @@ public class ChatCli {
                             error = "Error DEL_USER";
                         }
                         break;
+                    
+                    case END_CHAT:
+                        channel.close();
+                        connection.close();
+                        System.exit(0);
+                        break;
 
                     default:
                         error = "Comando inexistente!";
@@ -218,13 +234,13 @@ public class ChatCli {
                 }
 
                 if (!error.equals("")) {
-                    System.out.println("");
-                    System.out.println(error);
+                    out.println("");
+                    out.println(error);
                 }
                 printAndScanPrompt();
             } else if (sendTo.equals("")) {
                 // Identifica uma mensagem sem destinatário
-                System.out.println("Ninguém te escuta. Utilize @<NOME_DO_USUÁRIO> ou "
+                out.println("Ninguém te escuta. Utilize @<NOME_DO_USUÁRIO> ou "
                         + "#<NOME_DO_GRUPO> para definir um destinatário.");
                 printAndScanPrompt();
             } else {
@@ -243,14 +259,11 @@ public class ChatCli {
      */
     public static void sendMessage() throws IOException, TimeoutException {
         Channel channel = connection.createChannel();
-        // Protocolo da mensagem: grupo | usuário | conteúdo
         if (isGroup) {
             channel.exchangeDeclare(sendTo, "fanout");
-//            channel.basicPublish(sendTo, "", null, (sendTo + SEPARATOR + user + SEPARATOR + msg).getBytes("UTF-8"));
             channel.basicPublish(sendTo, "", null, makeMessage(user, msg, sendTo));
         } else {
             channel.queueDeclare(sendTo, false, false, false, null);
-//            channel.basicPublish("", sendTo, null, ("" + SEPARATOR + user + SEPARATOR + msg).getBytes("UTF-8"));
             channel.basicPublish("", sendTo, null, makeMessage(user, msg));
         }
         channel.close();
@@ -276,14 +289,13 @@ public class ChatCli {
      * @return Mensagem serializada
      */
     private static byte[] makeMessage(String sender, String text, String group) {
+        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        DateFormat timeFormat = new SimpleDateFormat("HH:mm");
+        Date now = new Date();
         Message.Content.Builder data = Message.Content.newBuilder()
-                .setData(ByteString.copyFromUtf8(text))
-                .setType(ContentType.TEXT);
-        Message.Builder m = Message.newBuilder()
-                .setSender(sender)
-                .setDate("31/08/2017")
-                .setTime("23:54")
-                .addContent(data);
+                .setData(ByteString.copyFromUtf8(text)).setType("text/plain");
+        Message.Builder m = Message.newBuilder().setSender(sender).setDate(dateFormat.format(now))
+                .setTime(timeFormat.format(now)).addContent(data);
         if (!group.isEmpty()) {
             m.setGroup(group);
         }

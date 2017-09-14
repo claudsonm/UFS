@@ -47,14 +47,14 @@ public class MessageProtosTest {
         ByteString input = ByteString.copyFromUtf8("Minha mensagem");
         Message.Content.Builder dados =
                 Message.Content.newBuilder().setData(input);
-        dados.setType(Message.ContentType.TEXT);
+        dados.setType("text/plain");
         
         msg.addContent(dados);
         Message m = msg.build();
         
         byte[] transportData = m.toByteArray();
         generateResource(transportData, writeDirectMessageFilePath);
-        assertEquals(56, transportData.length);
+        assertEquals(68, transportData.length);
     }
     
     @Test
@@ -70,7 +70,7 @@ public class MessageProtosTest {
         
         for (Message.Content dadosRecebidos : r.getContentList()) {
             switch (dadosRecebidos.getType()) {
-                case TEXT:
+                case "text/plain":
                     String saida = dadosRecebidos.getData().toStringUtf8();
                     assertEquals("Minha mensagem", saida);
                     break;
@@ -91,14 +91,14 @@ public class MessageProtosTest {
         ByteString input = ByteString.copyFromUtf8("Mensagem pra geral");
         Message.Content.Builder dados =
                 Message.Content.newBuilder().setData(input);
-        dados.setType(Message.ContentType.TEXT);
+        dados.setType("text/plain");
         
         msg.addContent(dados);
         Message m = msg.build();
         
         byte[] transportData = m.toByteArray();
         generateResource(transportData, writeGroupMessageFilePath);
-        assertEquals(77, transportData.length);
+        assertEquals(89, transportData.length);
     }
     
     @Test
@@ -115,7 +115,7 @@ public class MessageProtosTest {
         
         for (Message.Content dadosRecebidos : r.getContentList()) {
             switch (dadosRecebidos.getType()) {
-                case TEXT:
+                case "text/plain":
                     String saida = dadosRecebidos.getData().toStringUtf8();
                     assertEquals("Mensagem pra geral", saida);
                     break;

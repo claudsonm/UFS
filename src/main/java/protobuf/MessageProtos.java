@@ -190,148 +190,24 @@ public final class MessageProtos {
               protobuf.MessageProtos.Message.class, protobuf.MessageProtos.Message.Builder.class);
     }
 
-    /**
-     * Protobuf enum {@code Message.ContentType}
-     */
-    public enum ContentType
-        implements com.google.protobuf.ProtocolMessageEnum {
-      /**
-       * <code>TEXT = 0;</code>
-       */
-      TEXT(0),
-      /**
-       * <code>IMAGE = 1;</code>
-       */
-      IMAGE(1),
-      /**
-       * <code>AUDIO = 2;</code>
-       */
-      AUDIO(2),
-      /**
-       * <code>FILE = 3;</code>
-       */
-      FILE(3),
-      /**
-       * <code>OTHER = 4;</code>
-       */
-      OTHER(4),
-      UNRECOGNIZED(-1),
-      ;
-
-      /**
-       * <code>TEXT = 0;</code>
-       */
-      public static final int TEXT_VALUE = 0;
-      /**
-       * <code>IMAGE = 1;</code>
-       */
-      public static final int IMAGE_VALUE = 1;
-      /**
-       * <code>AUDIO = 2;</code>
-       */
-      public static final int AUDIO_VALUE = 2;
-      /**
-       * <code>FILE = 3;</code>
-       */
-      public static final int FILE_VALUE = 3;
-      /**
-       * <code>OTHER = 4;</code>
-       */
-      public static final int OTHER_VALUE = 4;
-
-
-      public final int getNumber() {
-        if (this == UNRECOGNIZED) {
-          throw new java.lang.IllegalArgumentException(
-              "Can't get the number of an unknown enum value.");
-        }
-        return value;
-      }
-
-      /**
-       * @deprecated Use {@link #forNumber(int)} instead.
-       */
-      @java.lang.Deprecated
-      public static ContentType valueOf(int value) {
-        return forNumber(value);
-      }
-
-      public static ContentType forNumber(int value) {
-        switch (value) {
-          case 0: return TEXT;
-          case 1: return IMAGE;
-          case 2: return AUDIO;
-          case 3: return FILE;
-          case 4: return OTHER;
-          default: return null;
-        }
-      }
-
-      public static com.google.protobuf.Internal.EnumLiteMap<ContentType>
-          internalGetValueMap() {
-        return internalValueMap;
-      }
-      private static final com.google.protobuf.Internal.EnumLiteMap<
-          ContentType> internalValueMap =
-            new com.google.protobuf.Internal.EnumLiteMap<ContentType>() {
-              public ContentType findValueByNumber(int number) {
-                return ContentType.forNumber(number);
-              }
-            };
-
-      public final com.google.protobuf.Descriptors.EnumValueDescriptor
-          getValueDescriptor() {
-        return getDescriptor().getValues().get(ordinal());
-      }
-      public final com.google.protobuf.Descriptors.EnumDescriptor
-          getDescriptorForType() {
-        return getDescriptor();
-      }
-      public static final com.google.protobuf.Descriptors.EnumDescriptor
-          getDescriptor() {
-        return protobuf.MessageProtos.Message.getDescriptor().getEnumTypes().get(0);
-      }
-
-      private static final ContentType[] VALUES = values();
-
-      public static ContentType valueOf(
-          com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
-        if (desc.getType() != getDescriptor()) {
-          throw new java.lang.IllegalArgumentException(
-            "EnumValueDescriptor is not for this type.");
-        }
-        if (desc.getIndex() == -1) {
-          return UNRECOGNIZED;
-        }
-        return VALUES[desc.getIndex()];
-      }
-
-      private final int value;
-
-      private ContentType(int value) {
-        this.value = value;
-      }
-
-      // @@protoc_insertion_point(enum_scope:Message.ContentType)
-    }
-
     public interface ContentOrBuilder extends
         // @@protoc_insertion_point(interface_extends:Message.Content)
         com.google.protobuf.MessageOrBuilder {
 
       /**
-       * <code>bytes data = 1;</code>
+       * <code>string type = 1;</code>
        */
-      com.google.protobuf.ByteString getData();
+      java.lang.String getType();
+      /**
+       * <code>string type = 1;</code>
+       */
+      com.google.protobuf.ByteString
+          getTypeBytes();
 
       /**
-       * <code>.Message.ContentType type = 2;</code>
+       * <code>bytes data = 2;</code>
        */
-      int getTypeValue();
-      /**
-       * <code>.Message.ContentType type = 2;</code>
-       */
-      protobuf.MessageProtos.Message.ContentType getType();
+      com.google.protobuf.ByteString getData();
     }
     /**
      * Protobuf type {@code Message.Content}
@@ -346,8 +222,8 @@ public final class MessageProtos {
         super(builder);
       }
       private Content() {
+        type_ = "";
         data_ = com.google.protobuf.ByteString.EMPTY;
-        type_ = 0;
       }
 
       @java.lang.Override
@@ -379,14 +255,14 @@ public final class MessageProtos {
                 break;
               }
               case 10: {
+                java.lang.String s = input.readStringRequireUtf8();
 
-                data_ = input.readBytes();
+                type_ = s;
                 break;
               }
-              case 16: {
-                int rawValue = input.readEnum();
+              case 18: {
 
-                type_ = rawValue;
+                data_ = input.readBytes();
                 break;
               }
             }
@@ -413,29 +289,47 @@ public final class MessageProtos {
                 protobuf.MessageProtos.Message.Content.class, protobuf.MessageProtos.Message.Content.Builder.class);
       }
 
-      public static final int DATA_FIELD_NUMBER = 1;
+      public static final int TYPE_FIELD_NUMBER = 1;
+      private volatile java.lang.Object type_;
+      /**
+       * <code>string type = 1;</code>
+       */
+      public java.lang.String getType() {
+        java.lang.Object ref = type_;
+        if (ref instanceof java.lang.String) {
+          return (java.lang.String) ref;
+        } else {
+          com.google.protobuf.ByteString bs = 
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          type_ = s;
+          return s;
+        }
+      }
+      /**
+       * <code>string type = 1;</code>
+       */
+      public com.google.protobuf.ByteString
+          getTypeBytes() {
+        java.lang.Object ref = type_;
+        if (ref instanceof java.lang.String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          type_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+
+      public static final int DATA_FIELD_NUMBER = 2;
       private com.google.protobuf.ByteString data_;
       /**
-       * <code>bytes data = 1;</code>
+       * <code>bytes data = 2;</code>
        */
       public com.google.protobuf.ByteString getData() {
         return data_;
-      }
-
-      public static final int TYPE_FIELD_NUMBER = 2;
-      private int type_;
-      /**
-       * <code>.Message.ContentType type = 2;</code>
-       */
-      public int getTypeValue() {
-        return type_;
-      }
-      /**
-       * <code>.Message.ContentType type = 2;</code>
-       */
-      public protobuf.MessageProtos.Message.ContentType getType() {
-        protobuf.MessageProtos.Message.ContentType result = protobuf.MessageProtos.Message.ContentType.valueOf(type_);
-        return result == null ? protobuf.MessageProtos.Message.ContentType.UNRECOGNIZED : result;
       }
 
       private byte memoizedIsInitialized = -1;
@@ -450,11 +344,11 @@ public final class MessageProtos {
 
       public void writeTo(com.google.protobuf.CodedOutputStream output)
                           throws java.io.IOException {
-        if (!data_.isEmpty()) {
-          output.writeBytes(1, data_);
+        if (!getTypeBytes().isEmpty()) {
+          com.google.protobuf.GeneratedMessageV3.writeString(output, 1, type_);
         }
-        if (type_ != protobuf.MessageProtos.Message.ContentType.TEXT.getNumber()) {
-          output.writeEnum(2, type_);
+        if (!data_.isEmpty()) {
+          output.writeBytes(2, data_);
         }
         unknownFields.writeTo(output);
       }
@@ -464,13 +358,12 @@ public final class MessageProtos {
         if (size != -1) return size;
 
         size = 0;
+        if (!getTypeBytes().isEmpty()) {
+          size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, type_);
+        }
         if (!data_.isEmpty()) {
           size += com.google.protobuf.CodedOutputStream
-            .computeBytesSize(1, data_);
-        }
-        if (type_ != protobuf.MessageProtos.Message.ContentType.TEXT.getNumber()) {
-          size += com.google.protobuf.CodedOutputStream
-            .computeEnumSize(2, type_);
+            .computeBytesSize(2, data_);
         }
         size += unknownFields.getSerializedSize();
         memoizedSize = size;
@@ -488,9 +381,10 @@ public final class MessageProtos {
         protobuf.MessageProtos.Message.Content other = (protobuf.MessageProtos.Message.Content) obj;
 
         boolean result = true;
+        result = result && getType()
+            .equals(other.getType());
         result = result && getData()
             .equals(other.getData());
-        result = result && type_ == other.type_;
         result = result && unknownFields.equals(other.unknownFields);
         return result;
       }
@@ -502,10 +396,10 @@ public final class MessageProtos {
         }
         int hash = 41;
         hash = (19 * hash) + getDescriptor().hashCode();
+        hash = (37 * hash) + TYPE_FIELD_NUMBER;
+        hash = (53 * hash) + getType().hashCode();
         hash = (37 * hash) + DATA_FIELD_NUMBER;
         hash = (53 * hash) + getData().hashCode();
-        hash = (37 * hash) + TYPE_FIELD_NUMBER;
-        hash = (53 * hash) + type_;
         hash = (29 * hash) + unknownFields.hashCode();
         memoizedHashCode = hash;
         return hash;
@@ -635,9 +529,9 @@ public final class MessageProtos {
         }
         public Builder clear() {
           super.clear();
-          data_ = com.google.protobuf.ByteString.EMPTY;
+          type_ = "";
 
-          type_ = 0;
+          data_ = com.google.protobuf.ByteString.EMPTY;
 
           return this;
         }
@@ -661,8 +555,8 @@ public final class MessageProtos {
 
         public protobuf.MessageProtos.Message.Content buildPartial() {
           protobuf.MessageProtos.Message.Content result = new protobuf.MessageProtos.Message.Content(this);
-          result.data_ = data_;
           result.type_ = type_;
+          result.data_ = data_;
           onBuilt();
           return result;
         }
@@ -704,11 +598,12 @@ public final class MessageProtos {
 
         public Builder mergeFrom(protobuf.MessageProtos.Message.Content other) {
           if (other == protobuf.MessageProtos.Message.Content.getDefaultInstance()) return this;
+          if (!other.getType().isEmpty()) {
+            type_ = other.type_;
+            onChanged();
+          }
           if (other.getData() != com.google.protobuf.ByteString.EMPTY) {
             setData(other.getData());
-          }
-          if (other.type_ != 0) {
-            setTypeValue(other.getTypeValue());
           }
           this.mergeUnknownFields(other.unknownFields);
           onChanged();
@@ -737,15 +632,84 @@ public final class MessageProtos {
           return this;
         }
 
+        private java.lang.Object type_ = "";
+        /**
+         * <code>string type = 1;</code>
+         */
+        public java.lang.String getType() {
+          java.lang.Object ref = type_;
+          if (!(ref instanceof java.lang.String)) {
+            com.google.protobuf.ByteString bs =
+                (com.google.protobuf.ByteString) ref;
+            java.lang.String s = bs.toStringUtf8();
+            type_ = s;
+            return s;
+          } else {
+            return (java.lang.String) ref;
+          }
+        }
+        /**
+         * <code>string type = 1;</code>
+         */
+        public com.google.protobuf.ByteString
+            getTypeBytes() {
+          java.lang.Object ref = type_;
+          if (ref instanceof String) {
+            com.google.protobuf.ByteString b = 
+                com.google.protobuf.ByteString.copyFromUtf8(
+                    (java.lang.String) ref);
+            type_ = b;
+            return b;
+          } else {
+            return (com.google.protobuf.ByteString) ref;
+          }
+        }
+        /**
+         * <code>string type = 1;</code>
+         */
+        public Builder setType(
+            java.lang.String value) {
+          if (value == null) {
+    throw new NullPointerException();
+  }
+  
+          type_ = value;
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>string type = 1;</code>
+         */
+        public Builder clearType() {
+          
+          type_ = getDefaultInstance().getType();
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>string type = 1;</code>
+         */
+        public Builder setTypeBytes(
+            com.google.protobuf.ByteString value) {
+          if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+          
+          type_ = value;
+          onChanged();
+          return this;
+        }
+
         private com.google.protobuf.ByteString data_ = com.google.protobuf.ByteString.EMPTY;
         /**
-         * <code>bytes data = 1;</code>
+         * <code>bytes data = 2;</code>
          */
         public com.google.protobuf.ByteString getData() {
           return data_;
         }
         /**
-         * <code>bytes data = 1;</code>
+         * <code>bytes data = 2;</code>
          */
         public Builder setData(com.google.protobuf.ByteString value) {
           if (value == null) {
@@ -757,55 +721,11 @@ public final class MessageProtos {
           return this;
         }
         /**
-         * <code>bytes data = 1;</code>
+         * <code>bytes data = 2;</code>
          */
         public Builder clearData() {
           
           data_ = getDefaultInstance().getData();
-          onChanged();
-          return this;
-        }
-
-        private int type_ = 0;
-        /**
-         * <code>.Message.ContentType type = 2;</code>
-         */
-        public int getTypeValue() {
-          return type_;
-        }
-        /**
-         * <code>.Message.ContentType type = 2;</code>
-         */
-        public Builder setTypeValue(int value) {
-          type_ = value;
-          onChanged();
-          return this;
-        }
-        /**
-         * <code>.Message.ContentType type = 2;</code>
-         */
-        public protobuf.MessageProtos.Message.ContentType getType() {
-          protobuf.MessageProtos.Message.ContentType result = protobuf.MessageProtos.Message.ContentType.valueOf(type_);
-          return result == null ? protobuf.MessageProtos.Message.ContentType.UNRECOGNIZED : result;
-        }
-        /**
-         * <code>.Message.ContentType type = 2;</code>
-         */
-        public Builder setType(protobuf.MessageProtos.Message.ContentType value) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          
-          type_ = value.getNumber();
-          onChanged();
-          return this;
-        }
-        /**
-         * <code>.Message.ContentType type = 2;</code>
-         */
-        public Builder clearType() {
-          
-          type_ = 0;
           onChanged();
           return this;
         }
@@ -2006,14 +1926,12 @@ public final class MessageProtos {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n src/main/resources/message.proto\"\350\001\n\007M" +
+      "\n src/main/resources/message.proto\"\216\001\n\007M" +
       "essage\022\016\n\006sender\030\001 \001(\t\022\014\n\004date\030\002 \001(\t\022\014\n\004" +
       "time\030\003 \001(\t\022\r\n\005group\030\004 \001(\t\022!\n\007content\030\005 \003" +
-      "(\0132\020.Message.Content\032;\n\007Content\022\014\n\004data\030" +
-      "\001 \001(\014\022\"\n\004type\030\002 \001(\0162\024.Message.ContentTyp" +
-      "e\"B\n\013ContentType\022\010\n\004TEXT\020\000\022\t\n\005IMAGE\020\001\022\t\n" +
-      "\005AUDIO\020\002\022\010\n\004FILE\020\003\022\t\n\005OTHER\020\004B\031\n\010protobu" +
-      "fB\rMessageProtosb\006proto3"
+      "(\0132\020.Message.Content\032%\n\007Content\022\014\n\004type\030" +
+      "\001 \001(\t\022\014\n\004data\030\002 \001(\014B\031\n\010protobufB\rMessage" +
+      "Protosb\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -2038,7 +1956,7 @@ public final class MessageProtos {
     internal_static_Message_Content_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_Message_Content_descriptor,
-        new java.lang.String[] { "Data", "Type", });
+        new java.lang.String[] { "Type", "Data", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

@@ -10,17 +10,9 @@ message Message {
     string time = 3;
     string group = 4;
 
-    enum ContentType {
-        TEXT = 0;
-        IMAGE = 1;
-        AUDIO = 2;
-        FILE = 3;
-        OTHER = 4;
-    }
-
     message Content {
-        bytes data = 1;
-        ContentType type = 2;
+        string type = 1;
+        bytes data = 2;
     }
 
     repeated Content content = 5;
